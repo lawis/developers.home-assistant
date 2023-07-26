@@ -150,7 +150,7 @@ function Home() {
                   className={styles.heroText}
                   href="https://www.home-assistant.io"
                 >
-                  Not a developer? Go to the normal website
+                  不是开发者？请访问主站
                 </a>
               </p>
             </div>

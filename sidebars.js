@@ -79,12 +79,12 @@ module.exports = {
     "development_index",
     {
       type: "category",
-      label: "Architecture",
+      label: "架构",
       items: ["architecture/core", "architecture_components"],
     },
     {
       type: "category",
-      label: "Development Workflow",
+      label: "开发工作流",
       items: [
         "development_environment",
         "development_submitting",
@@ -96,7 +96,7 @@ module.exports = {
     },
     {
       type: "category",
-      label: "Building Integrations",
+      label: "构建集成(Integrations)",
       items: [
         "creating_component_index",
         "creating_integration_file_structure",
@@ -125,7 +125,7 @@ module.exports = {
     },
     {
       type: "category",
-      label: "Development Checklist",
+      label: "开发核对表(Checklist)",
       items: [
         "development_checklist",
         "creating_component_code_review",
@@ -135,7 +135,7 @@ module.exports = {
     },
     {
       type: "category",
-      label: "The `hass` object",
+      label: "'hass' 对象",
       items: [
         "dev_101_hass",
         "dev_101_events",
@@ -145,7 +145,7 @@ module.exports = {
     },
     {
       type: "category",
-      label: "Entities",
+      label: "实体(Entities)",
       items: [
         "core/entity",
         {
@@ -156,7 +156,7 @@ module.exports = {
     },
     {
       type: "category",
-      label: "Areas, Devices and Entities",
+      label: "区域(Areas), 设备(Devices) 和 实体(Entities)",
       items: [
         "architecture/devices-and-services",
         "entity_registry_index",
@@ -167,7 +167,7 @@ module.exports = {
     },
     {
       type: "category",
-      label: "Authentication",
+      label: "认证",
       items: [
         "auth_index",
         "auth_permissions",
@@ -180,7 +180,7 @@ module.exports = {
     "data_entry_flow_index",
     {
       type: "category",
-      label: "Device Automations",
+      label: "设备自动化",
       items: [
         "device_automation_index",
         "device_automation_trigger",
@@ -190,7 +190,7 @@ module.exports = {
     },
     {
       type: "category",
-      label: "Intents",
+      label: "意图(Intents)",
       items: [
         "intent_index",
         "intent_firing",
@@ -200,12 +200,12 @@ module.exports = {
     },
     {
       type: "category",
-      label: "Conversation",
+      label: "对话(Conversation)",
       items: ["intent_conversation_api", "core/conversation/custom_agent"],
     },
     {
       type: "category",
-      label: "Native App Integration",
+      label: "原生应用(App)集成(Integration)",
       items: [
         "api/native-app-integration",
         "api/native-app-integration/setup",
@@ -223,12 +223,12 @@ module.exports = {
     "core/platform/significant_change",
     {
       type: "category",
-      label: "External APIs",
+      label: "外部调用API",
       items: ["api/websocket", "api/rest"],
     },
     {
       type: "category",
-      label: "Misc",
+      label: "杂项",
       items: ["development_validation", "development_typing", "instance_url"],
     },
   ],

@@ -1,5 +1,5 @@
 ---
-title: "Backup"
+title: "备份"
 ---
 
 When Home Assistant is creating a backup, there might be a need to pause certain operations in the integration, or dumping data so it can properly be restored.

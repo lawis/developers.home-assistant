@@ -1,8 +1,8 @@
 ---
-title: "Creating your first integration"
+title: "创建你的第一个集成(Integration)"
 ---
 
-Alright, so it's time to write your first code for your integration. AWESOME. Don't worry, we've tried hard to keep it as easy as possible. From a Home Assistant development environment, type the following and follow the instructions:
+好的,现在就可以为你的第一个集成编写代码了. 超级棒. 别担心, 我们已经尽力让这件事事儿变得简单. 在Home Assistant开发环境中, 输入以下内容并按照说明进行操作:
 
 ```shell
 python3 -m script.scaffold integration

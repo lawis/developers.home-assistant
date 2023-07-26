@@ -1,6 +1,6 @@
 module.exports = {
-  title: "Home Assistant Developer Docs",
-  tagline: "All you need to start developing",
+  title: "Home Assistant 开发者文档",
+  tagline: "您需要的开发文档都在这里",
   url: "https://developers.home-assistant.io",
   baseUrl: "/",
   favicon: "img/favicon.png",
@@ -8,7 +8,7 @@ module.exports = {
   projectName: "developers.home-assistant",
   themeConfig: {
     navbar: {
-      title: "Developers",
+      title: "HA开发者",
       logo: {
         alt: "Home Assistant",
         src: "img/logo-pretty.svg",
@@ -20,23 +20,23 @@ module.exports = {
           position: "left",
           items: [
             {
-              label: "Overview",
+              label: "概述",
               to: "docs/architecture_index",
             },
             {
-              label: "Core",
+              label: "内核(Core)",
               to: "docs/development_index",
             },
-            { to: "docs/frontend", label: "Frontend" },
+            { to: "docs/frontend", label: "前端(Frontend)" },
             { to: "docs/supervisor", label: "Supervisor" },
-            { to: "docs/add-ons", label: "Add-ons" },
-            { to: "docs/operating-system", label: "Operating System" },
-            { to: "docs/voice/overview", label: "Voice" },
-            { to: "docs/translations", label: "Translations" },
+            { to: "docs/add-ons", label: "插件(Add-ons)" },
+            { to: "docs/operating-system", label: "操作系统(Operating System)" },
+            { to: "docs/voice/overview", label: "语音助手(Voice)" },
+            { to: "docs/translations", label: "翻译指南(Translations)" },
           ],
         },
-        { to: "docs/misc", label: "Misc", position: "left" },
-        { to: "blog", label: "Blog", position: "left" },
+        { to: "docs/misc", label: "杂项", position: "left" },
+        { to: "blog", label: "博客", position: "left" },
       ],
     },
     footer: {
@@ -49,31 +49,31 @@ module.exports = {
       style: "dark",
       links: [
         {
-          title: "More Home Assistant",
+          title: "更多",
           items: [
             {
-              label: "Homepage",
+              label: "首页",
               href: "https://www.home-assistant.io",
             },
             {
-              label: "Data Science Portal",
+              label: "数据分析主页",
               href: "https://data.home-assistant.io",
             },
             {
-              label: "Alerts",
+              label: "重要通知",
               href: "https://alerts.home-assistant.io",
             },
             {
-              label: "System Status",
+              label: "运行状态",
               href: "https://status.home-assistant.io/",
             },
           ],
         },
         {
-          title: "Social",
+          title: "社交",
           items: [
             {
-              label: "Blog",
+              label: "博客",
               to: "blog",
             },
             {
@@ -91,20 +91,20 @@ module.exports = {
           ],
         },
         {
-          title: "Other",
+          title: "其他",
           items: [
             {
-              label: "Privacy",
+              label: "隐私",
               href: "https://www.home-assistant.io/privacy/",
             },
             {
-              label: "Security",
+              label: "安全",
               href: "https://www.home-assistant.io/security/",
             },
           ],
         },
         {
-          title: "Thanks",
+          title: "鸣谢",
           items: [
             {
               html: `

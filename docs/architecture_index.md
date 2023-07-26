@@ -1,18 +1,18 @@
 ---
-title: "Architecture Overview"
+title: "架构概述"
 ---
 
-Home Assistant provides a platform for home control and home automation. Home Assistant is not just an application: it's an embedded system that provides an experience like other consumer off-the-shelf products: onboarding, configuration and updating is all done via an easy to use interface.
+Home Assistant 提供了一个家庭控制和家庭自动化的平台. Home Assistant 不仅是个应应程序,它还是一个嵌入式系统,能提供消费品级别的用户体验.通过一个用户界面就可以轻松的完成登录配置更新等操作.
 
-- The [operating system](operating-system.md) provides the bare minimal Linux environment to run Supervisor and Core.
-- The [Supervisor](supervisor.md) manages the operating system.
-- The [Core](architecture/core.md) interacts with the user, the supervisor and IoT devices & services.
+- [操作系统(operating system)](operating-system.md) 提供了最精简的Linux环境用于运行监管器(Supervisor)和内核(Core).
+- [监管器(Supervisor)](supervisor.md) 用于管理操作系统(operating system)
+- [内核(Core)](architecture/core.md) 用于和用户,监管器(Supervisor),IoT设备,服务等交互.
 
 <img
   src='/img/en/architecture/full.svg'
   alt='Full picture of Home Assistant'
 />
 
-## Running parts of the stack
+## 只运行以上部分功能
 
-Users have different requirements for what they want from a home automation platform. That's why it is possible to run only part of the Home Assistant stack. For more information, see the [installation instructions](https://www.home-assistant.io/installation/).
+用户对家庭自动化平台的需求各不相同.这就是我们允许只运行(Home Assistant stack)部分功能的原因.更多信息,请参考[安装说明](https://www.home-assistant.io/installation/).

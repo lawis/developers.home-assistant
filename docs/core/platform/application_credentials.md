@@ -1,5 +1,5 @@
 ---
-title: "Application Credentials"
+title: "应用程序证书"
 ---
 
 Integrations may support [Configuration via OAuth2](/docs/config_entries_config_flow_handler#configuration-via-oauth2) allowing

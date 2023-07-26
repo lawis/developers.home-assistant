@@ -1,5 +1,5 @@
 ---
-title: "Repairs"
+title: "问题修复"
 ---
 
 Home Assistant keeps track of issues which should be brought to the user's attention. These issues can be created by integrations or by Home Assistant itself. Issues can either be fixable via a RepairsFlow or by linking to a website with information on how the user can solve it themselves.

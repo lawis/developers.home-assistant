@@ -1,10 +1,10 @@
 ---
-title: "Home Assistant Core"
-sidebar_label: Introduction
+title: "Home Assistant 内核(Core)"
+sidebar_label: 简介
 ---
 
-The core of Home Assistant is built from the ground up to be easily extensible using integrations. In this section, we're focusing on how to develop integrations.
+Home Assistant内核是从头开始构建的,它可以通过集成(integrations)很方便地扩展. 在本节中,我们将重点介绍如何开发集成(integrations).
 
-Before you start, make sure that you have read up on the overall [Home Assistant architecture](architecture_index.md) so that you are familiar with the concepts that make up Home Assistant.
+在开始之前,请确保您已经阅读了整个[Home Assistant 架构](architecture_index.md),以便您对Home Assistant有一个整体上的了解. 
 
-If you run into trouble following this documentation, don't hesitate to join our #devs_core channel on [Discord](https://www.home-assistant.io/join-chat/).
+如果您在阅读本文档时遇到问题,请随时加入我们在[Discord](https://www.home-assistant.io/join-chat/)上的 #devs_core 频道.

@@ -1,5 +1,5 @@
 ---
-title: "Brands"
+title: "品牌"
 ---
 
 A commercial brand may have several integrations which provide support for different offerings under that brand. Also, a brand may offer devices which comply with an IoT standard, for example Zigbee or Z-Wave.
