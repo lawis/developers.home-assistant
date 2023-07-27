@@ -1,9 +1,9 @@
 ---
-title: "Integration Manifest"
-sidebar_label: "Manifest"
+title: "集成清单文件(Manifest.json)定义"
+sidebar_label: "清单文件(Manifest.json)"
 ---
 
-Every integration has a manifest file to specify basic information about an integration. This file is stored as `manifest.json` in your integration directory. It is required to add such a file.
+每一个集成都有一个清单文件,用于指定其基本信息. 这个文件就是集成目录中的`manifest.json`文件. 此文件是必须要添加的.
 
 ```json
 {
@@ -22,7 +22,7 @@ Every integration has a manifest file to specify basic information about an inte
 }
 ```
 
-Or a minimal example that you can copy into your project:
+以下是只包含必要内容的示例,您可以将其复制到您的项目中:
 
 ```json
 {
@@ -37,78 +37,70 @@ Or a minimal example that you can copy into your project:
 }
 ```
 
-## Domain
+## Domain(域)
 
-The domain is a short name consisting of characters and underscores. This domain has to be unique and cannot be changed. Example of the domain for the mobile app integration: `mobile_app`. The domain key has to match the directory this file is in.
+域(Domain)是一个由字符和下划线组成的短名称. 域必须是唯一的, 且不能更改. 例如,移动应用程序集成的域为`mobile_app`. 该集成的所有文件都在`mobile_app/`文件夹中.
 
-## Name
+## Name(名称)
 
-The name of the integration.
+表示集成的名字(Name)
 
-## Version
+## Version(版本号)
 
-For core integrations, this should be omitted.
+在核心集成中,版本(Version)可以被省略
 
-The version of the integration is required for custom integrations. The version needs to be a valid version recognized by [AwesomeVersion](https://github.com/ludeeus/awesomeversion) like [CalVer](https://calver.org/) or [SemVer](https://semver.org/).
+自定义集成必须要有版本(Version)信息. 版本号必须是可以被[AwesomeVersion](https://github.com/ludeeus/awesomeversion)库识别的有效版本号.例如[CalVer](https://calver.org/) 或者 [SemVer](https://semver.org/)定义的规范版本号.
 
-## Integration Type
+## Integration Type(集成类型)
 
-Integrations are split into multiple integration types. Each integration
-must provide an `integration_type` in their manifest, that describes its main
-focus.
+集成分为多种类型. 每个集成都必须在`manifest.json`文件中提供一个`integration_type`, 以描述其主要作用.
 
 :::warning
-When not set, we currently default to `hub`. This default is temporary during
-our transition period, every integration should set an `integration_type` and
-it thus will become mandatory in the future.
+如果没有设置,我们目前会默认为`hub`. 这个默认值是在过渡期间临时设置的,每个集成都应该设置一个`integration_type`,此值将来会变为必填项.
 :::
 
-| Type |  Description
+| 类别 |  描述
 | ---- | -----------
-| `device` | Provides a single device like, for example, ESPHome. |
-| `entity` | Provides a basic entity platform, like sensor or light. This should generally not be used. |
-| `hardware` | Provides a hardware integration, like Raspbery Pi or Hardkernel. This should generally not be used. |
-| `helper` | Provides an entity to help the user with automations like input boolean, derivative or group. |
-| `hub` | Provides a hub integration, with multiple devices or services, like Philips Hue. |
-| `service` | Provides a single service, like DuckDNS or AdGuard. |
-| `system` | Provides a system integration and is reserved, should generally not be used. |
-| `virtual` | Not an integration on its own. Instead it points towards another integration or IoT standard. See [virtual integration](#virtual-integration) section. |
+| `device` | 控制单个设备,例如 ESPHome. |
+| `entity` | 控制一个基本的实体平台, 比如 sensor 或 light. 一般不应该设置成这个. |
+| `hardware` | 控制一个硬件的集成, 比如 Raspbery Pi 或者 Hardkernel. 一般不应该设置成这个. |
+| `helper` | 控制一个实体来帮助用户进行自动化操作,比如输入 boolean, derivative 或者 group. |
+| `hub` | 将多个设备或者服务集中管理的集成,比如 Philips Hue. |
+| `service` | 管理单一服务, 比如 DuckDNS 或 AdGuard. |
+| `system` | 控制一个系统的集成,这是一个预留类别,一般不应该设置成这个. |
+| `virtual` | 其本身并非集成。相反，它指向另一个集成或物联网标准。请参阅[虚拟集成](#virtual-integration)部分. |
 
 :::info
-The difference between a `hub` and a `service` or `device` is defined by the nature
-of the integration. A `hub` provides a gateway to multiple other devices or
-services. `service` and `device` are integrations that provide a single device
-or service per config entry.
+`hub` `service` `device`之间的不同取决于集成的性质. `hub`类型的集成提供了一个管理多个设备和服务的抽象网关. `service` `device` 类型的集成仅提供对单个服务或设备的访问.
 :::
 
-## Documentation
+## Documentation(文档)
 
-The website containing documentation on how to use your integration. If this integration is being submitted for inclusion in Home Assistant, it should be `https://www.home-assistant.io/integrations/<domain>`
+集成的文档地址,用来说明如何使用你的集成. 如果集成被提交到Home Assistant,那么文档地址应该是`https://www.home-assistant.io/integrations/<domain>`
 
-## Issue Tracker
+## Issue Tracker(问题跟踪)
 
-The issue tracker of your integration, where users reports issues if they run into one.
-If this integration is being submitted for inclusion in Home Assistant, it should be omitted. For built-in integrations, Home Assistant will automatically generate the correct link.
+集成相关问题的跟踪地址,用户在使用过程中遇到问题时,可以在这里提交问题. 如果集成被提交到Home Assistant,那么此项可以省略. 对于内建集成,Home Assistant会自动生成正确的链接.
 
-## Dependencies
+## Dependencies(依赖项)
 
-Dependencies are other Home Assistant integrations you want Home Assistant to set up successfully before the integration is loaded. Adding an integration to dependencies will ensure the depending integration is loaded before setup, but it does not guarantee all dependency configuration entries have been set up. Adding dependencies can be necessary if you want to offer functionality from that other integration, like webhooks or an MQTT connection. Adding an [after dependency](#after-dependencies) might be a better alternative if a dependency is optional but not critical. See the [MQTT section](#mqtt) for more details on handling this for MQTT.
+依赖项(Dependencies)可以定义在Home Assistant加载本集成前,必须先要成功加载的其他集成. 把一个集成添加到依赖项中,可以确保本集成在设置之前,依赖的集成已经被加载. 但是这并不能保证所有依赖项的配置都已经完成设置. 如果您需要提供一些来自于其他集成的功能(比如webhooks 或者MQTT connection),那增加依赖项是必要的.如果一个依赖只是可选的,那把它添加到[after dependency](#after-dependencies),是更好的选择.更多关于如何处理MQTT的信息,请参阅[MQTT](#mqtt)部分.
 
-Built-in integrations shall only specify other built-in integrations in `dependencies`. Custom integrations may specify both built-in and custom integrations in `dependencies`.
+内建集成应该只增加其他内建集成到`dependencies`中.自定义集成可以增加内建或自定义集成到`dependencies`中.
 
-## After dependencies
+## After dependencies(后依赖项)
 
-This option is used to specify dependencies that might be used by the integration but aren't essential. When `after_dependencies` is present, set up of an integration will wait for the `after_dependencies` to be set up before being set up. It will also make sure that the requirements of `after_dependencies` are installed so methods from the integration can be safely imported.  For example, if the `camera` integration might use the `stream` integration in certain configurations, adding `stream` to `after_dependencies` of `camera`'s manifest, will ensure that `stream` is loaded before `camera` if it is configured.  If `stream` is not configured, `camera` will still load.
+此选项用于指定集成可能使用的依赖项. 当`after_dependencies`存在时,集成的设置将等待`after_dependencies`设置完成后,再进行设置. 它还将确保安装`after_dependencies`的要求,以便可以安全地导入集成中的方法. 例如,如果`camera`集成可能在某些配置中使用`stream`集成,则将`stream`添加到`camera`的清单中的`after_dependencies`中,将确保在设置`camera`之前加载`stream`. 如果没有配置`stream`,`camera`仍将加载.
 
-Built-in integrations shall only specify other built-in integrations in `after_dependencies`. Custom integrations may specify both built-in and custom integrations in `after_dependencies`.
+内建集成应该只增加其他内建集成到`after_dependencies`中.自定义集成可以增加内建或自定义集成到`after_dependencies`中.
 
-## Code Owners
+## Code Owners(代码所有者)
 
-GitHub usernames or team names of people that are responsible for this integration. You should add at least your GitHub username here, as well as anyone who helped you to write code that is being included.
+此选项用于指定负责此集成的人员的GitHub用户名或团队名称. 您应该至少在此处添加您的GitHub用户名,以及任何帮助您编写代码人员的用户名.
 
-## Config Flow
+## Config Flow(配置流)
 
-Specify the `config_flow` key if your integration has a config flow to create a config entry. When specified, the file `config_flow.py` needs to exist in your integration.
+如果您的集成有一个用来创建配置条目的配置流,则需要指定 `config_flow` 键. 当指定以后,集成中则必须包含 `config_flow.py`文件.
 
 ```json
 {
@@ -116,24 +108,24 @@ Specify the `config_flow` key if your integration has a config flow to create a 
 }
 ```
 
-## Requirements
+## Requirements (Python依赖包)
 
-Requirements are Python libraries or modules that you would normally install using `pip` for your component. Home Assistant will try to install the requirements into the `deps` subdirectory of the Home Assistant [configuration directory](https://www.home-assistant.io/docs/configuration/) if you are not using a `venv` or in something like `path/to/venv/lib/python3.6/site-packages` if you are running in a virtual environment. This will make sure that all requirements are present at startup. If steps fail, like missing packages for the compilation of a module or other install errors, the component will fail to load.
+通过`pip`正常安装的各种Python库和模块,都可以通过Requirements来添加. Home Assistant会尝试将这些依赖包安装到Home Assistant[配置目录](https://www.home-assistant.io/docs/configuration/)的`deps`子目录中.当然前提是您没有使用`venv`或`path/to/venv/lib/python3.6/site-packages`(运行在虚拟环境中时)之类的内容. 这里会确保所有依赖包在启动时都存在. 如果某些步骤失败,比如缺少模块的编译或其他安装错误,则该组件(component)将无法加载.
 
-Requirements is an array of strings. Each entry is a `pip` compatible string. For example, the media player Cast platform depends on the Python package PyChromecast v3.2.0: `["pychromecast==3.2.0"]`.
+Requirements是字符串数组.每一个条目都是兼容`pip`的字符串. 例如,媒体播放器Cast平台依赖于Python包PyChromecast v3.2.0,则需要定义 `["pychromecast==3.2.0"]`.
 
-### Custom requirements during development & testing
+### 在开发测试期间需要的自定义Python依赖包(requirements)
 
-During the development of a component, it can be useful to test against different versions of a requirement. This can be done in two steps, using `pychromecast` as an example:
+在开发组件时,可以使用不同版本的依赖包进行测试,只需要两步即可. 使用`pychromecast`作为示例:
 
 ```shell
 pip install pychromecast==3.2.0 --target ~/.homeassistant/deps
 hass --skip-pip-packages pychromecast
 ```
 
-This will use the specified version, and prevent Home Assistant from trying to override it with what is specified in `requirements`. To prevent any package from being automatically overridden without specifying dependencies, you can launch Home Assistant with the global `--skip-pip` flag.
+这样就可以使用指定的依赖包版本,并阻止Home Assistant尝试使用`requirements`中指定的版本覆盖它. 要防止任何依赖包在不特别指定的情况下自动被覆盖,可以使用全局`--skip-pip`参数来启动Home Assistant.
 
-If you need to make changes to a requirement to support your component, it's also possible to install a development version of the requirement using `pip install -e`:
+如果您需要修改Python依赖包来支持您的组件,也可以使用`pip install -e`来安装依赖包的开发版本:
 
 ```shell
 git clone https://github.com/balloob/pychromecast.git
@@ -141,7 +133,7 @@ pip install -e ./pychromecast
 hass --skip-pip-packages pychromecast
 ```
 
-It is also possible to use a public git repository to install a requirement.  This can be useful, for example, to test changes to a requirement dependency before it's been published to PyPI. The following example will install the `except_connect` branch of the `pycoolmaster` library directly from GitHub unless version `0.2.2` is currently installed:
+也可以使用公共GitHub仓库来安装依赖包,这很有用.例如在发布到PyPI之前,测试对依赖包的更改.下面的示例可以直接从GitHub安装`pycoolmaster`库的`except_connect`分支下的`0.2.2`版本,当然如果已经安装`0.2.2`版本,则不再安装.
 
 ```json
 {
@@ -149,15 +141,15 @@ It is also possible to use a public git repository to install a requirement.  Th
 }
 ```
 
-### Custom integration requirements
+### 自定义集成的Python依赖包
 
-Custom integrations should only include requirements that are not required by the Core [requirements.txt](https://github.com/home-assistant/core/blob/dev/requirements.txt).
+自定义集成使用的依赖包,不应该包含核心集成需要的依赖包.具体参考[requirements.txt](https://github.com/home-assistant/core/blob/dev/requirements.txt).
 
 ## Loggers
 
 The `loggers` field is a list of names that the integration's requirements use for their [getLogger](https://docs.python.org/3/library/logging.html?highlight=logging#logging.getLogger) calls.
 
-## Bluetooth
+## Bluetooth(蓝牙)
 
 If your integration supports discovery via bluetooth, you can add a matcher to your manifest. If the user has the `bluetooth` integration loaded, it will load the `bluetooth` step of your integration's config flow when it is discovered. We support listening for Bluetooth discovery by matching on `connectable` `local_name`, `service_uuid`, `service_data_uuid`, `manufacturer_id`, and `manufacturer_data_start`. The `manufacturer_data_start` field expects a list of bytes encoded as integer values from 0-255. The manifest value is a list of matcher dictionaries. Your integration is discovered if all items of any of the specified matchers are found in the Bluetooth data. It's up to your config flow to filter out duplicates.
 

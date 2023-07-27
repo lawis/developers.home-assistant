@@ -2,17 +2,17 @@
 title: "创建你的第一个集成(Integration)"
 ---
 
-好的,现在就可以为你的第一个集成编写代码了. 超级棒. 别担心, 我们已经尽力让这件事事儿变得简单. 在Home Assistant开发环境中, 输入以下内容并按照说明进行操作:
+好的,现在就可以为你的第一个集成编写代码了. 当然,我们已经尽力让这件事事儿变得简单. 在Home Assistant开发环境(Visual Studio Code 自带的终端)中, 输入以下内容并按照说明进行操作:
 
 ```shell
 python3 -m script.scaffold integration
 ```
 
-This will set you up with everything that you need to build an integration that is able to be set up via the user interface. More extensive examples of integrations are available from [our example repository](https://github.com/home-assistant/example-custom-config/tree/master/custom_components/).
+这个命令会通过命令行交互界面来引导你完成集成的创建. 更多的示例可以在[示例仓库](https://developers.home-assistant.io/docs/en/creating_integration_index.html)中查看.
 
-## The minimum
+## 最小可执行集成
 
-The scaffold integration contains a bit more than just the bare minimum. The minimum is that you define a `DOMAIN` constant that contains the domain of the integration. The second part is that it needs to define a setup method that returns a boolean if the set up was successful.
+脚手架集成包含的内容比最小可执行集成要多一些. 最小可执行集成只定义了一个`DOMAIN`常量, 该常量包含集成的域信息. 还需要定义一个`setup`方法, 该方法返回一个布尔值, 用于指示集成是否初始化成功.
 
 ```python
 DOMAIN = "hello_state"
@@ -25,7 +25,7 @@ def setup(hass, config):
     return True
 ```
 
-And if you prefer an async component:
+如果你需要的是异步执行的集成,可以这样定义:
 
 ```python
 DOMAIN = "hello_state"
@@ -37,8 +37,7 @@ async def async_setup(hass, config):
     # Return boolean to indicate that initialization was successful.
     return True
 ```
-Create a file `<config_dir>/custom_components/hello_state/__init__.py` with one of the two codeblocks.
-In addition a manifest file is required with below keys as the bare minimum. Create `<config_dir>/custom_components/hello_state/manifest.json`.
+使用以上两个代码块中的一个来创建文件 `<config_dir>/custom_components/hello_state/__init__.py` .此外还需要一个清单(manifest)文件. 使用以下信息来创建文件`<config_dir>/custom_components/hello_state/manifest.json`.
 
 ```json
 {
@@ -48,8 +47,8 @@ In addition a manifest file is required with below keys as the bare minimum. Cre
 }
 ```
 
-To load this, add `hello_state:` to your `configuration.yaml` file. 
+要加载它,请将`hello_state:`添加到您的`configuration.yaml`文件中.
 
-## What the scaffold offers
+## 脚手架集成还包含什么
 
-When using the scaffold script, it will go past the bare minimum of an integration. It will include a config flow, tests for the config flow and basic translation infrastructure to provide internationalization for your config flow.
+使用脚手架脚本, 会生成比最小可执行集成更多的内容. 脚手架集成包含了配置流,测试配置流,以及方便进行多语言翻译的基本文件结构.

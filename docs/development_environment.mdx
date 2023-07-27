@@ -10,7 +10,7 @@ export const RepositoryOpener = () => {
   const repoUrl = `vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=${encodeURIComponent(value)}`;
   return <div>
     <input onInput={(ev) => setValue(ev.target.value)} style={{width: "80%", display: "inline-block", marginRight: 16}} />
-    <a href={repoUrl}><button style={{cursor: value == "" ? "default" : "pointer"}} disabled={value == ""}>Open</button></a>
+    <a href={repoUrl}><button style={{cursor: value == "" ? "default" : "pointer"}} disabled={value == ""}>打开</button></a>
   </div>
 }
 ```
@@ -19,45 +19,46 @@ export const RepositoryOpener = () => {
 
 ## 使用 Visual Studio Code + devcontainer 开发
 
-The easiest way to get started with development is to use Visual Studio Code with devcontainers. This approach will create a preconfigured development environment with all the tools you need. This approach is enabled for all Home Assistant repositories. [Learn more about devcontainers.](https://code.visualstudio.com/docs/devcontainers/containers)
+开始开发最简单的方法就是使用Visual Studio Code 再加上 devcontainers. 这种方法会创建一个包含所有需要的工具包的开发环境.这种方法适用于所有的Home Assistant仓库.[了解更多关于devcontainers的信息.](https://code.visualstudio.com/docs/devcontainers/containers)
+
 
 :::note
-As this approach uses containers, you may face challenges exposing hardware like USB devices & adapters (onboard Bluetooth, Zigbee, ...) into the container for testing. This is possible when developing on a Linux host; however, you cannot directly access such hardware if you are using a Windows or MacOS computer for development.
+因为这种方法使用了容器技术,您可能会遇到容器无法挂载宿主机硬件(例如USB设备,蓝牙zigbee适配器等)的问题.在Linux主机上没有此问题,在Windows和Mac OS主机上,会遇到此类问题.
 :::
 
-**Prerequisites**
+**必要条件**
 
 - [Docker](https://docs.docker.com/get-docker/)
 - [Visual Studio code](https://code.visualstudio.com/)
 - [Git](https://git-scm.com/)
 
-**Getting started:**
+**快速开始**
 
-1. Go to [Home Assistant core repository](https://github.com/home-assistant/core) and click "fork".
-2. Once your fork is created, copy the URL of your fork and paste it below, then click "Open":
+1. 打开 [Home Assistant 内核(Core) 仓库](https://github.com/home-assistant/core) 点击 "fork" 按钮.
+2. 当复刻(Fork)创建以后,复制复刻(fork)的URL地址并粘贴到以下文本框中,点击"打开"按钮:
    <RepositoryOpener />
-3. Your browser will prompt you if you want to use Visual Studio Code to open the link, click "Open Link".
-4. When Visual Studio Code asks if you want to install the Remote extension, click "Install".
-5. The Dev Container image will then be built (this may take a few minutes), after this your development environment will be ready.
-6. You can verify that your dev container is set up properly by the following:
-    * Open the command palette in Visual Studio Code - `Shift`+`Command`+`P`(Mac) / `Ctrl`+`Shift`+`P` (Windows/Linux).
-    * Select `Tasks: Run Task` -> `Run Home Assistant Core`
-    * A terminal should open and begin outputting activity. Check for errors and wait for the output to stop/slow down.
-    * Navigate a web browser to `https://localhost:8123`, and you should see the Home Assistant setup screen.
+3. 浏览器将提示您是否要使用Visual Studio Code打开链接,单机"打开链接".
+4. 当 Visual Studio Code 询问您是否要安装远程扩展时，单击"安装".
+5. 几分钟以后开发容器(Dev Container)镜像将被构建, 之后开发环境就准备就绪了.
+6. 你可以通过以下方式验证开发容器是否已经正确设置:
+    * 在Visual Studio Code中打开命令选项面板 - `Shift`+`Command`+`P`(Mac) / `Ctrl`+`Shift`+`P` (Windows/Linux).
+    * 选择 `Tasks: Run Task` -> `Run Home Assistant Core`
+    * 终端会被打开并开始输出活动信息. 检查是否报错并等待输出停止.
+    * 在浏览器中打开 `https://localhost:8123`, 你应该可以看到Home Assistant的设置界面.
 
-In the future, if you want to get back to your development environment: open Visual Studio Code, click on the "Remote Explorer" button in the sidebar, select "Containers" at the top of the sidebar.
+后续,如果您想回到开发环境,打开Visual Studio Code,单击侧边栏中的"远程资源管理器",选择和您复刻(fork)仓库对应的容器即可.
 
-### Tasks
+### 任务
 
-The devcontainer comes with some useful tasks to help you with development, you can start these tasks by opening the command palette with `Shift`+`Command`+`P`(Mac) / `Ctrl`+`Shift`+`P` (Windows/Linux) and select `Tasks: Run Task` then select the task you want to run.
+Devcontainer附带了一些有用的任务来帮助您开发,使用`Shift`+`Command`+`P`(Mac) / `Ctrl`+`Shift`+`P` (Windows/Linux)打开命令面板,输入`Tasks: Run Task`,在选择您需要运行的任务即可.
 
-When a task is currently running (like `Preview` for the docs), it can be restarted by opening the command palette and selecting `Tasks: Restart Running Task`, then select the task you want to restart.
+如果一个任务正在运行(比如文档的`预览(Review)任务`),您希望重启它,可以打开命令面板输入`Tasks: Restart Running Task`,再选择需要重启的任务即可.
 
-### Debugging with Visual Studio Code
+### 使用Visual Studio Code进行调试
 
-If the Dev Container was set up correctly - it supports debugging by default, out-of-the-box. It provides the necessary debug configurations, so hitting F5 should launch Home Assistant. Any breakpoints put in the code should be triggered, and the debugger should stop. 
+如果开发容器(Dev Container)设置正确,默认就支持调试.它提供了必要的调试配置,只需要按`F5`键来启动Home Assistant,在代码中设置的断点就会被触发,调试器也会停在这里.
 
-It is also possible to debug a remote Home Assistance instance (e.g., production instance) by following the procedure described [here](https://www.home-assistant.io/integrations/debugpy/).
+如何需要调试远程的Home Assistant实例(例如 生产实例)也是可以的,只需要根据[这里](https://www.home-assistant.io/integrations/debugpy/)的步骤执行即可.
 
 ## Manual Environment
 

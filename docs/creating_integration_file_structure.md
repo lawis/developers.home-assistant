@@ -1,32 +1,32 @@
 ---
-title: "Integration File Structure"
-sidebar_label: "File Structure"
+title: "集成的文件结构"
+sidebar_label: "文件结构"
 ---
 
-Each integration is stored inside a directory named after the integration domain. The domain is a short name consisting of characters and underscores. This domain has to be unique and cannot be changed. Example of the domain for the mobile app integration: `mobile_app`. So all files for this integration are in the folder `mobile_app/`.
+每个集成都存储在以集成域(Domain)命名的目录中. 域是一个由字符和下划线组成的短名称. 此域必须是唯一的, 且不能更改. 例如,移动应用程序集成的域为`mobile_app`. 因此,该集成的所有文件都在`mobile_app/`文件夹中.
 
-The bare minimum content of this folder looks like this:
+最小可执行集成的文件结构如下:
 
-- `manifest.json`: The manifest file describes the integration and its dependencies. [More info](creating_integration_manifest.md)
-- `__init__.py`: The component file. If the integration only offers a platform, you can keep this file limited to a docstring introducing the integration `"""The Mobile App integration."""`.
+- `manifest.json`: 清单(manifest)文件描述了集成及其依赖项. [更多信息](creating_integration_manifest.md)
+- `__init__.py`: 组件(component)文件. ***TODO:理解不明确*** 如果集成只提供一个平台, 则可以将此文件限制为介绍集成的文档字符串(docstring)`"""The Mobile App integration."""`.
 
-## Integrating devices - `light.py`, `switch.py` etc
+## 添加各种设备 - `light.py`, `switch.py` 等
 
-If your integration is going to integrate one or more devices, you will need to do this by creating a platform that interacts with an entity integration. For example, if you want to represent a light device inside Home Assistant, you will create `light.py`, which will contain a light platform for the light integration.
+如果您的集成要添加一个或多个设备, 您需要创建一个与实体集成(entity integration)交互的平台(platform). 例如,如果您想在Home Assistant中表示一个灯光设备(light device), 则需要创建`light.py`, 该文件将包含一个灯光平台(light platform), 用于灯光集成(light integration). 该平台(light platform)将负责与灯光设备(light device)交互, 并将其表示为实体(entity). 
 
-- More info on [available entity integrations](core/entity.md).
-- More info on [creating platforms](creating_platform_index.md).
+- 更多信息 [可用的实体集成](core/entity.md).
+- 更多信息 [创建平台](creating_platform_index.md).
 
-## Integrating services - `services.yaml`
+## 添加服务 - `services.yaml`
 
-If your integration is going to register services, it will need to provide a description of the available services. The description is stored in `services.yaml`. [More information about `services.yaml`.](dev_101_services.md)
+如果您的集成要注册服务, 则需要提供可用服务的描述. 描述存储在`services.yaml`中. [更多信息](dev_101_services.md)
 
-## Where Home Assistant looks for integrations
-
-Home Assistant will look for an integration when it sees the domain referenced in the config file (i.e. `mobile_app:`) or if it is a dependency of another integration. Home Assistant will look at the following locations:
+## Home Assistant在哪里查找集成
+当Home Assistant发现配置文件中引用了目标集成的域(例如`mobile_app:`), 或者另一个集成依赖目标集成时, 将查找这个集成. Home Assistant将查找以下位置:
 
 - `<config directory>/custom_components/<domain>`
-- `homeassistant/components/<domain>` (built-in integrations)
+- `homeassistant/components/<domain>` (内建集成)
 
-You can override a built-in integration by having an integration with the same domain in your `<config directory>/custom_components` folder. [The `manifest.json` file requires a version tag when you override a core integration](creating_integration_manifest/#version). An overridden core integration can be identified by a specific icon in the upper right corner of the integration box in the overview [![Open your Home Assistant instance and show your integrations.](https://my.home-assistant.io/badges/integrations.svg)](https://my.home-assistant.io/redirect/integrations/)
-Note that overriding built-in integrations is not recommended as you will no longer get updates. It is recommended to pick a unique name.
+您也可以覆盖内建集成,只需要在`<config directory>/custom_components` 文件夹中创建新集成,并使用和被覆盖集成同样的域即可. [如果您需要覆盖内核集成,需要在`manifest.json`文件中增加版本标签(version tag)](creating_integration_manifest/#version). 想要区分一个被覆盖的核心集成,只需要注意集成框的右上角有一个特定的图标. [![打开你的Home Assistant实例并显示你的集成.](https://my.home-assistant.io/badges/integrations.svg)](https://my.home-assistant.io/redirect/integrations/)
+
+不建议覆盖内建集成,这样您将无法获得更新. 建议给域起一个唯一的名称.
