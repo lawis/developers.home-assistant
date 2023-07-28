@@ -151,13 +151,13 @@ The `loggers` field is a list of names that the integration's requirements use f
 
 ## Bluetooth(蓝牙)
 
-If your integration supports discovery via bluetooth, you can add a matcher to your manifest. If the user has the `bluetooth` integration loaded, it will load the `bluetooth` step of your integration's config flow when it is discovered. We support listening for Bluetooth discovery by matching on `connectable` `local_name`, `service_uuid`, `service_data_uuid`, `manufacturer_id`, and `manufacturer_data_start`. The `manufacturer_data_start` field expects a list of bytes encoded as integer values from 0-255. The manifest value is a list of matcher dictionaries. Your integration is discovered if all items of any of the specified matchers are found in the Bluetooth data. It's up to your config flow to filter out duplicates.
+如果您的集成支持通过蓝牙发现设备,您需要在清单文件中增加匹配器(matcher).当匹配器发现了设备,并且用户已经加载了`bluetooth`集成,它会加载您的集成的配置流中的`bluetooth`相关步骤.我们支持通过匹配`connectable` `local_name` `service_uuid` `service_data_uuid` `manufacturer_id` `manufacturer_data_start`来监听并发现蓝牙设备. `manufacturer_data_start`字段需要一个以整型0-255编码的字节列表.清单值是匹配器字典的列表.如果在蓝牙数据中找到了任何指定匹配器的所有项,则会发现您的集成.过滤重复项是由您的配置流来完成的.任何指定的匹配器发现了合法的蓝牙数据,则会通知到您的集成.如果有重复的数据,需要您集成的配置流进行过滤处理.
 
-Matches for `local_name` must be at least three (3) characters long and may not contain any patterns in the first three (3) characters.
+`local_name`字段的匹配字符串至少要有三个字符,并且前三个字符中不能包含任何匹配模式(patterns).
 
-If the device only needs advertisement data, setting `connectable` to `false` will opt-in to receive discovery from Bluetooth controllers that do not have support for making connections.
+如果设备只需要广播数据,将`connectable`设置为`false`,这样即使设备不支持连接,也可以接收到来自蓝牙控制器的发现通知.
 
-The following example will match Nespresso Prodigio machines:
+下面的示例用于匹配Nespresso Prodigio咖啡机:
 
 ```json
 {
@@ -169,7 +169,7 @@ The following example will match Nespresso Prodigio machines:
 }
 ```
 
-The following example will match service data with a 128 bit uuid used for SwitchBot bot and curtain devices:
+下面的示例用于匹配SwitchBot和窗帘设备包含128位uuid的服务数据:
 
 ```json
 {
@@ -181,7 +181,7 @@ The following example will match service data with a 128 bit uuid used for Switc
 }
 ```
 
-If you want to match service data with a 16 bit uuid, you will have to convert it to a 128 bit uuid first, by replacing the 3rd and 4th byte in `00000000-0000-1000-8000-00805f9b34fb` with the 16 bit uuid. For example, for Switchbot sensor devices, the 16 bit uuid is `0xfd3d`, the corresponding 128 bit uuid becomes `0000fd3d-0000-1000-8000-00805f9b34fb`. The following example will therefore match service data with a 16 bit uuid used for SwitchBot sensor devices:
+如果你想要匹配16位uuid的服务数据,需要先将其转换成128位uuid,方法是替换`00000000-0000-1000-8000-00805f9b34fb`中的第三个和第四个字节.例如,Switchbot传感器设备的16位uuid是`0xfd3d`,对应的128位uuid就是`0000fd3d-0000-1000-8000-00805f9b34fb`.下面的示例用于匹配SwitchBot传感器设备的16位uuid服务数据:
 
 ```json
 {
@@ -193,7 +193,7 @@ If you want to match service data with a 16 bit uuid, you will have to convert i
 }
 ```
 
-The following example will match HomeKit devices:
+下面的示例用来匹配HomeKit设备:
 
 
 ```json
@@ -208,11 +208,11 @@ The following example will match HomeKit devices:
 ```
 
 
-## Zeroconf
+## Zeroconf(零配置网络)
 
-If your integration supports discovery via [Zeroconf](https://en.wikipedia.org/wiki/Zero-configuration_networking), you can add the type to your manifest. If the user has the `zeroconf` integration loaded, it will load the `zeroconf` step of your integration's config flow when it is discovered.
+如果你的集成通过[零配置网络(Zeroconf)](https://en.wikipedia.org/wiki/Zero-configuration_networking)来发现设备,你可以在清单文件中增加相关类型. 当发现此类设备,并且用户已经加载了`zeroconf`集成,它会加载您的集成的配置流中的`zeroconf`相关步骤. 
 
-Zeroconf is a list so you can specify multiple types to match on.
+Zeroconf是一个列表,所以你可以指定多个类型来匹配.
 
 ```json
 {
@@ -220,7 +220,9 @@ Zeroconf is a list so you can specify multiple types to match on.
 }
 ```
 
-Certain zeroconf types are very generic (i.e., `_printer._tcp.local.`, `_axis-video._tcp.local.` or `_http._tcp.local`). In such cases you should include a Name (`name`), or Properties (`properties`) filter:
+某些zeroconf类型是非常通用的(比如`_printer._tcp.local.`, `_axis-video._tcp.local.`, `_http._tcp.local`).
+
+Certain zeroconf types are very generic (i.e., `_printer._tcp.local.`, `_axis-video._tcp.local.` or `_http._tcp.local`). 这种情况下,您可以添加 `name` 或者 `properties` 来过滤您需要匹配的设备.
 
 ```json
 {
@@ -232,7 +234,7 @@ Certain zeroconf types are very generic (i.e., `_printer._tcp.local.`, `_axis-vi
 }
 ```
 
-Note that all values in the `properties` filters must be lowercase, and may contain a fnmatch type wildcard.
+请注意,`properties`属性中的所有值都必须是小写的,并且可以包含fnmatch(Unix shell 风格)的通配符.
 
 ## SSDP
 
