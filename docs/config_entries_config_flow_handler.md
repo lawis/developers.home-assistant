@@ -1,20 +1,18 @@
 ---
-title: Config Flow
+title: "Config Flow(配置流程)"
 ---
 
-Integrations can be set up via the user interface by adding support for a config flow to create a config entry. Components that want to support config entries will need to define a Config Flow Handler. This handler will manage the creation of entries from user input, discovery or other sources (like Home Assistant OS).
+通过在配置流程中增加配置条目,就可以在用户界面中设置集成. 想要通过配置条目来设置组件,就必须定义配置流程回调子程序(Config Flow Handler). 回调子程序(handler)可以管理条目的创建,这些条目可以来自用户输入,自动发现,或者其他来源(比如 Home Assistant OS).
 
-Config Flow Handlers control the data that is stored in a config entry. This means that there is no need to validate that the config is correct when Home Assistant starts up. It will also prevent breaking changes, because we will be able to migrate configuration entries to new formats if the version changes.
+配置流程回调子程序操控着存储在配置条目中的数据. 这样的好处在于Home Assistant启动时,不需要验证配置是否正确. 这也可以防止因为版本变化而导致的破坏性变化,因为我们可以在版本变化时,将配置条目处理为新版本支持的格式.
 
-When instantiating the handler, Home Assistant will make sure to load all dependencies and install the requirements of the component.
+## Updating the manifest(设置清单文件)
 
-## Updating the manifest
+你需要在集成的清单文件(manifest.json)文件中设置,以便Home Assistant知道您的集成有配置流程. 在清单文件中添加`config_flow: true`即可.具体请参考([清单文件](creating_integration_manifest.md#config-flow)).
 
-You need to update your integrations manifest to inform Home Assistant that your integration has a config flow. This is done by adding `config_flow: true` to your manifest ([docs](creating_integration_manifest.md#config-flow)).
+## Defining your config flow(定义配置流程)
 
-## Defining your config flow
-
-Config entries uses the [data flow entry framework](data_entry_flow_index.md) to define their config flows. The config flow needs to be defined in the file `config_flow.py` in your integration folder, extend `homeassistant.config_entries.ConfigFlow` and pass a `domain` key as part of inheriting `ConfigFlow`.
+配置条目使用[数据流条目框架(data flow entry framework)](data_entry_flow_index.md)来定义其配置流. 配置流需要在集成文件夹的`config_flow.py`文件中定义,扩展`homeassistant.config_entries.ConfigFlow`,并传递`domain`键作为继承`ConfigFlow`的一部分.
 
 ```python
 from homeassistant import config_entries
@@ -30,7 +28,7 @@ class ExampleConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 Once you have updated your manifest and created the `config_flow.py`, you will need to run `python3 -m script.hassfest` (one time only) for Home Assistant to activate the config entry for your integration.
 
-## Defining steps
+## Defining steps(定义步骤)
 
 Your config flow will need to define steps of your configuration flow. Each step is identified by a unique step name (`step_id`). The step callback methods follow the pattern `async_step_<step_id>`. The docs for [Data Entry Flow](data_entry_flow_index.md) describe the different return values of a step. Here is an example of how to define the `user` step:
 
@@ -109,33 +107,35 @@ A Unique ID is used to match a config entry to the underlying device or API. The
     self._abort_if_unique_id_configured(updates={CONF_HOST: host, CONF_PORT: port})
 ```
 
-#### Example acceptable sources for a unique ID
+#### 唯一ID可以被接受的来源示例
 
-- Serial number of a device
-- MAC address: formatted using `homeassistant.helpers.device_registry.format_mac`; Only obtain the MAC address from the device API or a discovery handler. Tools that rely on reading the arp cache or local network access such as `getmac` will not function in all supported network environments and are not acceptable.
-- Latitude and Longitude or other unique Geo Location
-- Unique identifier that is physically printed on the device or burned into an EEPROM
+- 设备序列号
+- MAC地址: 使用 `homeassistant.helpers.device_registry.format_mac`格式化; 只可以通过设备API或者通过发现回调程序(discovery handler)获取MAC地址.依赖于读取ARP缓存,或者访问本地网络(例如 `getmac`)的工具,无法在支持的网络环境中正常工作,因此将不被接受.
+- 经纬度或者其他有唯一性的地理位置.
+- 直接打印在设备上或者烧录在EEPROM中的唯一ID. 
 
-#### Sometimes acceptable sources for a unique ID for local devices
+#### 本地设备唯一ID的可接受来源
 
-- Hostname: If a subset of the hostname contains one of the acceptable sources, this portion can be used
+- 主机名 : 如果主机名的子集包含可接受的源,则可以使用这一部分.
 
-#### Sometimes acceptable sources for a unique ID for cloud services
+#### 云服务的唯一ID的可接受来源
 
-- Email Address: Must be normalized to lowercase
-- Username: Must be normalized to lowercase if usernames are case-insensitive.
-- Account ID: Must not have collisions
+- 邮件地址: 必须格式合法,且为小写.
+- 用户名: 必须格式合法,如果不区分大小写,则必须为小写.
+- 账户ID: 必须不可重复.
 
-#### Unacceptable sources for a unique ID
+#### 不被接受的唯一ID
 
-- IP Address
-- Device Name
-- Hostname if it can be changed by the user
+- IP地址
+- 设备名称
+- 用户可以修改的主机名
 - URL
 
-### Unignoring
+### Unignoring(重新发现忽略的条目)
 
-Your configuration flow can add support to re-discover the previously ignored entry by implementing the unignore step in the config flow.
+您的配置流程可以通过在配置流程中实现unignore步骤来重新发现先前被忽略的条目.
+
+```python
 
 ```python
 async def async_step_unignore(self, user_input):

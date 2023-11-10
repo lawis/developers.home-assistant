@@ -1,9 +1,9 @@
 {
   "name": "developers-home-assistant-v-2",
   "version": "0.0.0",
-  "private": true,
+  "private": false,
   "scripts": {
-    "start": "by-node-env",
+    "start": "by-node-env ",
     "start:development": "docusaurus start",
     "start:devcontainer": "docusaurus start --poll --host 0.0.0.0",
     "build": "docusaurus build",

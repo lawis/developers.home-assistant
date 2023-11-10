@@ -210,7 +210,7 @@ The `loggers` field is a list of names that the integration's requirements use f
 
 ## Zeroconf(零配置网络)
 
-如果你的集成通过[零配置网络(Zeroconf)](https://en.wikipedia.org/wiki/Zero-configuration_networking)来发现设备,你可以在清单文件中增加相关类型. 当发现此类设备,并且用户已经加载了`zeroconf`集成,它会加载您的集成的配置流中的`zeroconf`相关步骤. 
+如果你的集成通过[零配置网络(Zeroconf)](https://en.wikipedia.org/wiki/Zero-configuration_networking)来发现设备等,你可以在清单文件中增加相关类型. 当发现此类设备,并且用户已经加载了`zeroconf`集成,它会加载您的集成的配置流中的`zeroconf`相关步骤. 
 
 Zeroconf是一个列表,所以你可以指定多个类型来匹配.
 
@@ -236,9 +236,9 @@ Certain zeroconf types are very generic (i.e., `_printer._tcp.local.`, `_axis-vi
 
 请注意,`properties`属性中的所有值都必须是小写的,并且可以包含fnmatch(Unix shell 风格)的通配符.
 
-## SSDP
+## SSDP(简单服务发现协议)
 
-If your integration supports discovery via [SSDP](https://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol), you can add the type to your manifest. If the user has the `ssdp` integration loaded, it will load the `ssdp` step of your integration's config flow when it is discovered. We support SSDP discovery by the SSDP ST, USN, EXT, and Server headers (header names in lowercase), as well as data in [UPnP device description](https://openconnectivity.org/developer/specifications/upnp-resources/upnp/basic-device-v1-0/). The manifest value is a list of matcher dictionaries, your integration is discovered if all items of any of the specified matchers are found in the SSDP/UPnP data. It's up to your config flow to filter out duplicates.
+如果你的集成支持通过 [SSDP](https://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol) 发现设备等, 你可以在清单文件中增加相关类型. If the user has the `ssdp` integration loaded, it will load the `ssdp` step of your integration's config flow when it is discovered. We support SSDP discovery by the SSDP ST, USN, EXT, and Server headers (header names in lowercase), as well as data in [UPnP device description](https://openconnectivity.org/developer/specifications/upnp-resources/upnp/basic-device-v1-0/). The manifest value is a list of matcher dictionaries, your integration is discovered if all items of any of the specified matchers are found in the SSDP/UPnP data. It's up to your config flow to filter out duplicates.
 
 The following example has one matcher consisting of three items, all of which must match for discovery to happen by this config.
 
@@ -385,13 +385,13 @@ For example:
 }
 ```
 
-## Integration Quality Scale
+## Integration Quality Scale(集成质量评价表)
 
-The [Integration Quality Scale](https://www.home-assistant.io/docs/quality_scale/) scores an integration on the code quality and user experience. Each level of the quality scale consists of a list of requirements. If an integration matches all requirements, it's considered to have reached that level.
+[Integration Quality Scale(集成质量评价表)](https://www.home-assistant.io/docs/quality_scale/) 基于代码质量和用户体验给集成评分. Each level of the quality scale consists of a list of requirements. If an integration matches all requirements, it's considered to have reached that level.
 
 When your integration has no score, then don't add it to the manifest of your integration. However, be sure to look at the [Integration Quality Scale](https://www.home-assistant.io/docs/quality_scale/) list of requirements. It helps to improve the code and user experience tremendously.
 
-We highly recommend getting your integration scored.
+我们强烈建议您对您的集成进行评分.
 
 ```json
 {
@@ -399,23 +399,22 @@ We highly recommend getting your integration scored.
 }
 ```
 
-## IoT Class
+## IoT Class(IoT 类)
 
-The [IoT Class][iot_class] describes how an integration connects with, e.g., a device or service. For more information
-about IoT Classes, read the blog about ["Classifying the Internet of Things"][iot_class].
+[IoT Class][iot_class] 描述了集成如何与设备或者服务等进行连接. 关于IoT Classes的更多信息,请阅读博文["Classifying the Internet of Things(物联网分类)"][iot_class].
 
-The following IoT classes are accepted in the manifest:
+清单中接受以下IoT类:
 
-- `assumed_state`: We are unable to get the state of the device. Best we can do is to assume the state based on our last command.
-- `cloud_polling`: The integration of this device happens via the cloud and requires an active internet connection. Polling the state means that an update might be noticed later.
-- `cloud_push`: Integration of this device happens via the cloud and requires an active internet connection. Home Assistant will be notified as soon as a new state is available.
-- `local_polling`: Offers direct communication with device. Polling the state means that an update might be noticed later.
-- `local_push`: Offers direct communication with device. Home Assistant will be notified as soon as a new state is available.
-- `calculated`: The integration does not handle communication on its own, but provides a calculated result.
+- `assumed_state`: (假设状态)We are unable to get the state of the device. Best we can do is to assume the state based on our last command.
+- `cloud_polling`: (云端轮询)The integration of this device happens via the cloud and requires an active internet connection. Polling the state means that an update might be noticed later.
+- `cloud_push`: (云端推送)Integration of this device happens via the cloud and requires an active internet connection. Home Assistant will be notified as soon as a new state is available.
+- `local_polling`: (本地轮询)Offers direct communication with device. Polling the state means that an update might be noticed later.
+- `local_push`: (本地推送)Offers direct communication with device. Home Assistant will be notified as soon as a new state is available.
+- `calculated`: (计算)The integration does not handle communication on its own, but provides a calculated result.
 
 [iot_class]: https://www.home-assistant.io/blog/2016/02/12/classifying-the-internet-of-things/#classifiers
 
-## Virtual integration
+## Virtual integration(虚拟集成)
 
 Some products are supported by integrations that are not named after the product. For example, Roborock vacuums are integrated via the Xiaomi Miio integration, and the IKEA SYMFONISK product line can be used with the Sonos integration.
 
