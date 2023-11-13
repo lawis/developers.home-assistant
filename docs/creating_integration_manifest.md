@@ -256,9 +256,9 @@ The following example has one matcher consisting of three items, all of which mu
 
 ## HomeKit
 
-If your integration supports discovery via HomeKit, you can add the supported model names to your manifest. If the user has the `zeroconf` integration loaded, it will load the `homekit` step of your integration's config flow when it is discovered.
+如果您的集成支持通过HomeKit进行发现，可以将支持的模型名称添加到您的清单文件中。如果用户加载了Zeroconf集成，当发现时，它将加载您集成的配置流程中的HomeKit步骤。
 
-HomeKit discovery works by testing if the discovered modelname starts with any of the model names specified in the manifest.json.
+HomeKit发现的工作方式是通过测试发现的模型名称是否以清单文件中指定的任何模型名称开头。
 
 ```json
 {
@@ -270,15 +270,15 @@ HomeKit discovery works by testing if the discovered modelname starts with any o
 }
 ```
 
-Discovery via HomeKit does not mean that you have to talk the HomeKit protocol to communicate with your device. You can communicate with the device however you see fit.
+通过HomeKit进行发现并不意味着您必须使用HomeKit协议与设备进行通信。您可以按照自己的意愿与设备进行通信。
 
-When a discovery info is routed to your integration because of this entry in your manifest, the discovery info is no longer routed to integrations that listen to the HomeKit zeroconf type.
+当由于清单中的条目而将发现信息路由到您的集成时，该发现信息将不再被路由到监听HomeKit zeroconf类型的其他集成。
 
 ## MQTT
 
-If your integration supports discovery via MQTT, you can add the topics used for discovery. If the user has the `mqtt` integration loaded, it will load the `mqtt` step of your integration's config flow when it is discovered.
+如果你的集成支持通过MQTT进行发现，你可以添加用于发现的主题。如果用户加载了`mqtt`集成，在发现时它将加载您的集成配置流程中的`mqtt`步骤。
 
-MQTT discovery works by subscribing to MQTT topics specified in the manifest.json.
+MQTT发现的工作方式是订阅清单文件中指定的MQTT主题。
 
 ```json
 {
@@ -288,29 +288,26 @@ MQTT discovery works by subscribing to MQTT topics specified in the manifest.jso
 }
 ```
 
-If your integration requires `mqtt`, make sure it is added to the [dependencies](#dependencies).
 
-Integrations depending on MQTT should wait using `await mqtt.async_wait_for_mqtt_client(hass)` for the MQTT client to become available before they can subscribe. The `async_wait_for_mqtt_client` method will block and return `True` till the MQTT client is available.
+如果您的集成需要 `mqtt`，确保它被添加到 [dependencies](#dependencies) 中。
+
+依赖于 MQTT 的集成应该使用 `await mqtt.async_wait_for_mqtt_client(hass)` 来等待 MQTT 客户端可用，然后才能订阅。`async_wait_for_mqtt_client` 方法将阻塞并在 MQTT 客户端可用时返回 `True`。
 
 ## DHCP
 
-If your integration supports discovery via dhcp, you can add the type to your manifest. If the user has the `dhcp` integration loaded, it will load the `dhcp` step of your integration's config flow when it is discovered. We support passively listening for DHCP discovery by the `hostname` and [OUI](https://en.wikipedia.org/wiki/Organizationally_unique_identifier), or matching device registry mac address when `registered_devices` is set to `true`. The manifest value is a list of matcher dictionaries, your integration is discovered if all items of any of the specified matchers are found in the DHCP data. It's up to your config flow to filter out duplicates.
+如果您的集成支持通过dhcp进行发现，您可以将该类型添加到您的清单中。如果用户加载了`dhcp`集成，在发现时它将加载您的集成配置流程中的`dhcp`步骤。我们支持通过“hostname”和 [OUI](https://en.wikipedia.org/wiki/Organizationally_unique_identifier) 或者当`registered_devices`设置为`true`时匹配设备注册MAC地址来被动监听DHCP发现。清单值是一个匹配器字典的列表，如果在DHCP数据中找到了任何指定匹配器的所有项目，您的集成就会被发现。由您的配置流来过滤重复项。
 
-If an integration wants to receive discovery flows to update the IP Address of a device when it comes
-online, but a `hostname` or `oui` match would be too broad, and it has registered in the device registry with mac address using the `CONNECTION_NETWORK_MAC`,
-it should add a DHCP entry with `registered_devices` set to `true`.
+如果一个集成想要接收发现流以在设备上线时更新设备的IP地址，但是`hostname`或`oui`匹配范围太广，并且它已经在设备注册中使用`CONNECTION_NETWORK_MAC`注册了mac地址，那么它应该添加一个启用`registered_devices`设为`true`的DHCP条目。
 
-If the integration supports `zeroconf` or `ssdp`, these should be preferred over `dhcp` as it generally offers a better
-user experience.
+如果集成支持`zeroconf`或`ssdp`，通常应优先选择它们，因为它们通常提供更好的用户体验。
 
-The following example has three matchers consisting of two items. All of the items in any of the three matchers must match for discovery to happen by this config.
+以下示例有三个匹配器，包含两个项目。在任何三个匹配器中的所有项目必须匹配，这样配置流才会进行发现。
 
-For example:
+举个例子：
 
--  If the `hostname` was `Rachio-XYZ` and the `macaddress` was `00:9D:6B:55:12:AA`, the discovery would happen.
--  If the `hostname` was `Rachio-XYZ` and the `macaddress` was `00:00:00:55:12:AA`, the discovery would not happen.
--  If the `hostname` was `NotRachio-XYZ` and the `macaddress` was `00:9D:6B:55:12:AA`, the discovery would not happen.
-
+- 如果`hostname`是`Rachio-XYZ`，而`macaddress`是`00:9D:6B:55:12:AA`，发现将会发生。
+- 如果`hostname`是`Rachio-XYZ`，而`macaddress`是`00:00:00:55:12:AA`，发现将不会发生。
+- 如果`hostname`是`NotRachio-XYZ`，而`macaddress`是`00:9D:6B:55:12:AA`，发现将不会发生。
 
 ```json
 {
@@ -348,20 +345,20 @@ Example with setting `registered_devices` to `true`:
 
 ## USB
 
-If your integration supports discovery via usb, you can add the type to your manifest. If the user has the `usb` integration loaded, it will load the `usb` step of your integration's config flow when it is discovered. We support discovery by VID (Vendor ID), PID (Device ID), Serial Number, Manufacturer, and Description by extracting these values from the USB descriptor. For help identifiying these values see [How To Identify A Device](https://wiki.debian.org/HowToIdentifyADevice/USB). The manifest value is a list of matcher dictionaries. Your integration is discovered if all items of any of the specified matchers are found in the USB data. It's up to your config flow to filter out duplicates.
+如果您的集成支持通过USB进行发现，您可以将该类型添加到您的清单中。如果用户加载了`usb`集成，在发现时它将加载您的集成配置流程中的`usb`步骤。我们通过从USB描述符中提取这些值，支持通过VID（供应商ID）、PID（设备ID）、序列号、制造商和描述来进行发现。有关帮助识别这些值的信息，请参阅[How To Identify A Device](https://wiki.debian.org/HowToIdentifyADevice/USB)。清单值是一个匹配器字典的列表。如果在USB数据中找到了任何指定匹配器的所有项目，您的集成就会被发现。由您的配置流来过滤重复项。
 
 :::warning
-Some VID and PID combinations are used by many unrelated devices. For example VID `10C4` and PID `EA60` matches any Silicon Labs CP2102 USB-Serial bridge chip. When matching these type of devices, it is important to match on `description` or another identifer to avoid an unexpected discovery.
+一些VID和PID组合被许多不相关的设备使用。例如，VID `10C4` 和 PID `EA60` 匹配任何一颗芯片为Silicon Labs CP2102的USB-串行桥芯片。当匹配这类设备时，重要的是要根据`描述`或其他标识符进行匹配，以避免意外的发现。
 :::
 
-The following example has two matchers consisting of two items. All of the items in any of the two matchers must match for discovery to happen by this config.
+以下示例有两个匹配器，包含两个项目。在任何两个匹配器中的所有项目必须匹配，这样配置流才会进行发现。
 
-For example:
+举个例子：
 
--  If the `vid` was `AAAA` and the `pid` was `AAAA`, the discovery would happen.
--  If the `vid` was `AAAA` and the `pid` was `FFFF`, the discovery would not happen.
--  If the `vid` was `CCCC` and the `pid` was `AAAA`, the discovery would not happen.
--  If the `vid` was `1234`, the `pid` was `ABCD`, the `serial_number` was `12345678`, the `manufacturer` was `Midway USB`, and the `description` was `Version 12 Zigbee Stick`, the discovery would happen.
+- 如果`vid`是`AAAA`，而`pid`是`AAAA`，the discovery would happen
+- 如果`vid`是`AAAA`，而`pid`是`FFFF`，发现将不会发生。
+- 如果`vid`是`CCCC`，而`pid`是`AAAA`，发现将不会发生。
+- 如果`vid`是`1234`，`pid`是`ABCD`，`序列号`是`12345678`，`制造商`是`Midway USB`，而`描述`是`Version 12 Zigbee Stick`，the discovery would happen.
 
 ```json
 {
@@ -428,10 +425,23 @@ A virtual integration is an integration that just has a single manifest file, wi
 Virtual integrations can only be provided by Home Assistant Core and not by custom integrations.
 :::
 
+对于一些产品，它们的集成可能名称并不与产品本身相对应。例如，Roborock的吸尘器是通过小米Miio集成进行集成的，而IKEA SYMFONISK产品系列可以与Sonos集成一起使用。
+
+还有一些情况，某个产品系列只支持像Zigbee或Z-Wave这样的标准IoT标准。例如，U-tec的Ultraloq通过Z-Wave工作，没有特定的专用集成。
+
+对于最终用户来说，找到如何将这些产品与Home Assistant集成可能会令人困惑。为了帮助解决这些情况，Home Assistant提供了“虚拟集成”。这些集成并不是真正的集成，而是用于帮助用户找到与其设备匹配的正确集成。
+
+虚拟集成只包含一个清单文件，没有任何其他代码。有两种类型的虚拟集成：由其他集成支持的虚拟集成和使用现有IoT标准的虚拟集成。
+
+:::info
+虚拟集成只能由Home Assistant Core提供，而不能由自定义集成提供。
+:::
+
 ### Supported by
 
 The "Supported by" virtual integration is an integration that points to another integration to provide its implementation. For example, Roborock vacuums are integrated via the Xiaomi Miio (`xiaomi_miio`) integration.
 
+理解"Supported by"虚拟集成是指向另一个集成以提供其实现的集成。举例来说，Roborock吸尘器是通过小米Miio (xiaomi_miio) 集成进行集成的。
 Example manifest:
 
 ```json
@@ -453,9 +463,20 @@ Result:
 - Roborock is listed on our user documentation website under integrations with an automatically generated stub page that directs the user to the integration to use.
 - Roborock is listed in Home Assistant when clicking "add integration". When selected, we explain to the user that this product is integrated using a different integration, then the user continues to the Xioami Miio config flow.
 
+在这种情况下， `domain` 和 `name` 与任何其他集成一样，但 `integration_type` 设置为 `virtual`。此虚拟集成的域的徽标必须添加到我们的[brands存储库](https://github.com/home-assistant/brands/)中，因此在这种情况下，使用了Roborock品牌。
+
+`supported_by` 是为该产品提供实现的集成的域。在上面的例子中，Roborock吸尘器的支持集成是小米Miio，指向其域 `xiaomi_miio`。
+
+结果：
+
+- Roborock会在我们的用户文档网站上列出在集成下，并生成一个自动创建的存根页面，指导用户使用相关集成。
+- 在Home Assistant中点击“添加集成”时会列出Roborock。当用户选择该产品时，我们会向用户解释该产品是使用其他集成进行集成的，并继续进行小米Miio的配置流程。
+
 ### IoT standards
 
 The "IoT Standards" virtual integration is an integration that uses an existing IoT standard to provide connectivity with the device. For example, the U-tec ultraloq works via Z-Wave and has no specific dedicated integration.
+
+"IoT Standards"虚拟集成是一种利用现有的物联网标准与设备进行连接的集成。例如，U-tec的Ultraloq通过Z-Wave工作，并且没有特定的专用集成。
 
 Example manifest:
 
@@ -484,4 +505,18 @@ Brands also [support setting IoT standards](/docs/creating_integration_brand/#io
 
 It is preferred to set IoT standards on the brand level, and only use a virtual
 integration in case it would impose confusion for the end user.
+:::
+在这种情况下，`domain` 和 `name` 与任何其他集成一样，但 `integration_type` 设置为 `virtual`。这种虚拟集成的域的徽标应该添加到我们的[品牌存储库](https://github.com/home-assistant/brands/)中。
+
+`iot_standards` 是该产品用于连接的标准。在上述示例中，U-tech的Ultraloq产品使用Z-Wave与Home Assistant集成。
+
+结果：
+
+- U-tech的Ultraloq会在我们的用户文档网站上列出在集成下，并生成一个自动创建的存根页面，指导用户使用相关集成。
+- 在Home Assistant中点击“添加集成”时会列出U-tech的Ultraloq。当用户选择该产品时，我们会引导用户添加此Z-Wave设备（如果尚未设置Z-Wave，则会引导用户先设置Z-Wave）。
+
+:::info
+品牌还支持设置物联网标准。
+
+最好在品牌层面设置物联网标准，并仅在会给最终用户带来困惑的情况下使用虚拟集成。
 :::

@@ -26,11 +26,11 @@ class ExampleConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 1
 ```
 
-Once you have updated your manifest and created the `config_flow.py`, you will need to run `python3 -m script.hassfest` (one time only) for Home Assistant to activate the config entry for your integration.
+一旦你更新了清单文件（manifest）并创建了 `config_flow.py`，你需要运行`python3 -m script.hassfest`（只需运行一次）来激活Home Assistant中你的集成的配置条目。
 
 ## Defining steps(定义步骤)
 
-Your config flow will need to define steps of your configuration flow. Each step is identified by a unique step name (`step_id`). The step callback methods follow the pattern `async_step_<step_id>`. The docs for [Data Entry Flow](data_entry_flow_index.md) describe the different return values of a step. Here is an example of how to define the `user` step:
+你的配置流程需要定义配置流程的步骤。每个步骤由唯一的步骤名称（`step_id`）标识。步骤回调方法遵循`async_step_<step_id>`的模式。(data_entry_flow_index.md) 文档描述了步骤的不同返回值。下面是定义user步骤的示例代码:
 
 ```python
 import voluptuous as vol
@@ -45,33 +45,33 @@ class ExampleConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
 ```
 
-There are a few step names reserved for system use:
+有一些步骤名称被保留供系统使用:
 
-| Step name   | Description                                                                                                                                                   |
+| Step name (步骤名称)  | Description (描述)                                                                                                                                                  |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `bluetooth`        | Invoked if your integration has been discovered via Bluetooth as specified [using `bluetooth` in the manifest](creating_integration_manifest.md#bluetooth).             |
-| `discovery` | _DEPRECATED_ Invoked if your integration has been discovered and the matching step has not been defined.             |
-| `dhcp`      | Invoked if your integration has been discovered via DHCP as specified [using `dhcp` in the manifest](creating_integration_manifest.md#dhcp).             |
-| `hassio`    | Invoked if your integration has been discovered via a Supervisor add-on.
-| `homekit`   | Invoked if your integration has been discovered via HomeKit as specified [using `homekit` in the manifest](creating_integration_manifest.md#homekit).         |
-| `mqtt`      | Invoked if your integration has been discovered via MQTT as specified [using `mqtt` in the manifest](creating_integration_manifest.md#mqtt).             |
-| `ssdp`      | Invoked if your integration has been discovered via SSDP/uPnP as specified [using `ssdp` in the manifest](creating_integration_manifest.md#ssdp).             |
-| `usb`       | Invoked if your integration has been discovered via USB as specified [using `usb` in the manifest](creating_integration_manifest.md#usb).             |
-| `user`      | Invoked when a user initiates a flow via the user interface or when discovered and the matching and discovery step are not defined.                                                                                                  |
-| `zeroconf`  | Invoked if your integration has been discovered via Zeroconf/mDNS as specified [using `zeroconf` in the manifest](creating_integration_manifest.md#zeroconf). |
+| `bluetooth`        | 如果您的集成已通过蓝牙发现 [using `bluetooth` in the manifest](creating_integration_manifest.md#bluetooth).             |
+| `discovery` | _DEPRECATED_已弃用 Invoked if your integration has been discovered and the matching step has not been defined.（如果您的集成已被发现，但未定义匹配的步骤，则此功能已被弃用。）             |
+| `dhcp`      | 如果您的集成已通过DHCP（动态主机配置协议）发现，就会调用这个功能。DHCP是一种网络协议，用于为设备分配IP地址和其他网络配置信息。通过DHCP发现意味着您的集成能够在网络中自动获取IP地址和配置信息，并被发现 [using `dhcp` in the manifest](creating_integration_manifest.md#dhcp).             |
+| `hassio`    | 如果您的集成已通过Supervisor add-on发现
+| `homekit`   | 如果您的集成已通过HomeKit发现 [using `homekit` in the manifest](creating_integration_manifest.md#homekit).         |
+| `mqtt`      | 如果您的集成已通过MQTT发现 [using `mqtt` in the manifest](creating_integration_manifest.md#mqtt).             |
+| `ssdp`      | 如果您的集成已通过SSDP/uPnP发现 [using `ssdp` in the manifest](creating_integration_manifest.md#ssdp).             |
+| `usb`       | 如果您的集成已通过USB发现 [using `usb` in the manifest](creating_integration_manifest.md#usb).             |
+| `user`      | 当用户通过用户界面启动流程，或者发现了匹配的步骤和发现步骤都未定义时.                                                                                                  |
+| `zeroconf`  | 如果您的集成已通过Zeroconf/mDNS发现 [using `zeroconf` in the manifest](creating_integration_manifest.md#zeroconf). |
 
-## Unique IDs
+## Unique IDs （唯一id）
 
-A config flow can attach a unique ID to a config flow to avoid the same device being set up twice. When a unique ID is set, it will immediately abort if another flow is in progress for this unique ID. You can also quickly abort if there is already an existing config entry for this ID. Config entries will get the unique ID of the flow that creates them.
+在配置流程中，可以为配置流程附加一个唯一ID，以避免同一设备被设置两次。当设置了唯一ID时，如果另一个具有相同唯一ID的流程正在进行中，它将立即中止。您还可以在已经存在该ID的配置条目时快速中止。配置条目将获得创建它们的流程的唯一ID。
 
-Call inside a config flow step:
+Call inside a config flow step（在配置流程步骤中调用）:
 
 ```python
 await self.async_set_unique_id(device_unique_id)
 self._abort_if_unique_id_configured()
 ```
 
-Should the config flow then abort, the text resource with the key `already_configured` from the `abort` part of your `strings.json` will be displayed to the user in the interface as an abort reason.
+如果配置流程中断，将在用户界面中以中止原因的形式显示来自  `strings.json` 中 `abort` 部分的键为 `already_configured` 的文本资源。
 
 ```json
 {
@@ -82,15 +82,13 @@ Should the config flow then abort, the text resource with the key `already_confi
   }
 }
 ```
+通过设置唯一ID，用户将有选项忽略对配置条目的发现。这样，他们将不会再受到相关干扰。
+如果集成使用蓝牙、DHCP、HomeKit、Zeroconf/mDNS、USB或SSDP/uPnP来进行发现，则必须提供唯一ID。
 
-By setting a unique ID, users will have the option to ignore the discovery of your config entry. That way, they won't be bothered about it anymore.
-If the integration uses Bluetooth, DHCP, HomeKit, Zeroconf/mDNS, USB, or SSDP/uPnP to be discovered, supplying a unique ID is required.
+如果没有可用的唯一ID，可以选择省略 `bluetooth`、`dhcp`、`zeroconf`、`hassio`、`homekit`、`ssdp`、`usb` 和 `discovery` 步骤，即使它们在集成清单中配置了。
+在这种情况下，当发现配置项时，将调用 `user` 步骤。
 
-If a unique ID isn't available, alternatively, the `bluetooth`, `dhcp`, `zeroconf`, `hassio`, `homekit`, `ssdp`, `usb`, and `discovery` steps can be omitted, even if they are configured in
-the integration manifest. In that case, the `user` step will be called when the item is discovered.
-
-Alternatively, if an integration can't get a unique ID all the time (e.g., multiple devices, some have one, some don't), a helper is available
-that still allows for discovery, as long as there aren't any instances of the integrations configured yet.
+另外，如果集成无法始终获得唯一ID（例如，多个设备，一些有唯一ID，一些没有），可以使用辅助工具进行发现，只要尚未配置集成的实例即可。
 
 ```python
 if device_unique_id:
@@ -100,8 +98,7 @@ await self._async_handle_discovery_without_unique_id()
 
 ### Unique ID Requirements
 
-A Unique ID is used to match a config entry to the underlying device or API. The Unique ID must be stable and should not be able to be changed by the user. The Unique ID can be used to update the config entry data when device access details change. For example, for devices that communicate over the local network, if the IP address changes due to a new DHCP assignment, the integration can use the Unique ID to update the host using the following code snippet:
-
+唯一ID用于将配置条目与底层设备或API进行匹配。唯一ID必须是稳定的，并且用户不应该能够更改它。唯一ID可以用于在设备访问详细信息更改时更新配置条目数据。例如，对于通过本地网络通信的设备，如果IP地址由于新的DHCP分配而更改，集成可以使用唯一ID来更新主机，代码示例如下：
 ```
     await self.async_set_unique_id(serial_number)
     self._abort_if_unique_id_configured(updates={CONF_HOST: host, CONF_PORT: port})
@@ -136,8 +133,6 @@ A Unique ID is used to match a config entry to the underlying device or API. The
 您的配置流程可以通过在配置流程中实现unignore步骤来重新发现先前被忽略的条目.
 
 ```python
-
-```python
 async def async_step_unignore(self, user_input):
     unique_id = user_input["unique_id"]
     await self.async_set_unique_id(unique_id)
@@ -147,35 +142,27 @@ async def async_step_unignore(self, user_input):
     return self.async_show_form(…)
 ```
 
-## Discovery steps
+### 发现步骤
+当一个集成被发现时，相应的发现步骤会被调用（例如 `async_step_dhcp` 或 `async_step_zeroconf`），并提供发现的信息。这些步骤需要检查以下几点：
+- 确保没有其他此配置流程的实例正在设置所发现的设备。如果有多种方法可以发现设备在网络上，就可能会出现这种情况。
+- 确保设备尚未设置。
+- 调用发现步骤不应导致完成流程和配置条目。始终需要与用户确认。
 
-When an integration is discovered, their respective discovery step is invoked (ie `async_step_dhcp` or `async_step_zeroconf`) with the discovery information. The step will have to check the following things:
+### 无需身份验证的可发现集成
+如果集成可以在无需任何身份验证的情况下进行发现，您可以使用内置的可发现流程。此流程提供以下功能：
+- 在结束配置流程之前检测设备/服务是否可以在网络上被发现。
+- 支持所有基于清单的发现协议。
+- 限制为仅1个配置条目。由配置条目负责发现所有可用设备。
 
-- Make sure there are no other instances of this config flow in progress of setting up the discovered device. This can happen if there are multiple ways of discovering that a device is on the network.
-- Make sure that the device is not already set up.
-- Invoking a discovery step should never result in a finished flow and a config entry. Always confirm with the user.
+### OAuth2 配置
+Home Assistant内置支持使用 OAuth2 授权框架进行帐户链接的集成。要利用此功能，您需要以允许Home Assistant负责刷新令牌的方式构建Python API库。有关如何执行此操作的详细信息，请参阅我们的 API库指南。
 
-## Discoverable integrations that require no authentication
+### 翻译
+配置流程处理程序的翻译定义在组件翻译文件 `strings.json` 中的 `config` 键下。
 
-If your integration is discoverable without requiring any authentication, you'll be able to use the Discoverable Flow that is built-in. This flow offers the following features:
+如果您需要更详细的指南或有其他问题，请随时告诉我。
 
-- Detect if devices/services can be discovered on the network before finishing the config flow.
-- Support all manifest-based discovery protocols.
-- Limit to only 1 config entry. It is up to the config entry to discover all available devices.
 
-To get started, run `python3 -m script.scaffold config_flow_discovery` and follow the instructions. This will create all the boilerplate necessary to configure your integration using discovery.
-
-## Configuration via OAuth2
-
-Home Assistant has built-in support for integrations that offer account linking using [the OAuth2 authorization framework](https://www.rfc-editor.org/rfc/rfc6749). To be able to leverage this, you will need to structure your Python API library in a way that allows Home Assistant to be responsible for refreshing tokens. See our [API library guide](api_lib_index.md) on how to do this.
-
-The built-in OAuth2 support works out of the box with locally configured client ID / secret using the [Application Credentials platform](/docs/core/platform/application_credentials) and with the Home Assistant Cloud Account Linking service. This service allows users to link their account with a centrally managed client ID/secret. If you want your integration to be part of this service, reach out to us at [hello@home-assistant.io](mailto:hello@home-assistant.io).
-
-To get started, run `python3 -m script.scaffold config_flow_oauth2` and follow the instructions. This will create all the boilerplate necessary to configure your integration using OAuth2.
-
-## Translations
-
-Translations for the config flow handlers are defined under the `config` key in the component translation file `strings.json`. Example of the Hue component:
 
 ```json
 {
@@ -213,9 +200,9 @@ When the translations are merged into Home Assistant, they will be automatically
 
 ## Config Entry Migration
 
-As mentioned above - each Config Entry has a version assigned to it. This is to be able to migrate Config Entry data to new formats when Config Entry schema changes.
+正如上面提到的，每个配置条目都有一个分配给它的版本号。这是为了在配置条目架构发生更改时能够迁移配置条目数据到新的格式。
 
-Migration can be handled programatically by implementing function `async_migrate_entry` in your component's `__init__.py` file. The function should return `True` if migration is successful.
+迁移可以通过在组件的__init__.py文件中实现async_migrate_entry函数来进行程序处理。该函数应返回True，表示迁移成功
 
 ```python
 # Example migration function
@@ -258,9 +245,9 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry):
 
 ## Reauthentication
 
-Gracefully handling authentication errors such as invalid, expired, or revoked tokens is needed to advance on the [Integration Qualily Scale](integration_quality_scale_index.md). This example of how to add reauth to the OAuth flow created by `script.scaffold` following the pattern in [Building a Python library](api_lib_auth.md#oauth2).
+优雅地处理诸如无效、过期或被撤销的令牌等身份验证错误对于在[Integration Quality Scale](integration_quality_scale_index.md)上取得进展是必要的。这个例子展示了如何按照[Building a Python library](api_lib_auth.md#oauth2)中的模式，将重新授权添加到`script.scaffold`创建的OAuth流程中。
 
-This example catches an authentication exception in config entry setup in `__init__.py` and instructs the user to visit the integrations page in order to reconfigure the integration.
+这个例子在`__init__.py`中的配置条目设置中捕获身份验证异常，并指示用户访问集成页面以重新配置集成。
 
 ```python
 
@@ -281,7 +268,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     # TODO: Proceed with component setup
 ```
 
-The flow handler in `config_flow.py` also needs to have some additional steps to support reauth which include showing a confirmation, starting the reauth flow, updating the existing config entry, and reloading to invoke setup again.
+`config_flow.py`中的流程处理程序还需要一些额外的步骤来支持重新授权，包括显示确认信息、启动重新授权流程、更新现有的配置条目，并重新加载以再次调用设置。
 
 ```python
 
@@ -317,9 +304,9 @@ class OAuth2FlowHandler(
         return await super().async_oauth_create_entry(data)
 ```
 
-Depending on the details of the integration, there may be additional considerations such as ensuring the same account is used across reauth, or handling multiple config entries.
+根据集成的具体细节，可能还需要其他考虑因素，比如确保在重新授权过程中使用同一个账户，或处理多个配置条目。
 
-The reauth confirmation dialog needs additional definitions in `strings.json` for the reauth confirmation and success dialogs:
+重新授权确认对话框需要在`strings.json`中添加额外的定义，包括重新授权确认和成功对话框的内容。
 
 ```json
 {
@@ -337,12 +324,12 @@ The reauth confirmation dialog needs additional definitions in `strings.json` fo
 }
 ```
 
-See [Translations](#translations) local development instructions.
+您可以参考[Translations](#translations)中的本地开发说明。
 
-Authentication failures (such as a revoked oauth token) can be a little tricky to manually test. One suggestion is to make a copy of `config/.storage/core.config_entries` and manually change the values of `access_token`, `refresh_token`, and `expires_at` depending on the scenario you want to test. You can then walk advance through the reauth flow and confirm that the values get replaced with new valid tokens.
+身份验证失败（比如被撤销的 OAuth 令牌）可能会有点棘手，手动测试起来比较困难。其中一个建议是复制`config/.storage/core.config_entries`，并手动更改`access_token`、`refresh_token`和`expires_at`的值，根据您想要测试的情景。然后，您可以逐步进行重新授权流程，并确认这些值是否被新的有效令牌替换。
 
-Automated tests should verify that the reauth flow updates the existing config entry and does not create additional entries.
+自动化测试应该验证重新授权流程是否更新了现有的配置条目，并且没有创建额外的条目。
 
 ## Testing your config flow
 
-Integrations with a config flow require full test coverage of all code in `config_flow.py` to be accepted into core. [Test your code](development_testing.md#running-a-limited-test-suite) includes more details on how to generate a coverage report.
+与配置流程相关的集成需要对`config_flow.py`中的所有代码进行全面测试覆盖才能被接受到核心部分。[Test your code](development_testing.md#running-a-limited-test-suite) 中包含有关如何生成覆盖率报告的更多细节。
