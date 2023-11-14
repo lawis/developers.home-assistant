@@ -1,18 +1,18 @@
 ---
-title: "Networking and Discovery"
+title: "Networking and Discovery 网络发现"
 sidebar_label: "Networking and Discovery"
 ---
 
-Some integrations may need to discover devices on the network via [mDNS/Zeroconf](https://en.wikipedia.org/wiki/Zero-configuration_networking), [SSDP](https://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol), or another method once they have been enabled.  The primary use case is to find devices that do not have a known fixed IP Address or for integrations that can dynamically add and remove any number of compatible discoverable devices.
+某些集成可能需要在启用后通过[mDNS/Zeroconf](https://en.wikipedia.org/wiki/Zero-configuration_networking)、[SSDP](https://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol)或其他方法发现网络上的设备。主要用例是查找没有已知固定 IP 地址的设备，或者用于可以动态添加和删除任意数量的兼容可发现设备的集成。
 
-Home Assistant has built-in helpers to support mDNS/Zeroconf and SSDP. If your integration uses another discovery method that needs to determine which network interfaces to use to broadcast traffic, the [Network](https://www.home-assistant.io/integrations/network/) integration provides a helper API to access the user's interface preferences.
-
+Home Assistant 内置了用于支持 mDNS/Zeroconf 和 SSDP 的帮助函数。如果您的集成使用其他发现方法，并且需要确定使用哪些网络接口来广播流量，[Network](https://www.home-assistant.io/integrations/network/) 集成提供了一个帮助函数 API，用于访问用户的接口首选项。
 
 ## mDNS/Zeroconf
 
-Home Assistant uses the [python-zeroconf](https://github.com/python-zeroconf/python-zeroconf) package for mDNS support. As running multiple mDNS implementations on a single host is not recommended, Home Assistant provides internal helper APIs to access the running `Zeroconf` and `AsyncZeroconf` instances.
+Home Assistant 使用 [python-zeroconf](https://github.com/python-zeroconf/python-zeroconf) 包来支持 mDNS。由于在单个主机上运行多个 mDNS 实现并不推荐，因此 Home Assistant 提供了内部帮助函数 API 来访问运行中的 `Zeroconf` 和 `AsyncZeroconf` 实例。
 
-Before using these helpers, be sure to add `zeroconf` to `dependencies` in your integration's [`manifest.json`](creating_integration_manifest.md)
+在使用这些帮助函数之前，请确保在您的集成的 [`manifest.json`](creating_integration_manifest.md) 中的 `dependencies` 中添加了 `zeroconf`。
+
 
 ### Obtaining the `AsyncZeroconf` object
 
@@ -44,18 +44,21 @@ Home Assistant provides built-in discovery via SSDP.
 
 Before using these helpers, be sure to add `ssdp` to `dependencies` in your integration's [`manifest.json`](creating_integration_manifest.md)
 
-### Obtaining the list of discovered devices
 
-The list of discovered SSDP devices can be obtained using the following built-in
-helper APIs. The SSDP integration provides the following helper APIs to lookup existing
-SSDP discoveries from the cache: `ssdp.async_get_discovery_info_by_udn_st`, `ssdp.async_get_discovery_info_by_st`, `ssdp.async_get_discovery_info_by_udn`
 
-### Looking up a specific device
+SSDP代表Simple Service Discovery Protocol，是一种网络协议，用于设备之间的服务发现。Home Assistant提供了内置的SSDP发现功能。
 
-The `ssdp.async_get_discovery_info_by_udn_st` API returns a single `discovery_info`
-or `None` when provided an `SSDP`, `UDN` and `ST`.
+在使用这些辅助函数之前，确保在集成的 [`manifest.json`](creating_integration_manifest.md) 文件中的 `dependencies` 中添加了 `ssdp`。
 
-```
+### 获取已发现设备的列表
+
+可以使用以下内置的辅助API来获取已发现的SSDP设备列表。SSDP集成提供了以下辅助API来从缓存中查找现有的SSDP发现: `ssdp.async_get_discovery_info_by_udn_st`，`ssdp.async_get_discovery_info_by_st`，`ssdp.async_get_discovery_info_by_udn`。
+
+### 查找特定设备
+
+`ssdp.async_get_discovery_info_by_udn_st` API在提供`SSDP`、`UDN`和`ST`时返回单个`discovery_info`或`None`。
+
+```python
 from homeassistant.components import ssdp
 
 ...
@@ -63,14 +66,11 @@ from homeassistant.components import ssdp
 discovery_info = await ssdp.async_get_discovery_info_by_udn_st(hass, udn, st)
 ```
 
-### Looking up devices by `ST`
+### 通过`ST`查找设备
 
-If you want to look for a specific type of discovered devices, calling
-`ssdp.async_get_discovery_info_by_st` will return a list of all discovered devices that
-match the `SSDP` `ST`. The below example returns a list of discovery info for every
-Sonos player discovered on the network.
+如果要查找特定类型的已发现设备，调用`ssdp.async_get_discovery_info_by_st`将返回与`SSDP` `ST`匹配的所有已发现设备的列表。下面的示例返回网络上发现的每个Sonos播放器的发现信息列表。
 
-```
+```python
 from homeassistant.components import ssdp
 
 ...
@@ -81,14 +81,11 @@ for discovery_info in discovery_infos:
 
 ```
 
+### 通过`UDN`查找设备
 
-### Looking up devices by `UDN`
+如果要查看特定`UDN`提供的服务列表，调用`ssdp.async_get_discovery_info_by_udn`将返回与`UPNP` `UDN`匹配的所有已发现设备的列表。
 
-If you want to see a list of the services provided by a specific `UDN`, calling
-`ssdp.async_get_discovery_info_by_udn` will return a list of all discovered devices that
-match the `UPNP` `UDN`.
-
-```
+```python
 from homeassistant.components import ssdp
 
 ...
@@ -99,16 +96,15 @@ for discovery_info in discovery_infos:
 
 ```
 
-### Subscribing to SSDP discoveries
+### 订阅SSDP发现
 
-Some integrations may need to know when a device is discovered right away. The SSDP integration provides a registration API to receive callbacks when a new device is discovered that matches specific key values. The same format for `ssdp` in [`manifest.json`](creating_integration_manifest.md) is used for matching.
+有些集成可能需要立即了解何时发现了一个设备。SSDP集成提供了一个注册API，用于在发现与特定键值匹配的新设备时接收回调。与 `manifest.json` 中的 `ssdp` 匹配使用相同的格式。
 
-The function `ssdp.async_register_callback` is provided to enable this ability. The function returns a callback that will cancel the registration when called.
+提供了 `ssdp.async_register_callback` 函数来实现此能力。该函数返回一个回调函数，在调用时会取消注册。
 
-The below example shows registering to get callbacks when a Sonos player is seen
-on the network.
+下面的示例显示了注册回调函数以在网络上发现Sonos播放器时收到回调的方式。
 
-```
+```python
 from homeassistant.components import ssdp
 
 ...
@@ -120,9 +116,9 @@ entry.async_on_unload(
 )
 ```
 
-The below example shows registering to get callbacks when the `x-rincon-bootseq` header is present.
+下面的示例显示了在存在 `x-rincon-bootseq` 头部时注册回调函数的方式。
 
-```
+```python
 from homeassistant.components import ssdp
 from homeassistant.const import MATCH_ALL
 
@@ -135,11 +131,9 @@ entry.async_on_unload(
 )
 ```
 
+## 网络
 
-## Network
-
-For integrations that use a discovery method that is not built-in and need to access the user's network adapter configuration, the following helper API should be used.
-
+对于使用未内置的发现方法并需要访问用户的网络适配器配置的集成，应使用以下辅助API。
 
 ```python
 from homeassistant.components import network
@@ -148,7 +142,7 @@ from homeassistant.components import network
 adapters = await network.async_get_adapters(hass)
 ```
 
-### Example `async_get_adapters` data structure
+### `async_get_adapters` 示例数据结构
 
 ```python
 [
@@ -186,7 +180,7 @@ adapters = await network.async_get_adapters(hass)
 ]
 ```
 
-### Obtaining the IP Network from an adapter
+### 从适配器获取IP网络
 
 ```python
 from ipaddress import ip_network
@@ -205,11 +199,11 @@ for adapter in adapters:
 
 ## USB
 
-The USB integration discovers new USB devices at startup, when the integrations page is accessed, and when they are plugged in if the underlying system has support for `pyudev`.
+USB集成会在启动时、访问集成页面时以及插入USB设备时（如果底层系统支持 `pyudev`）自动发现新的USB设备。
 
-### Checking if a specific adapter is plugged in
+### 检查特定适配器是否已插入
 
-Call the `async_is_plugged_in` API to check if a specific adapter is on the system.
+调用 `async_is_plugged_in` API 来检查系统上是否已连接特定适配器。
 
 ```python
 from homeassistant.components import usb
@@ -221,9 +215,9 @@ if not usb.async_is_plugged_in(hass, {"serial_number": "A1234", "manufacturer": 
 
 ```
 
-### Knowing when to look for new compatible USB devices
+### 知道何时查找新的兼容USB设备
 
-Call the `async_register_scan_request_callback` API to request a callback when new compatible USB devices may be available.
+调用 `async_register_scan_request_callback` API 来请求在可能有新的兼容USB设备可用时收到的回调。
 
 ```python
 from homeassistant.components import usb

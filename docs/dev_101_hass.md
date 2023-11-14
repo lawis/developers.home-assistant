@@ -3,19 +3,19 @@ title: "Hass object"
 sidebar_label: "Introduction"
 ---
 
-While developing Home Assistant you will see a variable that is everywhere: `hass`. This is the Home Assistant instance that will give you access to all the various parts of the system.
+在开发Home Assistant时，你会经常看到一个到处都有的变量：`hass`。这是Home Assistant实例，它将为你提供访问系统各个部分的权限。
 
-### The `hass` object
+### `hass` 对象
 
-The Home Assistant instance contains four objects to help you interact with the system.
+Home Assistant实例包含四个对象，帮助你与系统进行交互。
 
-| Object | Description |
+| 对象 | 描述 |
 | ------ | ----------- |
-| `hass` | This is the instance of Home Assistant. Allows starting, stopping and enqueuing new jobs. [See available methods.](https://dev-docs.home-assistant.io/en/dev/api/core.html#homeassistant.core.HomeAssistant)
-| `hass.config` | This is the core configuration of Home Assistant exposing location, temperature preferences and config directory path. [See available methods.](https://dev-docs.home-assistant.io/en/dev/api/core.html#homeassistant.core.Config)
-| `hass.states` | This is the StateMachine. It allows you to set states and track when they are changed. [See available methods.](https://dev-docs.home-assistant.io/en/dev/api/core.html#homeassistant.core.StateMachine) |
-| `hass.bus` | This is the EventBus. It allows you to trigger and listen for events. [See available methods.](https://dev-docs.home-assistant.io/en/dev/api/core.html#homeassistant.core.EventBus) |
-| `hass.services` | This is the ServiceRegistry. It allows you to register services. [See available methods.](https://dev-docs.home-assistant.io/en/dev/api/core.html#homeassistant.core.ServiceRegistry) |
+| `hass` | 这是Home Assistant的实例。允许启动、停止和排队新的作业。[查看可用方法。](https://dev-docs.home-assistant.io/en/dev/api/core.html#homeassistant.core.HomeAssistant)
+| `hass.config` | 这是Home Assistant的核心配置，包括位置、温度偏好和配置目录路径。[查看可用方法。](https://dev-docs.home-assistant.io/en/dev/api/core.html#homeassistant.core.Config)
+| `hass.states` | 这是StateMachine。 它允许你设置状态并跟踪状态变化。[查看可用方法。](https://dev-docs.home-assistant.io/en/dev/api/core.html#homeassistant.core.StateMachine) |
+| `hass.bus` | 这是EventBus。 它允许你触发和监听事件。[查看可用方法。](https://dev-docs.home-assistant.io/en/dev/api/core.html#homeassistant.core.EventBus) |
+| `hass.services` | 这是ServiceRegistry。 它允许你注册服务。 [查看可用方法。](https://dev-docs.home-assistant.io/en/dev/api/core.html#homeassistant.core.ServiceRegistry) |
 
 <img class='invertDark'
   alt='Overview of the Home Assistant core architecture'
