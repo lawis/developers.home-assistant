@@ -3,31 +3,28 @@ title: Button Entity
 sidebar_label: Button
 ---
 
-A button entity is an entity that can fire an event / trigger an action towards a device or service but remains stateless from the Home Assistant perspective.
-It can be compared to a real live momentary switch, push-button, or some other form of a stateless switch. It is, however, not suitable for implementing actual physical buttons; the sole purpose of a button entity is to provide a virtual button inside Home Assistant.
+按钮实体是一个可以向设备或服务发送事件/触发操作的实体，但从Home Assistant的角度来看，它是无状态的。它可以类比为真实的瞬时开关、按钮或其他形式的无状态开关。然而，它不适用于实际物理按钮的实现；按钮实体的唯一目的是在Home Assistant中提供一个虚拟按钮。
 
-A switch button entity is derived from the  [`homeassistant.components.button.ButtonEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/button/__init__.py),
-and can be helpful for controlling device features like (but not limited to):
+开关按钮实体是从[`homeassistant.components.button.ButtonEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/button/__init__.py)派生而来的，可用于控制设备功能，例如（但不限于）：
 
-- Upgrading firmware
-- Reboot/Restart a device
-- Brew a cup of coffee
-- Reset something (like a counter, filter usage)
+- 升级固件
+- 重启设备
+- 冲泡一杯咖啡
+- 重置某些内容（如计数器、滤芯使用情况）
 
-If you want to represent something that can be turned on and off (and thus have an actual state), you should use a `switch` entity instead. If you want to integrate a real, physical, stateless button device in Home Assistant, you can do so by firing custom events. The entity button entity isn't suitable for these cases.
+如果您想表示可以打开和关闭的内容（因此具有实际状态），可以使用`switch`实体。如果您想在Home Assistant中集成一个真实的、物理的无状态按钮设备，可以通过触发自定义事件来实现。按钮实体不适用于这些情况。
 
-## Properties
+## 属性
 
-As this integration is stateless, it doesn't provide any specific properties for itself.
-Other properties that are common to all entities such as `device_class`, `icon`, `name` etc are still applicable.
+由于此集成是无状态的，因此它不提供任何特定的属性。
+所有实体都共用的其他属性，如`device_class`、`icon`、`name`等仍然适用。
 
-## Methods
+## 方法
 
 ### Press
 
-The press method can be used to trigger an action towards a device or service.
-It is called by Home Assistant when the user presses the button or the
-service to press the button has been called.
+press方法可用于触发与设备或服务相关的操作。
+当用户按下按钮或调用了按下按钮的服务时，Home Assistant将调用此方法。
 
 ```python
 class MyButton(ButtonEntity):
@@ -42,10 +39,10 @@ class MyButton(ButtonEntity):
 
 ### Available device classes
 
-Optionally specifies what type of entity it is. It will possibly map to Google device types.
+可选项，指定实体的类型。可能映射到谷歌设备类型。
 
-| Constant | Description
+| 常量 | 描述
 | ----- | -----------
-| `ButtonDeviceClass.IDENTIFY` | The button entity identifies a device.
-| `ButtonDeviceClass.RESTART` | The button entity restarts the device.
-| `ButtonDeviceClass.UPDATE` | The button entity updates the software of the device. The use of this device class should be avoided, please consider using the [`update`](/docs/core/entity/update) entity instead.
+| `ButtonDeviceClass.IDENTIFY` | 按钮实体用于识别设备。
+| `ButtonDeviceClass.RESTART` | 按钮实体用于重新启动设备。
+| `ButtonDeviceClass.UPDATE` | 按钮实体用于更新设备软件。建议避免使用该设备类别，请考虑使用[`update`](/docs/core/entity/update)实体。
