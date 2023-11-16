@@ -1,35 +1,35 @@
 ---
-title: Entity Registry
+title: Entity Registry 实体注册
 ---
 
-The entity registry is a registry where Home Assistant keeps track of entities. Any entity that is added to Home Assistant which specifies the [`unique_id` attribute](/core/entity.md#generic-properties) will be registered in the registry.
+实体注册表是 Home Assistant 用来跟踪实体的注册表。任何添加到 Home Assistant 的实体，只要指定了[`unique_id`属性](/core/entity.md#generic-properties)，都将在注册表中注册。
 
-Being registered has the advantage that the same entity will always get the same entity ID. It will also prevent other entities from using that entity ID.
+注册有一个优势，即相同的实体始终会获得相同的实体 ID。它还可以防止其他实体使用该实体 ID。
 
-A user is also able to override the name of an entity in the entity registry. When set, the name of the entity registry is used in favor of the name the device might give itself.
+用户还可以在实体注册表中覆盖实体的名称。一旦设置，实体注册表中的名称将优先于设备自身的名称。
 
-## Unique ID
+## 唯一 ID
 
-It is important that it is not possible for the user to change the unique ID, because the system would lose all its settings related to the unique ID.
+重要的是，用户不能更改唯一 ID，因为系统将丢失与唯一 ID 相关的所有设置。
 
-An entity is looked up in the registry based on a combination of the platform type (e.g., `light`), and the integration name (domain) (e.g. hue) and the unique ID of the entity. Entities should not include the `domain` (e.g., `your_integration`) and platform type (e.g., `light`) in their Unique ID as the system already accounts for these identifiers.
+实体在注册表中的查找是基于平台类型（例如`light`）、集成名称（域）（例如 hue）和实体的唯一 ID 的组合。实体的唯一 ID 不应包含域（例如 `your_integration`）和平台类型（例如 `light`），因为系统已经考虑了这些标识符。
 
-If a device has a single unique id but provides multiple entities, combine the unique id with unique identifiers for the entities. For example, if a device measures both temperature and humidity, you can uniquely identify the entities using `{unique_id}-{sensor_type}`.
+如果设备具有单个唯一 ID，但提供多个实体，请将唯一 ID 与实体的唯一标识符结合使用。例如，如果设备同时测量温度和湿度，您可以使用 `{unique_id}-{sensor_type}` 来唯一标识实体。
 
-## Unique ID requirements
+## 唯一 ID 的要求
 
-### Example acceptable sources for a unique ID
+### 可接受的唯一 ID 示例来源
 
-- Serial number of a device
-- MAC address: formatted using `homeassistant.helpers.device_registry.format_mac`; Only obtain the MAC address from the device API or a discovery handler. Tools that rely on reading the arp cache or local network access such as `getmac` will not function in all supported network environments and are not acceptable.
-- Latitude and Longitude or other unique Geo Location
-- Unique identifier that is physically printed on the device or burned into an EEPROM
+- 设备的序列号
+- MAC 地址：使用 `homeassistant.helpers.device_registry.format_mac` 进行格式化；只能从设备 API 或发现处理程序获取 MAC 地址。依赖于读取 arp 缓存或本地网络访问的工具，例如 `getmac`，在所有支持的网络环境中都无法正常工作，因此不可接受。
+- 纬度和经度或其他唯一地理位置
+- 设备上物理打印或烧入 EEPROM 的唯一标识符
 
-### Unique ID of last resort
+### 最后的唯一 ID
 
-For entities that are setup by a config entry, the `Config Entry ID` can be used as a last resort if no other Unique ID is available.
+对于由配置项设置的实体，如果没有其他唯一 ID 可用，可以使用“配置项 ID”作为最后的选择。
 
-### Unacceptable sources for a unique ID
+### 不能接受的唯一 ID 来源
 
 - IP Address
 - Device Name
