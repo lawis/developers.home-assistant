@@ -1,5 +1,5 @@
 ---
-title: "Permissions"
+title: "Permissions 权限"
 ---
 
 :::info

@@ -1,19 +1,18 @@
 ---
-title: Config Entries
+title: Config Entries 配置条目
 ---
+配置条目是由Home Assistant持久存储的配置数据。配置条目是用户通过UI创建的。UI流程由组件定义的[配置流程处理程序](config_entries_config_flow_handler.md)驱动。配置条目还可以有一个额外的[选项流程处理程序](config_entries_options_flow_handler.md)，也由组件定义。
 
-Config Entries are configuration data that are persistently stored by Home Assistant. A config entry is created by a user via the UI. The UI flow is powered by a [config flow handler](config_entries_config_flow_handler.md) as defined by the component. Config entries can also have an extra [options flow handler](config_entries_options_flow_handler.md), also defined by the component.
+## 生命周期
 
-## Lifecycle
-
-| State | Description |
+| 状态 | 描述 |
 | ----- | ----------- |
-| not loaded | The config entry has not been loaded. This is the initial state when a config entry is created or when Home Assistant is restarted. |
-| loaded | The config entry has been loaded. |
-| setup error | An error occurred when trying to set up the config entry. |
-| setup retry | A dependency of the config entry was not ready yet. Home Assistant will automatically retry loading this config entry in the future. Time between attempts will automatically increase.
-| migration error | The config entry had to be migrated to a newer version, but the migration failed.
-| failed unload | The config entry was attempted to be unloaded, but this was either not supported or it raised an exception.
+| 未加载 | 配置条目尚未加载。这是创建配置条目或Home Assistant重启时的初始状态。 |
+| 已加载 | 配置条目已加载。 |
+| 设置错误 | 设置配置条目时发生错误。 |
+| 设置重试 | 配置条目的某个依赖项尚未准备就绪。Home Assistant将自动在未来重新加载此配置条目。重试时间间隔将自动增加。
+| 迁移错误 | 配置条目需要迁移到较新版本，但迁移失败。
+| 卸载失败 | 尝试卸载配置条目时，要么不支持，要么引发了异常。
 
 <svg class='invertDark' width="508pt" height="188pt" viewBox="0.00 0.00 508.00 188.00" xmlns="http://www.w3.org/2000/svg">
 <g id="graph1" class="graph" transform="scale(1 1) rotate(0) translate(4 184)">
@@ -92,16 +91,13 @@ digraph G {
 }
 -->
 
-## Setting up an entry
+设置条目
 
-During startup, Home Assistant first calls the [normal component setup](/creating_component_index.md),
-and then call the method `async_setup_entry(hass, entry)` for each entry. If a new Config Entry is
-created at runtime, Home Assistant will also call `async_setup_entry(hass, entry)` ([example](https://github.com/home-assistant/core/blob/0.68.0/homeassistant/components/hue/__init__.py#L119)).
+在启动过程中，Home Assistant首先调用[普通组件设置](/creating_component_index.md)，然后为每个条目调用方法`async_setup_entry(hass, entry)`。如果在运行时创建了新的配置条目，Home Assistant也会调用`async_setup_entry(hass, entry)`（示例）。
 
-### For platforms
+对于平台
 
-If a component includes platforms, it will need to forward the Config Entry to the platform. This can
-be done by calling the forward function on the config entry manager ([example](https://github.com/home-assistant/core/blob/0.68.0/homeassistant/components/hue/bridge.py#L81)):
+如果组件包括平台，它将需要将配置条目转发给该平台。可以通过在配置条目管理器上调用转发函数来实现这一点 ([example](https://github.com/home-assistant/core/blob/0.68.0/homeassistant/components/hue/bridge.py#L81))：
 
 ```python
 # Use `hass.async_create_task` to avoid a circular dependency between the platform and the component
@@ -112,37 +108,38 @@ hass.async_create_task(
 )
 ```
 
-For a platform to support config entries, it will need to add a setup entry method ([example](https://github.com/home-assistant/core/blob/0.68.0/homeassistant/components/light/hue.py#L60)):
+要使平台支持配置条目，需要添加一个设置条目的方法。 ([example](https://github.com/home-assistant/core/blob/0.68.0/homeassistant/components/light/hue.py#L60)):
 
 ```python
 async def async_setup_entry(hass, config_entry, async_add_devices):
     """Set up entry."""
 ```
 
-## Unloading entries
+卸载条目
 
-Components can optionally support unloading a config entry. When unloading an entry, the component needs to clean up all entities, unsubscribe any event listener and close all connections. To implement this, add `async_unload_entry(hass, entry)` to your component ([example](https://github.com/home-assistant/core/blob/0.68.0/homeassistant/components/hue/__init__.py#L136)).
+组件可以选择支持卸载配置条目。在卸载条目时，组件需要清理所有实体，取消订阅任何事件监听器并关闭所有连接。要实现这一点，请将`async_unload_entry(hass, entry)`添加到您的组件中。([example](https://github.com/home-assistant/core/blob/0.68.0/homeassistant/components/hue/__init__.py#L136)).
 
-For each platform that you forwarded the config entry to, you will need to forward the unloading too.
+对于每个您将配置条目转发到的平台，您还需要转发卸载操作。
 
 ```python
 await self.hass.config_entries.async_forward_entry_unload(self.config_entry, "light")
 ```
 
-If you need to clean up resources used by an entity in a platform, have the entity implement the [`async_will_remove_from_hass`](core/entity.md#async_will_remove_from_hass) method.
+如果您需要清理平台中实体使用的资源，请让实体实现[`async_will_remove_from_hass`](core/entity.md#async_will_remove_from_hass) 方法。
 
-## Removal of entries
 
-If a component needs to clean up code when an entry is removed, it can define a removal method:
+删除条目
 
+如果组件在删除条目时需要清理代码，可以定义一个删除方法:
 ```python
 async def async_remove_entry(hass, entry) -> None:
     """Handle removal of an entry."""
 ```
 
-## Migrating config entries to a new version
+## 将配置条目迁移到新版本
 
-If the config entry version is changed, `async_migrate_entry` must be implemented to support the migration of old entries. This is documented in detail in the [config flow documentation](/config_entries_config_flow_handler.md#config-entry-migration)
+如果配置条目的版本发生变化，必须实现`async_migrate_entry`方法来支持旧条目的迁移。具体的文档细节可以在[config flow documentation](/config_entries_config_flow_handler.md#config-entry-migration)中找到。
+
 
 ```python
 async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
