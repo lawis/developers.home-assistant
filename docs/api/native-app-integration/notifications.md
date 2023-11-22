@@ -1,14 +1,15 @@
 ---
-title: "Push Notifications"
+title: "Push Notifications 推送通知"
 ---
 
-The `mobile_app` integration has a notify platform built in that allows for a generic way to send push notifications to your users without requiring installation of an external custom component. Push notifications can either be delivered via a websocket connection or via a cloud service.
 
-## Enabling websocket push notifications
+`mobile_app` 集成中内置了一个通知平台，可以以通用的方式向用户发送推送通知，而无需安装外部自定义组件。推送通知可以通过 WebSocket 连接或云服务进行传递。
 
-Your app can connect via the WebSocket API to Home Assistant to subscribe to push notifications. To enable this your app needs to either subscribe to cloud push notifications or add the `push_websocket_channel: true` to the `app_data` object in your registration.
+## 启用 WebSocket 推送通知
 
-To create a websocket channel create a push notification subscription:
+您的应用程序可以通过 WebSocket API 连接到 Home Assistant，以订阅推送通知。要启用此功能，您的应用程序需要订阅云推送通知或在注册中的 `app_data` 对象中添加 `push_websocket_channel: true`。
+
+要创建 WebSocket 通道，请创建一个推送通知订阅：
 
 ```json
 {
@@ -19,8 +20,7 @@ To create a websocket channel create a push notification subscription:
 }
 ```
 
-All push notifications will be delivered as an event over the websocket connection:
-
+所有的推送通知都将通过 WebSocket 连接作为一个事件进行传递：
 ```json
 {
   "id": 2,
@@ -32,8 +32,7 @@ All push notifications will be delivered as an event over the websocket connecti
 }
 ```
 
-If confirmation is enabled, you have to send a websocket command to confirm:
-
+如果启用了确认功能，您需要发送一个 WebSocket 命令来进行确认：
 ```json
 {
   "id": 3,
@@ -43,27 +42,29 @@ If confirmation is enabled, you have to send a websocket command to confirm:
 }
 ```
 
-If a registration supports cloud push notifications and is connected to receive local push notifications, notifications will be delivered locally first and fallback to cloud if the application doesn't confirm the notification.
 
-## Enabling cloud push notifications
+如果注册支持云推送通知，并且已连接以接收本地推送通知，则通知将首先在本地传递，如果应用程序不确认通知，则回退到云端。
 
-To enable the notify platform for your application, you must set two keys in the `app_data` object during the initial registration or later update of an existing registration.
+## 启用云推送通知
 
-| Key | Type | Description
+要为您的应用程序启用通知平台，您必须在初始注册或更新现有注册时，在 `app_data` 对象中设置两个键。
+
+| 键 | 类型 | 描述
 | --- | ---- | -----------
-| `push_token` | string | A push notification token unique to your users device. For example, this could be an APNS token or an FCM Instance ID/token.
-| `push_url` | string | The URL on your server that push notifications will be HTTP POSTed to.
+| `push_token` | 字符串 | 与用户设备唯一相关的推送通知令牌。例如，这可以是一个APNS令牌或一个FCM实例ID/令牌。
+| `push_url` | 字符串 | 您的服务器上将进行HTTP POST的推送通知的URL。
 
-You should advise the user to restart Home Assistant after you set these keys in order for them to see the notify target. It will have the format `notify.mobile_app_<saved_device_name>`.
+您应该建议用户在设置完这些密钥后重新启动 Home Assistant，以便他们能够看到通知目标。其格式为 `notify.mobile_app_<saved_device_name>`。
 
-### Deploying a server component
+### 部署服务器组件
 
-The notify platform doesn't concern itself with how to notify your users. It simply forwards a notification to your external server where you should actually handle the request.
-This approach allows you to maintain full control over your push notification infrastructure.
+通知平台无需考虑如何通知您的用户。它只是将通知转发到您的外部服务器，在那里您应该实际处理请求。
+这种方法使您能够完全控制推送通知基础设施。
 
-See the next section of this document for an example server implementation of a push notification forwarder that uses Firebase Cloud Functions and Firebase Cloud Messaging.
+请参阅此文档的下一节，了解使用 Firebase Cloud Functions 和 Firebase Cloud Messaging 实现推送通知转发的示例服务器组件。
 
-Your server should accept a HTTP POST payload like this:
+您的服务器应该接受类似于以下的 HTTP POST 负载：
+
 
 ```json
 {
@@ -81,30 +82,29 @@ Your server should accept a HTTP POST payload like this:
   }
 }
 ```
-
 :::info
-`webhook_id` will only be included from core-2021.11 or later.
+`webhook_id` 仅从 core-2021.11 版本或更高版本开始包含。
 :::
 
-It should respond with a 201 status code assuming the notification was queued for delivery successfully.
+假设通知成功排队等待发送，服务器应该以 201 状态代码作为响应。
 
-### Errors
+### 错误
 
-If an error occurs you should return a description of what went wrong with a status code _other than_ 201 or 429. An error response must be a JSON object and can contain one of the following keys:
+如果发生错误，您应返回错误描述，并使用 201 或 429 以外的状态代码。错误响应必须是一个 JSON 对象，可以包含以下键之一：
 
-| Key | Type | Description
+| 键 | 类型 | 描述
 | --- | ---- | -----------
-| `errorMessage` | string | If provided, it will be appended to a preset error message. For example, if `errorMessage` is "Could not communicate with Apple" it will be output in the log like "Internal server error, please try again later: Could not communicate with Apple"
-| `message` | string | If provided, it will be output directly to the logs at the warning log level.
+| `errorMessage` | 字符串 | 如果提供了，它将追加到预设错误消息中。例如，如果 `errorMessage` 是 "无法与 Apple 通信"，则在日志中输出为 "内部服务器错误，请稍后重试：无法与 Apple 通信"
+| `message` | 字符串 | 如果提供了，它将直接以警告日志级别输出到日志中。
 
-No matter what key you use, you should try to be as descriptive as possible about what went wrong and, if possible, how the user can fix it.
+无论使用哪个键，您都应尽量详细地描述出现了什么问题，如果可能，以及用户该如何解决。
 
-### Rate limits
+### 速率限制
 
-The notify platform also supports exposing rate limits to users. Home Assistant suggests you implement a conservative rate limit to keep your costs low and also so that users don't overload themselves with too many notifications.
-For reference, Home Assistant Companion has a maximum sendable notifications per 24 hours of 150 notifications. The rate limit resets for all users at midnight, UTC. You of course are free to use whatever configuration for your own rate limiting.
+通知平台还支持向用户公开速率限制。Home Assistant 建议您实现保守的速率限制，以降低成本，也好让用户不会因为太多通知而过载。
+供参考，Home Assistant Companion 在 24 小时内最多可发送 150 条通知。速率限制在每天协调世界时午夜重置。当然，您可以根据自己的需要使用任何配置来实现速率限制。
 
-If you choose to implement rate limiting, your successful server response should look like the following:
+如果您选择实现速率限制，您的成功服务器响应应如下所示：
 
 ```json
 {
@@ -117,23 +117,24 @@ If you choose to implement rate limiting, your successful server response should
 }
 ```
 
-| Key | Type | Description
+| 键 | 类型 | 描述
 | --- | ---- | -----------
-| `successful` | integer | The number of successful push notifications the user has sent during the rate limit period.
-| `errors` | integer | The number of failed push notifications the user has sent during the rate limit period.
-| `maximum` | integer | The maximum number of push notifications the user can send during the users rate limit period.
-| `resetsAt` | ISO8601 timestamp | The timestamp that the users rate limit period expires at. Must be provided in the UTC timezone.
+| `successful` | 整数 | 用户在速率限制期间成功发送的推送通知数量。
+| `errors` | 整数 | 用户在速率限制期间发送失败的推送通知数量。
+| `maximum` | 整数 | 用户在速率限制期间可以发送的最大推送通知数量。
+| `resetsAt` | ISO8601 时间戳 | 用户的速率限制期到期的时间戳。必须以 UTC 时区提供。
 
-The rate limits will be output to the log at the warning log level after every notification is successfully sent. Home Assistant will also output the exact time remaining until the rate limit period resets.
+每次成功发送通知后，速率限制将以警告日志级别的形式输出到日志中。Home Assistant 还会输出距速率限制期重置的精确剩余时间。
 
-Once the user hits their maximum amount of notifications sent in the rate limit period, you should start responding with a 429 status code until the rate limit period expires. The response object can optionally contain a key, `message` which will be output to the Home Assistant log instead of the standard error message.
+一旦用户在速率限制期间发送的通知数量达到最大限制，您应开始使用 429 状态码作为响应，直到速率限制期到期。响应对象可以选择包含一个名为 `message` 的键，该键将被输出到 Home Assistant 日志中，而不是标准错误消息。
 
-The notify platform does not itself implement any kind of rate limit protections. Users will be able to keep sending you notifications, so you should reject them with a 429 status code as early in your logic as possible.
+通知平台本身不实现任何类型的速率限制保护。用户将能够继续向您发送通知，因此应在您的逻辑中尽早使用 429 状态码拒绝它们。
 
-### Example server implementation
+### 示例服务器实现
 
-The below code is a Firebase Cloud Function that forwards notifications to Firebase Cloud Messaging. To deploy this, you should create a new Firestore database named `rateLimits`. Then, you can deploy the following code.
-Also, ensure that you have properly configured your project with the correct authentication keys for APNS and FCM.
+下面的代码是一个将通知转发到 Firebase Cloud Messaging 的 Firebase Cloud Function 示例。要部署此代码，您应创建一个名为 `rateLimits` 的新 Firestore 数据库。然后，您可以部署以下代码。
+此外，请确保已正确配置您的项目，并使用适用于 APNS 和 FCM 的正确认证密钥。
+
 
 ```javascript
 'use strict';

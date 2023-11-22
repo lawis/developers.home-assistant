@@ -1,14 +1,14 @@
 ---
-title: "Firing intents"
+title: "Firing intents 触发意图"
 ---
 
-If your code matches the user's speech or text to intents, you can let the intent be handled by Home Assistant. This can be done from inside your own integration, or via the generic Intent handle API.
+如果您的代码将用户的语音或文本匹配到意图上，您可以让Home Assistant处理该意图。这可以通过您自己的集成内部完成，也可以通过通用的意图处理API完成。
 
-When you fire an intent, you will get a response back or an error will be raised. It is up to your code to return the result to the user.
+当您触发一个意图时，您将收到一个响应或者可能会出现错误。您的代码需要将结果返回给用户。
 
 ## HTTP API
 
-When the intent integration is loaded, an HTTP API endpoint is available at `/api/intent/handle`. You can POST JSON data to it containing an intent name and it's data:
+在加载意图集成时，将在`/api/intent/handle`路径上提供一个HTTP API端点。您可以向该端点POST JSON数据，其中包含意图名称和其数据：
 
 ```json
 {
@@ -19,9 +19,10 @@ When the intent integration is loaded, an HTTP API endpoint is available at `/ap
 }
 ```
 
-## Home Assistant integration
+## Home Assistant集成
 
 Example code to handle an intent in Home Assistant.
+以下是在Home Assistant中处理意图的示例代码
 
 ```python
 from homeassistant.helpers import intent
@@ -44,32 +45,33 @@ except intent.IntentError:
     _LOGGER.exception("Error handling request for %s", intent_type)
 ```
 
-The intent response is an instance of `homeassistant.helpers.intent.IntentResponse`.
 
-| Name | Type | Description |
+意图响应是`homeassistant.helpers.intent.IntentResponse`的一个实例。
+
+| 名称 | 类型 | 描述 |
 | ---- | ---- | ----------- |
-| `intent` | Intent | Instance of intent that triggered response. |
-| `speech` | Dictionary | Speech responses. Each key is a type. Allowed types are `plain` and `ssml`. |
-| `reprompt` | Dictionary | Reprompt responses. Each key is a type. Allowed types are `plain` and `ssml`.<br />This is used to keep the session open when a response is required from the user. In these cases, `speech` usually is a question. |
-| `card` | Dictionary | Card responses. Each key is a type. |
+| `intent` | Intent | 触发响应的意图实例 |
+| `speech` | 字典 | 语音响应。每个键是一种类型。允许的类型有`plain`和`ssml` |
+| `reprompt` | 字典 | 提示响应。每个键是一种类型。允许的类型有`plain`和`ssml`。<br />当需要用户的响应时，使用此选项来保持会话开启。在这些情况下，`speech`通常是一个问题。 |
+| `card` | 字典 | 卡片响应。每个键是一种类型。 |
 
-Speech dictionary values:
+语音字典的值：
 
-| Name | Type | Description |
+| 名称 | 类型 | 描述 |
 | ---- | ---- | ----------- |
-| `speech` | String | The text to say
-| `extra_data` | Any | Extra information related to this speech.
+| `speech` | 字符串 | 要说的文本 |
+| `extra_data` | 任意类型 | 与此语音相关的额外信息 |
 
-Reprompt dictionary values:
+提示字典的值：
 
-| Name | Type | Description |
+| 名称 | 类型 | 描述 |
 | ---- | ---- | ----------- |
-| `reprompt` | String | The text to say when user takes too long to respond
-| `extra_data` | Any | Extra information related to this speech.
+| `reprompt` | 字符串 | 当用户花费过长时间来回应时要说的文本 |
+| `extra_data` | 任意类型 | 与此提示相关的额外信息 |
 
-Card dictionary values:
+卡片字典的值：
 
-| Name | Type | Description |
+| 名称 | 类型 | 描述 |
 | ---- | ---- | ----------- |
-| `title` | String | The title of the card
-| `content` | Any | The content of the card
+| `title` | 字符串 | 卡片的标题 |
+| `content` | 任意类型 | 卡片的内容

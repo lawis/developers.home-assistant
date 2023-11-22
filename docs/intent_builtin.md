@@ -1,36 +1,36 @@
 ---
-title: "Built-in intents"
+title: "Built-in intents 内置意图"
 toc_max_heading_level: 2
 ---
 
 import intents from '!!yaml-loader!../intents/intents.yaml';
 
-The following intents are **supported**:
+以下意图受支持：
 
-  * HassTurnOn, HassTurnOff, HassGetState, HassLightSet
+  * HassTurnOn（打开设备）、HassTurnOff（关闭设备）、HassGetState（获取设备状态）、HassLightSet（设置灯光）
 
-The following intents are **deprecated**:
+以下意图已弃用：
 
- * HassOpenCover, HassCloseCover, HassToggle, HassHumidifierSetpoint, HassHumidifierMode, HassShoppingListAddItem, HassShoppingListLastItems
+ * HassOpenCover（打开遮盖物）、HassCloseCover（关闭遮盖物）、HassToggle（切换设备状态）、HassHumidifierSetpoint（设置加湿器目标值）、HassHumidifierMode（设置加湿器模式）、HassShoppingListAddItem（添加物品到购物清单）、HassShoppingListLastItems（获取最近添加的物品）
 
-**Slots**
+**插槽**
 
-For *HassTurnOn* and *HassTurnOff*, the *slots* are optional. 
+对于*HassTurnOn*和*HassTurnOff*意图，插槽是可选的。
 
-Possible slot combinations are:
-
-
-    | Slot combination        | Example                          |
-    | ----------------------- | ---------------------------------|
-    | name only               | table light                      |
-    | area only               | kitchen                          |
-    | area and name           | living room reading light        |
-    | area and domain         | kitchen lights                   |
-    | area and device class   | bathroom humidity                |
-    | device class and domain | carbon dioxide sensors           |
+可能的插槽组合有:
 
 
-## Supported intents
+    | 插槽组合        | 示例                          |
+    | ----------------------- | --------------------------------- |
+    | 仅名称               | 台灯                      |
+    | 仅区域               | 厨房                          |
+    | 区域和名称           | 客厅阅读灯        |
+    | 区域和域           | 厨房灯                   |
+    | 区域和设备类别   | 浴室湿度                |
+    | 设备类别和域 | 二氧化碳传感器           |
+
+
+## 支持的意图
 
 <>
 {
@@ -59,70 +59,70 @@ Possible slot combinations are:
 }
 </>
 
-## Deprecated intents
+## 已弃用的意图
 
-These are old intents that are not supported by template matching sentences and are planned to be removed or replaced.
+这些是不受模板匹配句子支持的旧意图，计划将其删除或替换。
 
 
 ### HassOpenCover
 
-_Deprecated; use `HassTurnOn` instead._
+_已弃用；请改用`HassTurnOn`代替。_
 
-Open a cover.
+打开遮盖物。
 
-| Slot name | Type | Required | Description
-| --------- | ---- | -------- | -----------
-| name | string | Yes | Name of the cover entity to open.
+| 插槽名称 | 类型 | 是否必填 | 描述 |
+| --------- | ---- | -------- | ---- |
+| name | string | 是 | 要打开的遮盖物实体的名称。|
 
 ### HassCloseCover
 
-_Deprecated; use `HassTurnOff` instead._
+_已弃用；请改用`HassTurnOff`代替。_
 
-Close a cover.
+关闭遮盖物。
 
-| Slot name | Type | Required | Description
-| --------- | ---- | -------- | -----------
-| name | string | Yes | Name of the cover entity to close.
+| 插槽名称 | 类型 | 是否必填 | 描述 |
+| --------- | ---- | -------- | ---- |
+| name | string | 是 | 要关闭的遮盖物实体的名称。|
 
 ### HassToggle
 
-Toggle the state of an entity.
+切换实体的状态。
 
-| Slot name | Type | Required | Description
-| --------- | ---- | -------- | -----------
-| name | string | Yes | Name of the entity to toggle.
+| 插槽名称 | 类型 | 是否必填 | 描述 |
+| --------- | ---- | -------- | ---- |
+| name | string | 是 | 要切换的实体的名称。|
 
 ### HassHumidifierSetpoint
 
-Set target humidity.
+设置目标湿度。
 
-| Slot name | Type | Required | Description
-| --------- | ---- | -------- | -----------
-| name | string | Yes | Name of the entity to control.
-| humidity | integer, 0-100 | Yes | Target humidity to set.
+| 插槽名称 | 类型 | 是否必填 | 描述 |
+| --------- | ---- | -------- | ---- |
+| name | string | 是 | 要控制的实体的名称。|
+| humidity | 整数, 0-100 | 是 | 要设置的目标湿度值。|
 
 ### HassHumidifierMode
 
-Set humidifier mode if supported by the humidifier.
+如果加湿器支持，设置加湿器模式。
 
-| Slot name | Type | Required | Description
-| --------- | ---- | -------- | -----------
-| name | string | Yes | Name of the entity to control.
-| mode | string | Yes | The mode to switch to.
+| 插槽名称 | 类型 | 是否必填 | 描述 |
+| --------- | ---- | -------- | ---- |
+| name | string | 是 | 要控制的实体的名称。|
+| mode | string | 是 | 要切换到的模式。|
 
 ### HassShoppingListAddItem
 
-Add an item to the shopping list.
+将物品添加到购物清单。
 
-| Slot name | Type | Required | Description
-| --------- | ---- | -------- | -----------
-| item | string | Yes | Name of item to add to the list.
+| 插槽名称 | 类型 | 是否必填 | 描述 |
+| --------- | ---- | -------- | ---- |
+| item | string | 是 | 要添加到清单的物品的名称。|
 
 ### HassShoppingListLastItems
 
-List the last 5 items on the shopping list.
+列出购物清单上的最后5个物品。
 
-_This intent has no slots._
+_此意图没有插槽。_
 
 
 

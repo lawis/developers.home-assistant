@@ -1,38 +1,37 @@
 ---
-title: "Device Triggers"
+title: "Device Triggers 设备触发器"
 sidebar_label: Triggers
 ---
 
-Device triggers are automation triggers that are tied to a specific device and an event or state change. Examples are "light turned on" or "water detected".
+设备触发器是与特定设备和事件或状态变化相关联的自动化触发器。例如，“灯打开”或“检测到水”。
 
-Device triggers can be provided by the integration that provides the device (e.g. ZHA, deCONZ) or the entity integrations that the device has entities with (e.g. light, switch). An example of the former is events not tied to an entity e.g. key press on a remote control or touch panel, while an example of the latter could be that a light has been turned on.
+设备触发器可以由提供设备的集成（例如ZHA、deCONZ）或设备具有实体的实体集成（例如灯、开关）提供。前者的示例是与实体无关的事件，例如遥控器或触摸面板上的键按下，而后者的示例可能是灯已经打开。
 
-To add support for Device Triggers, an integration needs to have a `device_trigger.py` and:
+要添加对设备触发器的支持，集成需要具有`device_trigger.py`文件，并：
 
-- *Define a `TRIGGER_SCHEMA`*: A dictionary that represents a trigger, such as a device and an event type
-- *Create triggers*: Create dictionaries containing the device or entity and supported events or state changes as defined by the schema.
-- *Attach triggers*: Associate a trigger config with an event or state change, e.g. a message fired on the event bus.
-- *Add text and translations*: Give each trigger a human readable name.
+- *定义`TRIGGER_SCHEMA`*：表示触发器的字典，例如设备和事件类型
+- *创建触发器*：创建包含设备或实体以及由模式定义的支持的事件或状态更改的字典。
+- *附加触发器*：将触发器配置与事件或状态更改关联，例如在事件总线上触发的消息。
+- *添加文本和翻译*：为每个触发器提供人类可读的名称。
 
-Do not apply the static schema manually. The core will apply the schema if the trigger schema is defined as a constant in the `device_trigger.py` module of the integration.
+不要手动应用静态模式。如果触发器模式在集成的`device_trigger.py`模块中被定义为常量，核心将应用该模式。
 
-If the trigger requires dynamic validation that the static `TRIGGER_SCHEMA` can't provide, it's possible to implement an `async_validate_trigger_config` function.
+如果触发器需要动态验证，静态`TRIGGER_SCHEMA`无法提供，可以实现`async_validate_trigger_config`函数。
 
 ```py
 async def async_validate_trigger_config(hass: HomeAssistant, config: ConfigType) -> ConfigType:
     """Validate config."""
 ```
 
-Home Assistant includes a template to get started with device triggers. To get started, run inside a development environment `python3 -m script.scaffold device_trigger`.
+Home Assistant 包含一个模板，用于开始使用设备触发器。要开始使用，请在开发环境中运行 `python3 -m script.scaffold device_trigger`。
 
-The template will create a new file `device_trigger.py` in your integration folder and a matching test file. The file contains the following functions and constants:
-
+模板将在您的集成文件夹中创建一个名为 `device_trigger.py` 的新文件以及一个匹配的测试文件。该文件包含以下函数和常量：
 
 #### Define a `TRIGGER_SCHEMA`
 
-Device triggers are defined as dictionaries. These dictionaries are created by your integration and are consumed by your integration to attach the trigger.
+设备触发器被定义为字典。这些字典由您的集成创建，并由您的集成用于附加触发器。
 
-This is a voluptuous schema that verifies that a specific trigger dictionary represents a config that your integration can handle. This should extend the TRIGGER_BASE_SCHEMA from `device_automation/__init__.py`.
+这是一个 voluptuous 模式，用于验证特定触发器字典是否表示您的集成可以处理的配置。这应该扩展 `device_automation/__init__.py` 中的 TRIGGER_BASE_SCHEMA。
 
 ```python
 from homeassistant.const import (
@@ -49,11 +48,11 @@ TRIGGER_SCHEMA = TRIGGER_BASE_SCHEMA.extend(
 )
 ```
 
-This example has a single `type` field indicating the type of events supported.
+此示例具有一个单独的`type`字段，表示支持的事件类型。
 
 #### Create triggers
 
-The `async_get_triggers` method returns a list of triggers supported by the device or any associated entities. These are the triggers exposed to the user for creating automations.
+`async_get_triggers`方法返回设备或任何相关实体支持的触发器列表。这些触发器将向用户公开，以便创建自动化。
 
 ```python
 from homeassistant.const import (
@@ -91,6 +90,11 @@ async def async_get_triggers(hass, device_id):
 To wire it up: Given a `TRIGGER_SCHEMA` config, make sure the `action` is called when the trigger is triggered.
 
 For example, you might attach the trigger and action to [Events fired](integration_events.md) on the event bus by your integration.
+#### Attach triggers
+
+将其连接起来：给定一个`TRIGGER_SCHEMA`配置，确保在触发触发器时调用`action`。
+
+例如，您可以将触发器和动作附加到由您的集成在事件总线上的[Events fired]触发的事件(integration_events.md)上。
 
 ```python
 async def async_attach_trigger(hass, config, action, trigger_info):
@@ -110,11 +114,11 @@ async def async_attach_trigger(hass, config, action, trigger_info):
     )
 ```
 
-The return value is a function that detaches the trigger.
+返回值是一个解除触发器的函数。
 
-#### Add text and translations
+#### 添加文本和翻译
 
-The Automation user interface will display a human-readable string in the device automation mapped to the event type.  Update `strings.json` with the trigger types and subtypes that you support:
+自动化用户界面将在设备自动化中显示与事件类型相对应的可读字符串。请在`strings.json`中更新支持的触发器类型和子类型：
 
 ```json
 {
@@ -126,5 +130,4 @@ The Automation user interface will display a human-readable string in the device
 }
 ```
 
-To test your translations during development, run `python3 -m script.translations develop`.
-
+在开发过程中测试翻译，请运行 `python3 -m script.translations develop`。
