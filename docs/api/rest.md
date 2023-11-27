@@ -3,18 +3,19 @@ title: "REST API"
 ---
 import ApiEndpoint from '@site/static/js/api_endpoint.jsx'
 
-Home Assistant provides a RESTful API on the same port as the web frontend (default port is port 8123).
+Home Assistant 在与 Web 前端相同的端口上提供了一个 RESTful API（默认端口为 8123）。
 
-If you are not using the [`frontend`](https://www.home-assistant.io/integrations/frontend/) in your setup then you need to add the [`api` integration](https://www.home-assistant.io/integrations/api/) to your `configuration.yaml` file.
+如果您的设置中没有使用 [`frontend`](https://www.home-assistant.io/integrations/frontend/) ，那么您需要将 [`api`](https://www.home-assistant.io/integrations/api/) 集成添加到您的 `configuration.yaml` 文件中。
 
-- `http://IP_ADDRESS:8123/` is an interface to control Home Assistant.
-- `http://IP_ADDRESS:8123/api/` is a RESTful API.
+- `http://IP_ADDRESS:8123/` 是用于控制 Home Assistant 的界面。
+- `http://IP_ADDRESS:8123/api/` 是一个 RESTful API。
 
-The API accepts and returns only JSON encoded objects.
+API 仅接受和返回 JSON 编码的对象。
 
-All API calls have to be accompanied by the header `Authorization: Bearer TOKEN`, where `TOKEN` is replaced by your unique access token. You obtain a token ("Long-Lived Access Token") by logging into the frontend using a web browser, and going to [your profile](https://www.home-assistant.io/docs/authentication/#your-account-profile) `http://IP_ADDRESS:8123/profile`. Be careful to copy the whole key.
+所有 API 调用都需要在标头中附带 `Authorization: Bearer TOKEN`，其中 `TOKEN` 被替换为您的唯一访问令牌。您可以通过使用 Web 浏览器登录前端，并转到 [您的个人资料](https://www.home-assistant.io/docs/authentication/#your-account-profile) `http://IP_ADDRESS:8123/profile` 来获取令牌（"长期访问令牌"）。请注意将整个密钥复制下来。
 
-There are multiple ways to consume the Home Assistant Rest API. One is with `curl`:
+有多种方法可以使用 Home Assistant Rest API。其中一种是使用 `curl` 命令：
+
 
 ```shell
 curl \
@@ -23,8 +24,8 @@ curl \
   http://IP_ADDRESS:8123/ENDPOINT
 ```
 
-Another option is to use Python and the [Requests](https://requests.readthedocs.io/en/latest/) module.
 
+另一个选项是使用 Python 和 [Requests](https://requests.readthedocs.io/en/latest/) 模块。
 ```python
 from requests import get
 
@@ -38,7 +39,7 @@ response = get(url, headers=headers)
 print(response.text)
 ```
 
-Another option is to use the [RESTful Command integration](https://www.home-assistant.io/integrations/rest_command/) in a Home Assistant automation or script.
+另一个选项是在 Home Assistant 的自动化或脚本中使用 [RESTful Command 集成](https://www.home-assistant.io/integrations/rest_command/)。
 
 ```yaml
 turn_light_on:
@@ -50,8 +51,7 @@ turn_light_on:
   payload: '{"state":"on"}'
 ```
 
-Successful calls will return status code 200 or 201. Other status codes that can return are:
-
+成功的调用将返回状态码 200 或 201。其他可能返回的状态码有：
 - 400 (Bad Request)
 - 401 (Unauthorized)
 - 404 (Not Found)

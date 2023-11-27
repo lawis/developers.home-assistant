@@ -2,30 +2,30 @@
 title: "WebSocket API"
 ---
 
-Home Assistant contains a WebSocket API. This API can be used to stream information from a Home Assistant instance to any client that implements WebSockets. We maintain a [JavaScript library](https://github.com/home-assistant/home-assistant-js-websocket) which we use in our frontend.
+Home Assistant 包含一个 WebSocket API。这个 API 可以用来将信息从 Home Assistant 实例传输到任何实现了 WebSockets 的客户端上。我们维护一个[JavaScript 库](https://github.com/home-assistant/home-assistant-js-websocket)，在我们的前端中使用该库。
 
-## Server states
+## 服务器状态
 
-1. Client connects.
-1. Authentication phase starts.
-    - Server sends `auth_required` message.
-    - Client sends `auth` message.
-    - If `auth` message correct: go to 3.
-    - Server sends `auth_invalid`. Go to 6.
-1. Send `auth_ok` message
-1. Authentication phase ends.
-1. Command phase starts.
-    1. Client can send commands.
-    1. Server can send results of previous commands.
-1. Client or server disconnects session.
+1. 客户端连接。
+2. 认证阶段开始。
+   - 服务器发送`auth_required`消息。
+   - 客户端发送`auth`消息。
+   - 如果`auth`消息正确：转到步骤 3。
+   - 服务器发送`auth_invalid`消息。转到步骤 6。
+3. 发送`auth_ok`消息。
+4. 认证阶段结束。
+5. 命令阶段开始。
+   1. 客户端可以发送命令。
+   2. 服务器可以发送之前命令的结果。
+6. 客户端或服务器断开会话。
 
-During the command phase, the client attaches a unique identifier to each message. The server will add this identifier to each message so that the client can link each message to its origin.
+在命令阶段，客户端会为每条消息附加一个唯一标识符。服务器将在每条消息中添加此标识符，以便客户端可以将每条消息与其来源关联起来。
 
-## Message format
+## 消息格式
 
-Each API message is a JSON serialized object containing a `type` key. After the authentication phase messages also must contain an `id`, an integer that contains the number of interactions.
+每个 API 消息都是一个 JSON 序列化对象，包含一个`type`键。在认证阶段后，消息还必须包含一个`id`，它是一个整数，表示交互次数。
 
-Example of an auth message:
+以下是一个`auth`消息的示例：
 
 ```json
 {
@@ -49,7 +49,7 @@ Example of an auth message:
 
 ## Authentication phase
 
-When a client connects to the server, the server sends out `auth_required`.
+当客户端连接到服务器时，服务器会发送`auth_required`消息。
 
 ```json
 {
@@ -58,8 +58,8 @@ When a client connects to the server, the server sends out `auth_required`.
 }
 ```
 
-The first message from the client should be an auth message. You can authorize with an access token.
 
+客户端的第一条消息应该是一个`auth`消息。您可以使用访问令牌进行授权。
 ```json
 {
   "type": "auth",
@@ -67,7 +67,7 @@ The first message from the client should be an auth message. You can authorize w
 }
 ```
 
-If the client supplies valid authentication, the authentication phase will complete by the server sending the `auth_ok` message:
+如果客户端提供有效的身份验证，服务器将通过发送`auth_ok`消息来完成认证阶段：
 
 ```json
 {
@@ -76,8 +76,8 @@ If the client supplies valid authentication, the authentication phase will compl
 }
 ```
 
-If the data is incorrect, the server will reply with `auth_invalid` message and disconnect the session.
 
+如果数据不正确，服务器将以`auth_invalid`消息回复并断开与客户端的连接。
 ```json
 {
   "type": "auth_invalid",
@@ -85,9 +85,9 @@ If the data is incorrect, the server will reply with `auth_invalid` message and 
 }
 ```
 
-## Command phase
+## 命令阶段
 
-During this phase the client can give commands to the server. The server will respond to each command with a `result` message indicating when the command is done and if it was successful along with the context of the command.
+在这个阶段，客户端可以向服务器发送命令。服务器将对每个命令做出响应，使用一个`result`消息指示命令何时完成以及是否成功，同时提供命令的上下文信息。
 
 ```json
 {
@@ -104,9 +104,9 @@ During this phase the client can give commands to the server. The server will re
 }
 ```
 
-## Subscribe to events
+## 订阅事件
 
-The command `subscribe_events` will subscribe your client to the event bus. You can either listen to all events or to a specific event type. If you want to listen to multiple event types, you will have to send multiple `subscribe_events` commands.
+命令`subscribe_events`将会将您的客户端订阅到事件总线上。您可以选择同时监听所有事件或特定类型的事件。如果您想要监听多个事件类型，您需要发送多个`subscribe_events`命令。
 
 ```json
 {
@@ -117,8 +117,7 @@ The command `subscribe_events` will subscribe your client to the event bus. You 
 }
 ```
 
-The server will respond with a result message to indicate that the subscription is active.
-
+服务器将会以`result`消息作为回应，来指示订阅已经生效。
 ```json
 {
   "id": 18,
@@ -128,7 +127,8 @@ The server will respond with a result message to indicate that the subscription 
 }
 ```
 
-For each event that matches, the server will send a message of type `event`. The `id` in the message will point at the original `id` of the `listen_event` command.
+
+对于每个匹配的事件，服务器将会发送一个类型为`event`的消息。消息中的`id`将指向原始`listen_event`命令的`id`。
 
 ```json
 {
@@ -194,7 +194,7 @@ For each event that matches, the server will send a message of type `event`. The
 
 ## Subscribe to trigger
 
-You can also subscribe to one or more triggers with `subscribe_trigger`. These are the same triggers syntax as used for [automation triggers](https://www.home-assistant.io/docs/automation/trigger/). You can define one or a list of triggers.
+你还可以使用`subscribe_trigger`命令订阅一个或多个触发器。这些触发器的语法与[自动化触发器](https://www.home-assistant.io/docs/automation/trigger/)相同。你可以定义一个或多个触发器。
 
 ```json
 {
@@ -220,7 +220,7 @@ As a response you get:
 }
 ```
 
-For each trigger that matches, the server will send a message of type `trigger`. The `id` in the message will point at the original `id` of the `subscribe_trigger` command. Note that your variables will be different based on the used trigger.
+对于每个匹配的触发器，服务器将会发送一个类型为`trigger`的消息。消息中的`id`将指向原始`subscribe_trigger`命令的`id`。请注意，基于使用的触发器，你的变量将是不同的。
 
 ```json
 {
@@ -279,7 +279,7 @@ For each trigger that matches, the server will send a message of type `trigger`.
 
 ### Unsubscribing from events
 
-You can unsubscribe from previously created subscriptions. Pass the id of the original subscription command as value to the subscription field.
+你可以取消之前创建的订阅。将原始订阅命令的id作为值传递给订阅字段即可。
 
 ```json
 {
@@ -289,8 +289,7 @@ You can unsubscribe from previously created subscriptions. Pass the id of the or
 }
 ```
 
-The server will respond with a result message to indicate that unsubscribing was successful.
-
+服务器将会回复一个结果消息，以指示取消订阅是否成功。
 ```json
 {
   "id": 19,
@@ -302,8 +301,7 @@ The server will respond with a result message to indicate that unsubscribing was
 
 ## Fire an event
 
-This will fire an event on the Home Assistant event bus.
-
+这将在 Home Assistant 事件总线上触发一个事件。
 ```json
 {
   "id": 24,
@@ -317,8 +315,7 @@ This will fire an event on the Home Assistant event bus.
 }
 ```
 
-The server will respond with a result message to indicate that the event was fired successful.
-
+服务器将通过一个结果消息来响应，以指示事件已成功触发。
 ```json
 {
   "id": 24,
@@ -336,7 +333,8 @@ The server will respond with a result message to indicate that the event was fir
 
 ## Calling a service
 
-This will call a service in Home Assistant. Right now there is no return value. The client can listen to `state_changed` events if it is interested in changed entities as a result of a service call.
+
+这将在 Home Assistant 中调用服务。当前没有返回值。如果客户端希望了解由于服务调用而导致的实体变化，可以监听 `state_changed` 事件。
 
 ```json
 {
@@ -356,8 +354,7 @@ This will call a service in Home Assistant. Right now there is no return value. 
 }
 ```
 
-The server will indicate with a message indicating that the service is done executing.
-
+服务器将用一条消息表示服务执行完毕。
 ```json
 {
   "id": 24,
@@ -373,9 +370,9 @@ The server will indicate with a message indicating that the service is done exec
 }
 ```
 
-## Fetching states
+## Fetching states 获取状态
 
-This will get a dump of all the current states in Home Assistant.
+这将获取 Home Assistant 中所有当前状态的快照。
 
 ```json
 {
@@ -384,8 +381,7 @@ This will get a dump of all the current states in Home Assistant.
 }
 ```
 
-The server will respond with a result message containing the states.
-
+服务器将用包含状态的结果消息作出响应。
 ```json
 {
   "id": 19,
@@ -395,9 +391,9 @@ The server will respond with a result message containing the states.
 }
 ```
 
-## Fetching config
+## Fetching config 获取状态
 
-This will get a dump of the current config in Home Assistant.
+这将获取Home Assistant中当前配置的详细信息。
 
 ```json
 {
@@ -406,8 +402,7 @@ This will get a dump of the current config in Home Assistant.
 }
 ```
 
-The server will respond with a result message containing the config.
-
+服务器将用包含配置信息的结果消息作出响应。
 ```json
 {
   "id": 19,
@@ -419,7 +414,7 @@ The server will respond with a result message containing the config.
 
 ## Fetching services
 
-This will get a dump of the current services in Home Assistant.
+这将获取Home Assistant中当前服务的详细信息。
 
 ```json
 {
@@ -428,8 +423,7 @@ This will get a dump of the current services in Home Assistant.
 }
 ```
 
-The server will respond with a result message containing the services.
-
+服务器将用包含服务信息的结果消息作出响应。
 ```json
 {
   "id": 19,
@@ -439,9 +433,9 @@ The server will respond with a result message containing the services.
 }
 ```
 
-## Fetching panels
+## 获取面板信息
 
-This will get a dump of the current registered panels in Home Assistant.
+这将获取 Home Assistant 中当前注册的面板的详细信息。
 
 ```json
 {
@@ -450,8 +444,7 @@ This will get a dump of the current registered panels in Home Assistant.
 }
 ```
 
-The server will respond with a result message containing the current registered panels.
-
+服务器将用包含当前已注册面板信息的结果消息作出响应。
 ```json
 {
   "id": 19,
@@ -463,7 +456,7 @@ The server will respond with a result message containing the current registered 
 
 ## Pings and Pongs
 
-The API supports receiving a ping from the client and returning a pong. This serves as a heartbeat to ensure the connection is still alive:
+API 支持接收来自客户端的 ping 消息并返回一个 pong 消息。这相当于一个心跳包，用于确保连接仍然存活。
 
 ```json
 {
@@ -472,8 +465,7 @@ The API supports receiving a ping from the client and returning a pong. This ser
 }
 ```
 
-The server must send a pong back as quickly as possible, if the connection is still active:
-
+如果连接仍然活动，服务器必须尽快发送一个 pong 回复。
 ```json
 {
     "id": 19,
@@ -481,9 +473,9 @@ The server must send a pong back as quickly as possible, if the connection is st
 }
 ```
 
-## Validate config
+## 验证配置
 
-This command allows you to validate triggers, conditions and action configurations. The keys `trigger`, `condition` and `action` will be validated as if part of an automation (so a list of triggers/conditions/actions is also allowed). All fields are optional and the result will only contain keys that were passed in.
+此命令允许您验证触发器、条件和操作配置。`trigger`、`condition` 和 `action` 字段将被验证，就好像它们是自动化的一部分（因此也允许触发器/条件/操作列表）。所有字段都是可选的，结果中只包含传入的字段键。
 
 ```json
 {
@@ -495,7 +487,7 @@ This command allows you to validate triggers, conditions and action configuratio
 }
 ```
 
-The server will respond with the validation results. Only fields will be included in the response that were also included in the command message.
+服务器将以验证结果作为响应。响应中只包含在命令消息中出现的字段。
 
 ```json
 {
@@ -510,9 +502,9 @@ The server will respond with the validation results. Only fields will be include
 }
 ```
 
-## Error handling
+## 错误处理
 
-If an error occurs, the `success` key in the `result` message will be set to `false`. It will contain an `error` key containing an object with two keys: `code` and `message`.
+如果发生错误，则 `result` 消息中的 `success` 键将被设置为 `false`。它将包含一个名为 `error` 的键，其中包含一个具有两个键（`code` 和 `message`）的对象。
 
 ```json
 {
