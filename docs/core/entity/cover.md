@@ -3,77 +3,75 @@ title: Cover Entity
 sidebar_label: Cover
 ---
 
-A cover entity controls an opening or cover, such as a garage door or a window shade. Derive a platform entity from [`homeassistant.components.cover.CoverEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/cover/__init__.py).
+一个覆盖物实体用于控制门窗、窗帘等的打开或覆盖动作。请从[`homeassistant.components.cover.CoverEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/cover/__init__.py)派生一个平台实体。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应当仅从内存中返回信息，而不进行 I/O 操作（如网络请求）。请实现 `update()` 或 `async_update()` 方法来获取数据。
 :::
 
-### Platform Properties (to be implemented by deriving platform classes)
+### 平台属性（由派生平台类实现）
 
-| Name | Type | Default | Description
+| 名称 | 类型 | 默认值 | 描述
 | ---- | ---- | ------- | -----------
-| current_cover_position | int | None | The current position of cover where 0 means closed and 100 is fully open.  Required with `SUPPORT_SET_POSITION`.
-| current_cover_tilt_position | int | None | The current tilt position of the cover where 0 means closed/no tilt and 100 means open/maximum tilt.  Required with `SUPPORT_SET_TILT_POSITION`
-| is_opening | bool | None | If the cover is opening or not. Used to determine `state`.
-| is_closing | bool | None | If the cover is closing or not. Used to determine `state`.
-| is_closed | bool | `NotImplementedError()` | If the cover is closed or not.  if the state is unknown, return `None`. Used to determine `state`.
+| current_cover_position | int | None | 覆盖物当前位置，其中 0 表示关闭，100 表示完全打开。在使用 `SUPPORT_SET_POSITION` 时为必需。
+| current_cover_tilt_position | int | None | 覆盖物当前倾斜位置，其中 0 表示关闭/无倾斜，100 表示打开/最大倾斜。在使用 `SUPPORT_SET_TILT_POSITION` 时为必需。
+| is_opening | bool | None | 覆盖物是否正在打开。用于确定状态。
+| is_closing | bool | None | 覆盖物是否正在关闭。用于确定状态。
+| is_closed | bool | `NotImplementedError()` | 覆盖物是否关闭。如果状态未知，返回 `None`。用于确定状态。
 
-### Entity Properties (base class properties which may be overridden)
+### 实体属性（可以被子类覆盖的基类属性）
 
-| Name | Type | Default | Description
+| 名称 | 类型 | 默认值 | 描述
 | ---- | ---- | ------- | -----------
-| device_class | string | None | Describes the type/class of the cover. Must be `None` or one of the valid values from the table below.
-| supported_features | int (bitwise) | Value determined from `current_cover_position` and `current_cover_tilt_position` | Describes the supported features. See the related table below for details.
+| device_class | string | None | 描述覆盖物的类型/类别。必须为 `None` 或下表中的有效值之一。
+| supported_features | int（位操作）| 从 `current_cover_position` 和 `current_cover_tilt_position` 确定的值 | 描述支持的功能。详见下表。
 
-### Device Classes
+### 设备类别
 
-| Constant | Description
+| 常量 | 描述
 |----------|-----------------------|
-| `CoverDeviceClass.AWNING` | Control of an awning, such as an exterior retractible window, door, or patio cover.
-| `CoverDeviceClass.BLIND` | Control of blinds, which are linked slats that expand or collapse to cover an opening or may be tilted to partially cover an opening, such as window blinds.
-| `CoverDeviceClass.CURTAIN` | Control of curtains or drapes, which is often fabric hung above a window or door that can be drawn open.
-| `CoverDeviceClass.DAMPER` | Control of a mechanical damper that reduces air flow, sound, or light.
-| `CoverDeviceClass.DOOR` | Control of a door that provides access to an area which is typically part of a structure.
-| `CoverDeviceClass.GARAGE` | Control of a garage door that provides access to a garage.
-| `CoverDeviceClass.GATE` | Control of a gate that provides access to a driveway or other area. Gates are found outside of a structure and are typically part of a fence.
-| `CoverDeviceClass.SHADE` | Control of shades, which are a continuous plane of material or connected cells that expanded or collapsed over an opening, such as window shades.
-| `CoverDeviceClass.SHUTTER` | Control of shutters, which are linked slats that swing out/in to cover an opening or may be tilted to partially cover an opening, such as indoor or exterior window shutters.
-| `CoverDeviceClass.WINDOW` | Control of a physical window that opens and closes or may tilt.
+| `CoverDeviceClass.AWNING` | 遮阳篷的控制，例如外部伸缩窗户、门或阳台遮挡物。
+| `CoverDeviceClass.BLIND` | 百叶窗的控制，是连接的板片，展开或折叠以覆盖开口，也可以倾斜部分覆盖开口，例如窗帘。
+| `CoverDeviceClass.CURTAIN` | 窗帘的控制，通常是悬挂在窗户或门上的织物，可以被拉开。
+| `CoverDeviceClass.DAMPER` | 机械调节器（减少气流、噪音或光线）的控制。
+| `CoverDeviceClass.DOOR` | 门的控制，通常提供对结构部分的访问。
+| `CoverDeviceClass.GARAGE` | 车库门的控制，通常提供对车库的访问。
+| `CoverDeviceClass.GATE` | 门的控制，通常提供对车道或其他区域的访问。门位于建筑物外部，通常属于围栏的一部分。
+| `CoverDeviceClass.SHADE` | 百叶窗的控制，是一块连续的材料或连接的隔室，可以展开或折叠以覆盖开口，例如窗帘。
+| `CoverDeviceClass.SHUTTER` | 百叶窗的控制，是连接的板片，可以摆动以覆盖开口，也可以倾斜部分覆盖开口，例如室内或室外百叶窗。
+| `CoverDeviceClass.WINDOW` | 物理窗户的控制，可以打开、关闭或倾斜。
 
-### States
+### 状态
 
-| Constant | Description
+| 常量 | 描述
 |----------|------------------------|
-| `STATE_OPENING` | The cover is in the process of opening to reach a set position.
-| `STATE_OPEN` | The cover has reached the open position.
-| `STATE_CLOSING` | The cover is in the process of closing to reach a set position.
-| `STATE_CLOSED` | The cover has reach the closed position.
+| `STATE_OPENING` | 覆盖物正在打开至设定位置。
+| `STATE_OPEN` | 覆盖物已完全打开。
+| `STATE_CLOSING` | 覆盖物正在关闭至设定位置。
+| `STATE_CLOSED` | 覆盖物已完全关闭。
 
-## Supported Features
+## 支持的功能
 
-Supported features are defined by using values in the `CoverEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
+支持的功能使用 `CoverEntityFeature` 枚举的值，并使用按位或（`|`）操作符进行组合。
 
-| Value               | Description                                                                      |
+| 值               | 描述                                                                      |
 | ------------------- | -------------------------------------------------------------------------------- |
-| `OPEN`              | The cover supports being opened.                                                 |
-| `CLOSE`             | The cover supports being closed.                                                 |
-| `SET_POSITION`      | The cover supports moving to a specific position between opened and closed.      |
-| `STOP`              | The cover supports stopping the current action (open, close, set position)       |
-| `OPEN_TILT`         | The cover supports being tilting open.                                           |
-| `CLOSE_TILT`        | The cover supports being tilting closed.                                         |
-| `SET_TILT_POSITION` | The cover supports moving to a specific tilt position between opened and closed. |
-| `STOP_TILT`         | The cover supports stopping the current tilt action (open, close, set position)  |
+| `OPEN`              | 覆盖物支持打开操作。                                                 |
+| `CLOSE`             | 覆盖物支持关闭操作。                                                 |
+| `SET_POSITION`      | 覆盖物支持定位操作，可以在完全打开和完全关闭之间移动到指定的位置。      |
+| `STOP`              | 覆盖物支持停止当前操作（打开、关闭、定位）。       |
+| `OPEN_TILT`         | 覆盖物支持倾斜开操作。                                           |
+| `CLOSE_TILT`        | 覆盖物支持倾斜关操作。                                         |
+| `SET_TILT_POSITION` | 覆盖物支持定位倾斜操作，可以在完全打开和完全关闭之间移动到指定的倾斜位置。 |
+| `STOP_TILT`         | 覆盖物支持停止当前倾斜操作（开、关、定位）。  |
 
 ## Methods
 
 ### Open cover
 
-Only implement this method if the flag `SUPPORT_OPEN` is set.
-
+如果设置了 `SUPPORT_OPEN` 标志，请实现此方法。
 ```python
 class MyCover(CoverEntity):
     # Implement one of these methods.
@@ -87,7 +85,7 @@ class MyCover(CoverEntity):
 
 ### Close cover
 
-Only implement this method if the flag `SUPPORT_CLOSE` is set.
+如果设置了 `SUPPORT_CLOSE` 标志，请实现此方法。
 
 ```python
 class MyCover(CoverEntity):
@@ -100,9 +98,9 @@ class MyCover(CoverEntity):
         """Close cover."""
 ```
 
-### Set cover position
+### 设置覆盖物位置
 
-Only implement this method if the flag `SUPPORT_SET_POSITION` is set.
+如果设置了 `SUPPORT_SET_POSITION` 标志，请实现此方法。
 
 ```python
 class MyCover(CoverEntity):
@@ -115,10 +113,10 @@ class MyCover(CoverEntity):
         """Move the cover to a specific position."""
 ```
 
-### Stop cover
 
-Only implement this method if the flag `SUPPORT_STOP` is set.
+### 停止覆盖物
 
+如果设置了 `SUPPORT_STOP` 标志，请实现此方法。
 ```python
 class MyCover(CoverEntity):
     # Implement one of these methods.
@@ -130,9 +128,9 @@ class MyCover(CoverEntity):
         """Stop the cover."""
 ```
 
-### Open cover tilt
+### 打开覆盖物倾斜
 
-Only implement this method if the flag `SUPPORT_OPEN_TILT` is set.
+如果设置了 `SUPPORT_OPEN_TILT` 标志，请实现此方法。
 
 ```python
 class MyCover(CoverEntity):
@@ -145,9 +143,9 @@ class MyCover(CoverEntity):
         """Open the cover tilt."""
 ```
 
-### Close cover tilt
+### 关闭覆盖物倾斜
 
-Only implement this method if the flag `SUPPORT_CLOSE_TILT` is set.
+如果设置了 `SUPPORT_CLOSE_TILT` 标志，请实现此方法。
 
 ```python
 class MyCover(CoverEntity):
@@ -160,9 +158,9 @@ class MyCover(CoverEntity):
         """Close the cover tilt."""
 ```
 
-### Set cover tilt position
+### 设置覆盖物倾斜位置
 
-Only implement this method if the flag `SUPPORT_SET_TILT_POSITION` is set.
+如果设置了 `SUPPORT_SET_TILT_POSITION` 标志，请实现此方法。
 
 ```python
 class MyCover(CoverEntity):
@@ -175,9 +173,9 @@ class MyCover(CoverEntity):
         """Move the cover tilt to a specific position."""
 ```
 
-### Stop cover tilt
+### 停止覆盖物倾斜
 
-Only implement this method if the flag `SUPPORT_STOP_TILT` is set.
+如果设置了 `SUPPORT_STOP_TILT` 标志，请实现此方法。
 
 ```python
 class MyCover(CoverEntity):

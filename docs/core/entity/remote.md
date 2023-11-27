@@ -3,33 +3,32 @@ title: Remote Entity
 sidebar_label: Remote
 ---
 
-Derive entity platforms from [`homeassistant.components.remote.RemoteEntity`](https://github.com/home-assistant/home-assistant/blob/master/homeassistant/components/remote/__init__.py)
+从[`homeassistant.components.remote.RemoteEntity`](https://github.com/home-assistant/home-assistant/blob/master/homeassistant/components/remote/__init__.py)派生实体平台。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应始终只从内存中返回信息，不进行I/O操作（如网络请求）。实现`update()`或`async_update()`来获取数据。
 :::
 
-| Name | Type | Default | Description
-| ---- | ---- | ------- | -----------
-| current_activity | str | None | Return the current active activity |
-| activity_list | list | None | Return the list of available activities |
+| 名称 | 类型 | 默认值 | 描述 |
+| ---- | ---- | ------- | ---- |
+| current_activity | str | None | 返回当前活动的名称 |
+| activity_list | list | None | 返回可用活动的列表 |
 
-### Activity
+### 活动
 
-An activity is a predefined activity or macro that puts the remote in a specific state. For example, a "Watch TV" activity may turn on multiple devices and change the channel to a specific channel.
+活动是预定义的活动或宏，可以将遥控器置于特定状态。例如，"Watch TV"活动可能会打开多个设备并将频道切换到指定的频道。
 
-## Supported Features
+## 支持的功能
 
-Supported features are defined by using values in the `RemoteEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
+支持的功能由使用`RemoteEntityFeature`枚举中的值定义，并使用按位或（`|`）运算符进行组合。
 
-| Value            | Description                                   |
+| 值 | 描述 |
 | ---------------- | --------------------------------------------- |
-| `LEARN_COMMAND`  | Entity allows learning commands from devices. |
-| `DELETE_COMMAND` | Entity allows deleting commands from devices. |
-| `ACTIVITY`       | Entity supports activities.                   |
+| `LEARN_COMMAND`  | 实体允许从设备学习命令。 |
+| `DELETE_COMMAND` | 实体允许从设备删除命令。 |
+| `ACTIVITY`       | 实体支持活动。                   |
 
 ## Methods
 

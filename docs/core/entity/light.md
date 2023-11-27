@@ -3,83 +3,63 @@ title: Light Entity
 sidebar_label: Light
 ---
 
+暗光实体控制光源的亮度、色调和饱和度颜色值、白色值、色温和效果。从 [`homeassistant.components.light.LightEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/light/__init__.py) 派生实体平台。
 
-A light entity controls the brightness, hue and saturation color value, white value, color temperature and effects of a light source. Derive platform entities from [`homeassistant.components.light.LightEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/light/__init__.py).
+## 属性
 
-## Properties
+| 名称                     | 类型           | 默认值         | 描述                                                                                                                         |
+| ------------------------ | ------------  | ------------  | --------------------------------------------------------------------------------------------------------------------------- |
+| brightness               | int           | `None`        | 返回光源的亮度，取值范围为 1..255。                                                                                           |
+| color_mode               | string        | `None`        | 返回光源的颜色模式。返回的颜色模式必须存在于 `supported_color_modes` 属性中。                                                 |
+| color_temp_kelvin        | int           | `None`        | 返回以 Kelvin 为单位的色温颜色值。当光源的颜色模式设置为 `ColorMode.COLOR_TEMP` 时，此属性将被复制到光源的状态属性中；否则将被忽略。          |
+| effect                   | string        | `None`        | 返回当前的效果。                                                                                                              |
+| effect_list              | list          | `None`        | 返回支持的效果列表。                                                                                                          |
+| hs_color                 | tuple         | `None`        | 返回色调和饱和度颜色值（float，float）。当光源的颜色模式设置为 `ColorMode.HS` 时，此属性将被复制到光源的状态属性中；否则将被忽略。        |
+| is_on                    | bool          | `None`        | 返回光源实体是否打开。                                                                                                        |
+| max_color_temp_kelvin    | int           | `int`         | 返回光源支持的最低色温（以 Kelvin 为单位）。                                                                                    |
+| min_color_temp_kelvin    | int           | `int`         | 返回光源支持的最高色温（以 Kelvin 为单位）。                                                                                    |
+| rgb_color                | tuple         | `None`        | 返回 RGB 颜色值（int，int，int）。当光源的颜色模式设置为 `ColorMode.RGB` 时，此属性将被复制到光源的状态属性中；否则将被忽略。           |
+| rgbw_color               | tuple         | `None`        | 返回 RGBW 颜色值（int，int，int，int）。当光源的颜色模式设置为 `ColorMode.RGBW` 时，此属性将被复制到光源的状态属性中；否则将被忽略。     |
+| rgbww_color              | tuple         | `None`        | 返回 RGBWW 颜色值（int，int，int，int，int）。当光源的颜色模式设置为 `ColorMode.RGBWW` 时，此属性将被复制到光源的状态属性中；否则将被忽略。 |
+| supported_color_modes    | set           | `None`        | 标记支持的颜色模式的集合。                                                                                                    |
+| supported_features       | int           | `int`         | 标记支持的功能的标志位。                                                                                                      |
+| white_value              | int           | `None`        | 返回光源的白色值，取值范围为 0..255。该属性已弃用，并将在 Home Assistant 2021.10 中移除。                                         |
+| xy_color                 | tuple         | `None`        | 返回 XY 颜色值（float，float）。当光源的颜色模式设置为 `ColorMode.XY` 时，此属性将被复制到光源的状态属性中；否则将被忽略。           |
 
-| Name | Type | Default | Description
-| ---- | ---- | ---- | ----
-| brightness | int | None | Return the brightness of this light between 1..255
-| color_mode | string | None | Return the color mode of the light. The returned color mode must be present in the `supported_color_modes` property.
-| color_temp_kelvin | int | None | Return the CT color value in K. This property will be copied to the light's state attribute when the light's color mode is set to `ColorMode.COLOR_TEMP` and ignored otherwise.
-| effect | String | None | Return the current effect.
-| effect_list | list | None | Return the list of supported effects.
-| hs_color | tuple | None | Return the hue and saturation color value (float, float). This property will be copied to the light's state attribute when the light's color mode is set to `ColorMode.HS` and ignored otherwise.
-| is_on    | bool | `None`  | Returns if the light entity is on or not.  
-| max_color_temp_kelvin | int | int | Return the coldest color_temp_kelvin that this light supports.
-| min_color_temp_kelvin | int | int | Return the warmest color_temp_kelvin that this light supports.
-| rgb_color | tuple | None | Return the rgb color value (int, int, int). This property will be copied to the light's state attribute when the light's color mode is set to `ColorMode.RGB` and ignored otherwise.
-| rgbw_color | tuple | None | Return the rgbw color value (int, int, int, int). This property will be copied to the light's state attribute when the light's color mode is set to `ColorMode.RGBW` and ignored otherwise.
-| rgbww_color | tuple | None | Return the rgbww color value (int, int, int, int, int). This property will be copied to the light's state attribute when the light's color mode is set to `ColorMode.RGBWW` and ignored otherwise.
-| supported_color_modes | set | None | Flag supported color modes.
-| supported_features | int | int | Flag supported features.
-| white_value | int | None | Return the white value of this light between 0..255. This is deprecated and will be removed in Home Assistant 2021.10.
-| xy_color | tuple | None | Return the xy color value (float, float). This property will be copied to the light's state attribute when the light's color mode is set to `ColorMode.XY` and ignored otherwise.
+## 颜色模式
 
-## Color Modes
+新的集成必须实现 `color_mode` 和 `supported_color_modes`。如果要升级现有的集成以支持颜色模式，则应实现 `color_mode` 和 `supported_color_modes`。
 
-New integrations must implement both `color_mode` and `supported_color_modes`. If an integration is upgraded to support color mode, both `color_mode` and `supported_color_modes` should be implemented.
+支持的颜色模式通过在 `ColorMode` 枚举中使用值来定义。
 
-Supported color modes are defined by using values in the `ColorMode` enum.
+如果一个光源没有实现 `supported_color_modes`，则根据 `supported_features` 属性中的已弃用标志来推断。具体步骤如下：
 
-If a light does not implement the `supported_color_modes`, the `LightEntity` will attempt deduce it based on deprecated flags in the `supported_features` property:
+- 从一个空集合开始。
+- 如果设置了 `SUPPORT_COLOR_TEMP`，则添加 `ColorMode.COLOR_TEMP`。
+- 如果设置了 `SUPPORT_COLOR`，则添加 `ColorMode.HS`。
+- 如果设置了 `SUPPORT_WHITE_VALUE`，则添加 `ColorMode.RGBW`。
+- 如果设置了 `SUPPORT_BRIGHTNESS`，并且尚未添加任何颜色模式，则添加 `ColorMode.BRIGHTNESS`。
+- 如果尚未添加任何颜色模式，则添加 `ColorMode.ONOFF`。
 
- - Start with an empty set
- - If `SUPPORT_COLOR_TEMP` is set, add `ColorMode.COLOR_TEMP`
- - If `SUPPORT_COLOR` is set, add `ColorMode.HS`
- - If `SUPPORT_WHITE_VALUE` is set, add `ColorMode.RGBW`
- - If `SUPPORT_BRIGHTNESS` is set and no color modes have yet been added, add `ColorMode.BRIGHTNESS`
- - If no color modes have yet been added, add `ColorMode.ONOFF`
+如果一个光源没有实现 `color_mode`，则根据设置了哪些属性以及哪些属性为 `None` 来推断。具体步骤如下：
 
-If a light does not implement the `color_mode`, the `LightEntity` will attempt to deduce it based on which of the properties are set and which are `None`:
+- 如果 `supported_color_mode` 包括 `ColorMode.RGBW`，并且 `white_value` 和 `hs_color` 都不为 `None`，则返回 `ColorMode.RGBW`。
+- 否则，如果 `supported_color_mode` 包括 `ColorMode.HS`，并且 `hs_color` 不为 `None`，则返回 `ColorMode.HS`。
+- 否则，如果 `supported_color_mode` 包括 `ColorMode.COLOR_TEMP`，并且 `color_temp` 不为 `None`，则返回 `ColorMode.COLOR_TEMP`。
+- 否则，如果 `supported_color_mode` 包括 `ColorMode.BRIGHTNESS`，并且 `brightness` 不为 `None`，则返回 `ColorMode.BRIGHTNESS`。
+- 否则，如果 `supported_color_mode` 包括 `ColorMode.ONOFF`，则返回 `ColorMode.ONOFF`。
+- 否则，返回 `ColorMode.UNKNOWN`。
 
-- If `supported_color_mode` includes `ColorMode.RGBW` and `white_value` and `hs_color` are both not None: `ColorMode.RGBW`
-- Else if `supported_color_mode` includes `ColorMode.HS` and `hs_color` is not None: `ColorMode.HS`
-- Else if `supported_color_mode` includes `ColorMode.COLOR_TEMP` and `color_temp` is not None: `ColorMode.COLOR_TEMP`
-- Else if `supported_color_mode` includes `ColorMode.BRIGHTNESS` and `brightness` is not None: `ColorMode.BRIGHTNESS`
-- Else if `supported_color_mode` includes `ColorMode.ONOFF`: `ColorMode.ONOFF`
-- Else: ColorMode.UNKNOWN
-
-| Value | Description
-|----------|-----------------------
-| `ColorMode.UNKNOWN` | The light's color mode is not known.
-| `ColorMode.ONOFF` | The light can be turned on or off. This mode must be the only supported mode if supported by the light.
-| `ColorMode.BRIGHTNESS` | The light can be dimmed. This mode must be the only supported mode if supported by the light.
-| `ColorMode.COLOR_TEMP` | The light can be dimmed and its color temperature is present in the state.
-| `ColorMode.HS` | The light can be dimmed and its color can be adjusted. The light's brightness can be set using the `brightness` parameter and read through the `brightness` property. The light's color can be set using the `hs_color` parameter and read through the `hs_color` property. `hs_color` is an (h, s) tuple (no brightness).
-| `ColorMode.RGB` | The light can be dimmed and its color can be adjusted. The light's brightness can be set using the `brightness` parameter and read through the `brightness` property. The light's color can be set using the `rgb_color` parameter and read through the `rgb_color` property. `rgb_color` is an (r, g, b) tuple (not normalized for brightness).
-| `ColorMode.RGBW` | The light can be dimmed and its color can be adjusted. The light's brightness can be set using the `brightness` parameter and read through the `brightness` property. The light's color can be set using the `rgbw_color` parameter and read through the `rgbw_color` property. `rgbw_color` is an (r, g, b, w) tuple (not normalized for brightness).
-| `ColorMode.RGBWW` | The light can be dimmed and its color can be adjusted. The light's brightness can be set using the `brightness` parameter and read through the `brightness` property. The light's color can be set using the `rgbww_color` parameter and read through the `rgbww_color` property. `rgbww_color` is an (r, g, b, cw, ww) tuple (not normalized for brightness).
-| `ColorMode.WHITE` | The light can be dimmed and its color can be adjusted. In addition, the light can be set to white mode. The light's brightness can be set using the `brightness` parameter and read through the `brightness` property. The light can be set to white mode by using the `white` parameter with the desired brightness as value. Note that there's no `white` property. If both `brighthness` and `white` are present in a service call, the `white` parameter will be updated with the value of `brightness`. If this mode is supported, the light must also support at least one of `ColorMode.HS`, `ColorMode.RGB`, `ColorMode.RGBW`, `ColorMode.RGBWW` or `ColorMode.XY`.
-| `ColorMode.XY` | The light can be dimmed and its color can be adjusted. The light's brightness can be set using the `brightness` parameter and read through the `brightness` property. The light's color can be set using the `xy_color` parameter and read through the `xy_color` property. `xy_color` is an (x, y) tuple.
-
-Note that in color modes `ColorMode.RGB`, `ColorMode.RGBW` and `ColorMode.RGBWW` there is brightness information both in the light's `brightness` property and in the color. As an example, if the light's brightness is 128 and the light's color is (192, 64, 32), the overall brightness of the light is: 128/255 * max(192, 64, 32)/255 = 38%.
-
-If the light is in mode `ColorMode.HS`, `ColorMode.RGB` or `ColorMode.XY`, the light's state attribute will contain the light's color expressed in `hs`, `rgb` and `xy` color format. Note that when the light is in mode `ColorMode.RGB`, the `hs` and `xy` state attributes only hold the chromaticity of the `rgb` color as the `hs` and `xy` pairs do not hold brightness information.
-
-If the light is in mode `ColorMode.RGBW` or `ColorMode.RGBWW`, the light's state attribute will contain the light's color expressed in `hs`, `rgb` and `xy` color format. The color conversion is an approximation done by adding the white channels to the color.
-
-## Supported Features
-
-Supported features are defined by using values in the `LightEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
-
-| Value        | Description                                                    |
-| ------------ | -------------------------------------------------------------- |
-| `EFFECT`     | Controls the effect a light source shows                       |
-| `FLASH`      | Controls the duration of a flash a light source shows          |
-| `TRANSITION` | Controls the duration of transitions between color and effects |
+| Value | Description |
+| ------ | ------------ |
+| `ColorMode.UNKNOWN` | 灯光的颜色模式未知。 |
+| `ColorMode.ONOFF` | 灯光可以打开或关闭。如果灯光支持，此模式必须是唯一支持的模式。 |
+| `ColorMode.BRIGHTNESS` | 灯光可以调暗。如果灯光支持，此模式必须是唯一支持的模式。 |
+| `ColorMode.COLOR_TEMP` | 灯光可以调暗，并且其颜色温度在状态中存在。 |
+| `ColorMode.HS` | 灯光可以调暗，并且可以调整颜色。可以使用 `brightness` 参数设置灯光的亮度，并通过 `brightness` 属性进行读取。可以使用 `hs_color` 参数设置灯光的颜色，并通过 `hs_color` 属性进行读取。`hs_color` 是一个 (h, s) 元组（不包含亮度）。 |
+| `ColorMode.RGB` | 灯光可以调暗，并且可以调整颜色。可以使用 `brightness` 参数设置灯光的亮度，并通过 `brightness` 属性进行读取。可以使用 `rgb_color` 参数设置灯光的颜色，并通过 `rgb_color` 属性进行读取。`rgb_color` 是一个 (r, g, b) 元组（不考虑亮度）。 |
+| `ColorMode.RGBW` | 灯光可以调暗，并且可以调整颜色。可以使用 `brightness` 参数设置灯光的亮度，并通过 `brightness` 属性进行读取。可以使用 `rgbw_color` 参数设置灯光的颜色，并通过 `rgbw_color` 属性进行读取。`rgbw_color` 是一个 (r, g, b, w) 元组（不考虑亮度）。 |
+| `ColorMode.RGBWW` | 灯光可以调暗，并且可以调整颜色。可以使用 `brightness` 参数设置
 
 ## Methods
 
@@ -94,17 +74,17 @@ class MyLightEntity(LightEntity):
         """Turn device on."""
 ```
 
-Note that there's no `color_mode` passed to the `async_turn_on` method, instead only a single color attribute is allowed.
-It is guaranteed that the integration will only receive a single color attribute in a `turn_on`call, which is guaranteed to be supported by the light according to the light's `supported_color_modes` property. To ensure this, colors in the service call will be translated before the entity's `async_turn_on` method is called if the light doesn't support the corresponding color mode:
+请注意，在 `async_turn_on` 方法中没有传递 `color_mode` 参数，而只允许使用单一的颜色属性。
+可以确保集成系统在调用 `turn_on` 时只接收到单一的颜色属性，并且该属性根据灯光的 `supported_color_modes` 属性来确定是否被支持。为了确保这一点，如果灯光不支持相应的颜色模式，服务调用中的颜色将在调用实体的 `async_turn_on` 方法之前进行转换:
 
-| Color type   | Translation
+| 颜色类型   | 转换
 |--------------|-----------------------
-| color_temp | Will be removed from the service call if not supported and translated to `hs_color`, `rgb_color`, `rgbw_color`, `rgbww_color` or `xy_color` if supported by the light.
-| hs_color | Will be removed from the service call if not supported and translated to `rgb_color`, `rgbw_color`, `rgbww_color` or `xy_color` if supported by the light.
-| rgb_color | Will be removed from the service call if not supported and translated to `rgbw_color`, `rgbww_color`, `hs_color` or `xy_color` if supported by the light.
-| rgbw_color | Will be removed from the service call if not supported.
-| rgbww_color | Will be removed from the service call if not supported.
-| xy_color | Will be removed from the service call if not supported and translated to `hs_color`, `rgb_color`, `rgbw_color` or `rgbww_color` if supported by the light.
+| color_temp | 如果不受支持，则将其从服务调用中删除，并将其转换为 `hs_color`、`rgb_color`、`rgbw_color`、`rgbww_color` 或 `xy_color`（如果灯光支持）。
+| hs_color | 如果不受支持，则将其从服务调用中删除，并将其转换为 `rgb_color`、`rgbw_color`、`rgbww_color` 或 `xy_color`（如果灯光支持）。
+| rgb_color | 如果不受支持，则将其从服务调用中删除，并将其转换为 `rgbw_color`、`rgbww_color`、`hs_color` 或 `xy_color`（如果灯光支持）。
+| rgbw_color | 如果不受支持，则将其从服务调用中删除。
+| rgbww_color | 如果不受支持，则将其从服务调用中删除。
+| xy_color | 如果不受支持，则将其从服务调用中删除，并将其转换为 `hs_color`、`rgb_color`、`rgbw_color` 或 `rgbww_color`（如果灯光支持）。
 
 
 ### Turn Off Light Device

@@ -3,32 +3,31 @@ title: Event entity
 sidebar_label: Event
 ---
 
-Events are signals that are emitted when something happens, for example, when a user presses a physical button like a doorbell or when a button on a remote control is pressed. The event entity captures these events in the physical world and makes them available in Home Assistant as an entity.
+事件是在发生某些事情时发出的信号，例如当用户按下物理按钮（如门铃）或按下遥控器上的按钮时。事件实体将这些事件捕获在物理世界中，并将它们作为实体在Home Assistant中提供。
 
-The event entity is stateless, meaning you don't have to maintain a state. Instead, you can trigger an event when something in the physical world happens. Home Assistant will keep track of the last event that was emitted and will show that as the current state of the entity.
+事件实体是无状态的，这意味着您不需要维护状态。相反，当物理世界中发生某些事件时，您可以触发一个事件。Home Assistant会跟踪最后一个发出的事件，并将其显示为实体的当前状态。
 
-The main state of the entity is the timestamp of when the last event was emitted, additionally the type of the event and optionally extra state data that was provided with the event are also kept track of.
+实体的主要状态是上次发出事件的时间戳，此外还会跟踪事件的类型以及可选的随事件提供的额外状态数据。
 
-An event entity is derived from the  [`homeassistant.components.event.EventEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/event/__init__.py).
+事件实体从[`homeassistant.components.event.EventEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/event/__init__.py)派生。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应总是仅从内存中返回信息，而不执行I/O操作（如网络请求）。实现 `update()` 或 `async_update()` 来获取数据。
 :::
 
-| Name        | Type            | Default      | Description                                          |
-| ----------- | --------------- | ------------ | ---------------------------------------------------- |
-| event_types | list of strings | **Required** | A list of possible event types this entity can fire. |
+| 名称         | 类型              | 默认值       | 描述                                                     |
+| ------------- | ----------------- | ------------ | ------------------------------------------------------- |
+| event_types   | 字符串列表      | **必需**     | 此实体可以触发的可能事件类型列表。                              |
 
-Other properties that are common to all entities such as `device_class`, `icon`, `name` etc are also applicable.
+适用于所有实体的其他属性，如 `device_class`、`icon`、`name` 等也适用。
 
-## Firing events
+## 触发事件
 
-The event entity is a little different compared to other entities. Home Assistant manages the state, but the integration
-is responsible for firing the events. This is done by calling the `_trigger_event` method on the event entity.
+事件实体与其他实体略有不同。Home Assistant管理状态，但整合是负责触发事件的。这可以通过在事件实体上调用 `_trigger_event` 方法来完成。
 
-This method takes the event type as the first argument and optionally extra state data as the second argument.
+此方法接受事件类型作为第一个参数，并可选地接受额外的状态数据作为第二个参数。
 
 ```python
 class MyEvent(EventEntity):
@@ -47,18 +46,18 @@ class MyEvent(EventEntity):
         my_device_api.listen(self._async_handle_event)
 ```
 
-Only event types that are defined in the `event_types` property can be fired. If an event type is fired that is not defined in the `event_types` property, a `ValueError` will be raised.
+只能触发在 `event_types` 属性中定义的事件类型。如果触发了在 `event_types` 属性中未定义的事件类型，将会引发 `ValueError`。
 
 :::tip
-Be sure to deregister any callbacks when the entity is removed from Home Assistant.
+确保在从Home Assistant中删除实体时取消注册所有的回调函数。
 :::
 
-### Available device classes
+### 可用的设备类别
 
-Optionally specifies what type of entity it is.
+可选地指定它是什么类型的实体。
 
-| Constant                    | Description                                           |
-| --------------------------- | ----------------------------------------------------- |
-| `EventDeviceClass.BUTTON`   | A button of a remote control has been pressed.        |
-| `EventDeviceClass.DOORBELL` | Specifically for buttons that are used as a doorbell. |
-| `EventDeviceClass.MOTION`   | For motion events detected by a motion sensor.        |
+| 常量                         | 描述                                     |
+| --------------------------- | ---------------------------------------- |
+| `EventDeviceClass.BUTTON`   | 按下遥控器上的按钮。                    |
+| `EventDeviceClass.DOORBELL` | 专门用于门铃按钮。                      |
+| `EventDeviceClass.MOTION`   | 由运动传感器检测到的运动事件。           |

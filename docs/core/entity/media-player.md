@@ -3,71 +3,67 @@ title: Media Player Entity
 sidebar_label: Media Player
 ---
 
-:::info Incomplete
-This entry is incomplete. Contribution welcome.
-:::
-A media player entity controls a media player.  Derive a platform entity from [`homeassistant.components.media_player.MediaPlayerEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/media_player/__init__.py).
+媒体播放器实体控制一个媒体播放器。从[`homeassistant.components.media_player.MediaPlayerEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/media_player/__init__.py)派生一个平台实体。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应该只从内存中返回信息，而不进行 I/O 操作（如网络请求）。实现`update()`或`async_update()`来获取数据。
 :::
 
-| Name | Type | Default | Description
+| 名称 | 类型 | 默认值 | 描述
 | ---- | ---- | ------- | -----------
-| supported_features | int | int | Flag supported features.
-| sound_mode | string | None | The current sound mode of the media player
-| sound_mode_list | list | None | Dynamic list of available sound modes (set by platform, empty means sound mode not supported)
-| source | string | None | The currently selected input source for the media player.
-| source_list | list | None | The list of possible input sources for the media player. (This list should contain human readable names, suitable for frontend display)
-| media_image_url | string | None | URL that represents the current image.
-| media_image_remotely_accessible | boolean | False | Return `True` if property `media_image_url` is accessible outside of the home network.
-| device_class | string | `None` | Type of media player.
-| group_members | list | `None` | A dynamic list of player entities which are currently grouped together for synchronous playback. If the platform has a concept of defining a group leader, the leader should be the first element in that list.
+| supported_features | int | int | 支持的功能标志。
+| sound_mode | string | None | 媒体播放器的当前声音模式。
+| sound_mode_list | list | None | 可用声音模式的动态列表（由平台设置，为空表示不支持声音模式）。
+| source | string | None | 媒体播放器当前选择的输入源。
+| source_list | list | None | 媒体播放器的可能输入源列表（该列表应包含适合前端显示的可读名称）
+| media_image_url | string | None | 表示当前图像的 URL。
+| media_image_remotely_accessible | boolean | False | 如果属性`media_image_url`可以在家庭网络外访问，则返回`True`。
+| device_class | string | `None` | 媒体播放器的类型。
+| group_members | list | `None` | 一组当前正在进行同步播放的播放器实体的动态列表。如果平台有定义组长的概念，则组长应该是该列表的第一个元素。
 
-## Supported Features
+## 支持的功能
 
-Supported features are defined by using values in the `MediaPlayerEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
+支持的功能使用`MediaPlayerEntityFeature`枚举值定义，并使用按位或（`|`）运算符组合。
 
-| Value               | Description                                                        |
+| 值                 | 描述                                                     |
 | ------------------- | ------------------------------------------------------------------ |
-| `BROWSE_MEDIA`      | Entity allows browsing media.                                      |
-| `CLEAR_PLAYLIST`    | Entity allows clearing the active playlist.                        |
-| `GROUPING`          | Entity can be grouped with other players for synchronous playback. |
-| `MEDIA_ANNOUNCE`    | Entity supports the `play_media` service's announce parameter.     |
-| `MEDIA_ENQUEUE`     | Entity supports the `play_media` service's enqueue parameter.      |
-| `NEXT_TRACK`        | Entity allows skipping to the next media track.                    |
-| `PAUSE`             | Entity allows pausing the playback of media.                       |
-| `PLAY`              | Entity allows playing/resuming playback of media.                  |
-| `PLAY_MEDIA`        | Entity allows playing media sources.                               |
-| `PREVIOUS_TRACK`    | Entity allows returning back to a previous media track.            |
-| `REPEAT_SET`        | Entity allows setting repeat.                                      |
-| `SEEK`              | Entity allows seeking position during playback of media.           |
-| `SELECT_SOUND_MODE` | Entity allows selecting a sound mode.                              |
-| `SELECT_SOURCE`     | Entity allows selecting a source/input.                            |
-| `SHUFFLE_SET`       | Entity allows shuffling the active playlist.                       |
-| `STOP`              | Entity allows stopping the playback of media.                      |
-| `TURN_OFF`          | Entity is able to be turned off.                                   |
-| `TURN_ON`           | Entity is able to be turned on.                                    |
-| `VOLUME_MUTE`       | Entity volume can be muted.                                        |
-| `VOLUME_SET`        | Entity volume can be set to specific levels.                       |
-| `VOLUME_STEP`       | Entity volume can be adjusted up and down.                         |
+| `BROWSE_MEDIA`      | 实体允许浏览媒体。                                      |
+| `CLEAR_PLAYLIST`    | 实体允许清除活动播放列表。                        |
+| `GROUPING`          | 实体可以与其他播放器一起分组进行同步播放。 |
+| `MEDIA_ANNOUNCE`    | 实体支持`play_media`服务的announce参数。     |
+| `MEDIA_ENQUEUE`     | 实体支持`play_media`服务的enqueue参数。      |
+| `NEXT_TRACK`        | 实体允许跳到下一个媒体轨道。                    |
+| `PAUSE`             | 实体允许暂停媒体的播放。                      |
+| `PLAY`              | 实体允许播放/继续播放媒体。                  |
+| `PLAY_MEDIA`        | 实体允许播放媒体源。                               |
+| `PREVIOUS_TRACK`    | 实体允许返回到先前的媒体轨道。            |
+| `REPEAT_SET`        | 实体允许设置重复播放。                          |
+| `SEEK`              | 实体允许在媒体播放过程中调整位置。           |
+| `SELECT_SOUND_MODE` | 实体允许选择声音模式。                              |
+| `SELECT_SOURCE`     | 实体允许选择源/输入。                            |
+| `SHUFFLE_SET`       | 实体允许对活动播放列表进行洗牌。                 |
+| `STOP`              | 实体允许停止媒体的播放。                      |
+| `TURN_OFF`          | 实体可以被关闭。                                   |
+| `TURN_ON`           | 实体可以被打开。                                   |
+| `VOLUME_MUTE`       | 实体音量可以被静音。                            |
+| `VOLUME_SET`        | 实体音量可以被设定到特定的级别。           |
+| `VOLUME_STEP`       | 实体音量可以向上和向下调整。                 |
 
-## States
+## 状态
 
-The state of a media player is defined by using values in the `MediaPlayerState` enum, and can take the following possible values.
+媒体播放器的状态使用`MediaPlayerState`枚举值定义，并可以具有以下可能的值。
 
-| Value       | Description                                                                                                         |
+| 值       | 描述                                                                                                         |
 |-------------|---------------------------------------------------------------------------------------------------------------------|
-| `OFF`       | Entity is turned off and is not accepting commands until turned on.                                                 |
-| `ON`        | Entity is turned on, but no details on its state is currently known.                                               |
-| `IDLE`      | Entity is turned on and accepting commands, but currently not playing any media. Possibly at some idle home screen. |
-| `PLAYING`   | Entity is currently playing media.                                                                                  |
-| `PAUSED`    | Entity has an active media and is currently paused                                                                |
-| `STANDBY`   | Entity is in a low power state, accepting commands.                              |
-| `BUFFERING` | Entity is preparing to start playback of some media                                                                 |
+| `OFF`       | 实体已关闭，并且在打开之前不接受命令。                                                 |
+| `ON`        | 实体已打开，但当前不知道其状态的详细信息。                                               |
+| `IDLE`      | 实体已打开并接受命令，但当前未播放任何媒体。可能在某个空闲的主页屏幕上。 |
+| `PLAYING`   | 实体当前正在播放媒体。                                                                                  |
+| `PAUSED`    | 实体有一个活动媒体并且当前处于暂停状态                                                                |
+| `STANDBY`   | 实体处于低功耗状态，接受命令。                              |
+| `BUFFERING` | 实体正在准备开始播放某个媒体                                                                                   |
 
 ## Methods
 
@@ -98,18 +94,20 @@ class MyMediaPlayer(MediaPlayerEntity):
 
 ```
 
-The `enqueue` attribute is a string enum `MediaPlayerEnqueue`:
+`enqueue`属性是一个字符串枚举`MediaPlayerEnqueue`：
 
- - `add`: add given media item to end of the queue
- - `next`: play the given media item next, keep queue
- - `play`: play the given media item now, keep queue
- - `replace`: play the given media item now, clear queue
+- `add`：将给定的媒体项添加到队列的末尾。
+- `next`：播放给定的媒体项，保留队列。
+- `play`：立即播放给定的媒体项，保留队列。
+- `replace`：立即播放给定的媒体项，清除队列。
 
-When the `announce` boolean attribute is set to `true`, the media player should try to pause the current music, announce the media to the user and then resume the music.
+当`announce`布尔属性设置为`true`时，媒体播放器应尝试暂停当前的音乐，向用户宣布媒体，然后恢复音乐播放。
 
-### Browse Media
+### 浏览媒体
 
-If the media player supports browsing media, it should implement the following method:
+如果媒体播放器支持浏览媒体，应该实现以下方法：
+
+
 
 ```python
 class MyMediaPlayer(MediaPlayerEntity):
