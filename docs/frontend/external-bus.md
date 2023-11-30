@@ -1,44 +1,43 @@
 ---
 title: "External Bus"
 ---
+前端能够与嵌入Home Assistant前端的外部应用程序建立消息总线。这个系统是[外部身份验证](frontend/external-authentication.md)的概括，使得在将来添加更多命令时更加容易，无需在应用程序或前端方面进行大量改动。
 
-The frontend is able to set up a message bus with an external app that is embedding the Home Assistant frontend. This system is a generalization of the [external authentication](frontend/external-authentication.md), making it easier to add more commands in the future without extensive plumbing on either the app or frontend side.
+## 消息交换
 
-## Message exchange
+与外部身份验证类似，消息交换是通过外部应用程序提供一个JavaScript方法实现的。
 
-Just like external auth, message exchange is achieved by the external app making a JavaScript method available.
+消息以序列化的JSON对象形式传递给外部应用程序。将被调用的函数接受一个参数：一个字符串。外部应用程序将处理并相应地处理消息（或忽略）。
 
-Messages are passed to the external app as serialized JSON objects. The function that will be called takes a single parameter: a string. The external app will have to process the message and deal with it accordingly (or ignore it).
-
-On Android, your app needs to define the following method:
+在Android上，您的应用程序需要定义以下方法：
 
 ```ts
 window.externalApp.externalBus(message: string)
 ```
 
-On iOS, your app needs to define the following method:
+在iOS上，您的应用程序需要定义以下方法：
 
 ```ts
 window.webkit.messageHandlers.externalBus.postMessage(message: string);
 ```
 
-To send messages to the frontend, serialize your message to JSON and call the following function from the external app:
+要将消息发送到前端，请将消息序列化为JSON并从外部应用程序调用以下函数：
 
 ```ts
 window.externalBus(message: string)
 ```
 
-## Message format
+## 消息格式
 
-The message describes an action or a piece of information that the sender wants the receiver to do or know about. If it's an action, the sender will expect a response with the result of that action. A response to a command can either be successful or failed.
+消息描述了发送方希望接收方执行或了解的操作或信息。如果是操作，发送方将期望得到操作结果的响应。对命令的响应可以是成功或失败。
 
-### Action and Info Message format
+### 操作和信息消息格式
 
-The format of a message that contains or provides information is the same. It contains an identifier, a type and an optional payload (depending on the type).
+包含或提供信息的消息格式相同。它包含一个标识符、一个类型和一个可选的有效负载（取决于类型）。
 
-A result message will re-use the identifier in the response, to indicate to which action the response is related.
+响应消息将重用响应中的标识符，以指示响应与哪个操作相关联。
 
-The basic format of a message is the following:
+消息的基本格式如下：
 
 ```ts
 {
@@ -48,7 +47,7 @@ The basic format of a message is the following:
 }
 ```
 
-An example message:
+示例消息：
 
 ```json
 {
@@ -57,13 +56,13 @@ An example message:
 }
 ```
 
-### Result Message Format
+### 结果消息格式
 
-If the message was an action, the sender will expect a response with the result. The response is either success or failure.
+如果消息是一个操作，发送方将期望得到一个结果响应。响应可以是成功或失败。
 
-The type of result depends on the type of the message that it is responding to. For example, if it is responding to `config/get`, the result should be an object describing the configuration.
+结果的类型取决于它所回应的消息的类型。例如，如果它回应`config/get`，结果应该是描述配置的对象。
 
-Message formats:
+消息格式：
 
 ```ts
 interface SuccessResult {
@@ -84,18 +83,18 @@ interface ErrorResult {
 }
 ```
 
-## Supported messages
+## 支持的消息
 
-### Get External Config
+### 获取外部配置
 
-Available in: Home Assistant 0.92
-Type: `config/get`
-Direction: frontend to external app.
-Expects answer: yes
+可用于：Home Assistant 0.92
+类型：`config/get`
+方向：前端到外部应用程序。
+期望答复：是
 
-Query the external app for the external configuration. The external configuration is used to customize the experience in the frontend.
+查询外部应用程序的外部配置。外部配置用于在前端中定制体验。
 
-Expected response payload:
+预期的响应有效载荷：
 
 ```ts
 {
@@ -104,28 +103,28 @@ Expected response payload:
 }
 ```
 
-- `hasSettingsScreen` set to true if the external app will show a configuration screen when it receives the command `config_screen/show`. If so, a new option will be added to the sidebar to trigger the configuration screen.
-- `canWriteTag` set to true if the external app is able to write tags and so can support the `tag/write` command.
+- `hasSettingsScreen`设置为true，如果外部应用程序在接收到`config_screen/show`命令时将显示一个配置屏幕。如果是这样，将在侧边栏中添加一个新选项来触发配置屏幕。
+- `canWriteTag`设置为true，如果外部应用程序能够写入标签，因此可以支持`tag/write`命令。
 
-### Show Config Screen `config_screen/show`
+### 显示配置屏幕 `config_screen/show`
 
-Available in: Home Assistant 0.92
-Type: `config_screen/show`
-Direction: frontend to external app.
-Expect answer: no
+可用于：Home Assistant 0.92
+类型：`config_screen/show`
+方向：前端到外部应用程序。
+期望答复：否
 
-Show the configuration screen of the external app.
+显示外部应用程序的配置屏幕。
 
-### Connection Status update `connection-status`
+### 连接状态更新 `connection-status`
 
-Available in: Home Assistant 0.92
-Type: `connection-status`
-Direction: frontend to external app.
-Expect answer: no
+可用于：Home Assistant 0.92
+类型：`connection-status`
+方向：前端到外部应用程序。
+期望答复：否
 
-Notify the external app if the frontend is connected to Home Assistant.
+如果前端连接到Home Assistant，则通知外部应用程序。
 
-Payload structure:
+有效载荷结构：
 
 ```ts
 {
@@ -133,16 +132,16 @@ Payload structure:
 }
 ```
 
-### Trigger Haptic `haptic`
+### 触发触觉反馈 `haptic`
 
-Available in: Home Assistant 0.92
-Type: `haptic`
-Direction: frontend to external app.
-Expect answer: no
+可用于：Home Assistant 0.92
+类型：`haptic`
+方向：前端到外部应用程序。
+期望答复：否
 
-Notify the external app to trigger haptic feedback.
+通知外部应用程序触发触觉反馈。
 
-Payload structure:
+有效载荷结构：
 
 ```ts
 {
@@ -158,14 +157,14 @@ Payload structure:
 }
 ```
 
-### Write Tag `tag/write`
+### 写入标签 `tag/write`
 
-Available in: Home Assistant 0.115
-Type: `tag/write`
-Direction: frontend to external app
-Expect answer: yes
+可用于：Home Assistant 0.115
+类型：`tag/write`
+方向：前端到外部应用程序。
+期望答复：是
 
-Tell the external app to open the UI to write to a tag. Name is the name of the tag as entered by the user. The name is `null` if no name has been set.
+告诉外部应用程序打开用于写入标签的界面。名称是用户输入的标签名称。如果未设置名称，则名称为`null`。
 
 ```ts
 {
@@ -174,7 +173,7 @@ Tell the external app to open the UI to write to a tag. Name is the name of the 
 }
 ```
 
-Expected response payload is an empty object for now. We might add more later:
+预期响应载荷目前为空对象。我们可能会在以后添加更多：
 
 ```ts
 {}

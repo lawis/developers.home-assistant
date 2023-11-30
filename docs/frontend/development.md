@@ -1,19 +1,19 @@
 ---
-title: "Frontend development"
-sidebar_label: "Development"
+title: "Frontend development 前端开发"
+sidebar_label: "Development 开发"
 ---
 
-The Home Assistant frontend is built using web components. For more background about our technology choices, [see this blog post](https://developers.home-assistant.io/blog/2019/05/22/internet-of-things-and-the-modern-web.html).
+Home Assistant前端使用Web组件构建。有关我们的技术选择的更多背景信息，请参阅[这篇博文](https://developers.home-assistant.io/blog/2019/05/22/internet-of-things-and-the-modern-web.html)。
 
 :::caution
-Do not use development mode in production. Home Assistant uses aggressive caching to improve the mobile experience. This is disabled during development so that you do not have to restart the server in between changes.
+不要在生产环境中使用开发模式。Home Assistant使用积极的缓存来改善移动体验。在开发过程中，这是禁用的，这样您就不必在更改之间重新启动服务器。
 :::
 
-## Setting up the environment
+## 设置环境
 
-### Getting the code
+### 获取代码
 
-The first step is to fork the [frontend repository][hass-frontend] and add the upstream remote. You can place the forked repository anywhere on your system.
+第一步是fork[前端代码库][hass-frontend]并添加upstream远程。您可以将fork的代码库放置在系统的任何位置。
 
 ```shell
 git clone git@github.com:YOUR_GIT_USERNAME/frontend.git
@@ -21,11 +21,11 @@ cd frontend
 git remote add upstream https://github.com/home-assistant/frontend.git
 ```
 
-### Configuring Home Assistant
+### 配置Home Assistant
 
-You will need to have an instance of Home Assistant set up. See our guide on [setting up a development environment](/development_environment.mdx).
+您需要设置一个Home Assistant实例。请参阅我们关于[设置开发环境](/development_environment.mdx)的指南。
 
-Next step is to configure Home Assistant to use the development mode for the frontend. Do this by updating the frontend config in your `configuration.yaml` and set the path to the frontend repository that you cloned in the last step:
+下一步是配置Home Assistant以使用前端的开发模式。通过在上一步中克隆的前端代码库中更新`configuration.yaml`中的前端配置，并将路径设置为该库的路径：
 
 ```yaml
 frontend:
@@ -33,7 +33,7 @@ frontend:
   development_repo: /path/to/hass/frontend/
 ```
 
-If you are using Visual Studio Code with devcontainers for Home Assistant, you need to mount the `frontend` directory into the container. Add the following section to `.devcontainer/devcontainer.json`:
+如果您在使用带有Home Assistant的devcontainers的Visual Studio Code，则需要将`frontend`目录挂载到容器中。将以下部分添加到`.devcontainer/devcontainer.json`文件中：
 
 ```json
 "mounts": [
@@ -41,68 +41,68 @@ If you are using Visual Studio Code with devcontainers for Home Assistant, you n
 ]
 ```
 
-The Home Assistant's devcontainer needs to get rebuilt via the `docker-build` [task](/development_environment.mdx#tasks), and the `configuration.yaml` should point to the path inside the container:
+需要通过`docker-build` [任务](/development_environment.mdx#tasks)重新构建Home Assistant的devcontainer，并且`configuration.yaml`应该指向容器内部的路径：
 
 ```yaml
 frontend:
   development_repo: /workspaces/frontend/
 ```
 
-The change to `.devcontainer/devcontainer.json` should be excluded from any PR as it contains your local path to the `frontend` repository.
+`.devcontainer/devcontainer.json`的更改应该从任何PR中排除，因为它包含了指向`frontend`代码库的本地路径。
 
-### Installing Node.js
+### 安装Node.js
 
-Node.js is required to build the frontend. The preferred method of installing node.js is with [nvm](https://github.com/nvm-sh/nvm). Install nvm using the instructions in the [README](https://github.com/nvm-sh/nvm#install--update-script), and install the correct node.js by running the following command:
+构建前端需要Node.js。首选安装Node.js的方法是使用[nvm](https://github.com/nvm-sh/nvm)。根据[README](https://github.com/nvm-sh/nvm#install--update-script)中的说明安装nvm，并通过运行以下命令安装正确的Node.js版本：
 
 ```shell
 nvm install
 ```
 
-[Yarn](https://yarnpkg.com/en/) is used as the package manager for node modules. [Install yarn using the instructions here.](https://yarnpkg.com/getting-started/install)
+[Yarn](https://yarnpkg.com/en/)是用于管理节点模块的包管理器。使用[这里的说明安装yarn。](https://yarnpkg.com/getting-started/install)
 
-Next, development dependencies need to be installed to bootstrap the frontend development environment. First activate the right Node version and then download all the dependencies:
+接下来，需要安装开发依赖项以启动前端开发环境。首先激活正确的Node版本，然后下载所有依赖项：
 
 ```shell
 nvm use
 script/bootstrap
 ```
 
-## Development
+## 开发
 
-During development, you will need to run the development script to maintain a development build of the frontend that auto updates when you change any of the source files. To run this server, run:
+在开发过程中，您需要运行开发脚本以维护一个开发构建的前端，当您更改任何源文件时，它会自动更新。要运行这个服务器，请运行：
 
 ```shell
 nvm use
 script/develop
 ```
 
-Make sure you have cache disabled and correct settings to avoid stale content:
+确保禁用缓存并正确设置以避免旧内容：
 
 :::info
-Instructions are for Google Chrome
+以下说明适用于Google Chrome
 :::
 
-1. Disable cache by ticking the box in `Network` > `Disable cache`
+1. 通过在`Network` > `Disable cache`中勾选框来禁用缓存
 
 <p class='img'>
   <img src='/img/en/development/disable-cache.png' />
 </p>
 
-2. Enable Bypass for network in `Application` > `Service Workers` > `Bypass for network`
+2. 在`Application` > `Service Workers` > `Bypass for network`中启用网络绕行
 
 <p class='img'>
   <img src='/img/en/development/bypass-for-network.png' />
 </p>
 
-## Creating pull requests
+## 创建拉取请求
 
-If you're planning on issuing a PR back to the Home Assistant codebase you need to fork the frontend project and add your fork as a remote to the Home Assistant frontend repo.
+如果您计划向Home Assistant代码库提出PR，则需要fork前端项目并将您的fork添加为Home Assistant前端库的一个remote。
 
 ```shell
 git remote add fork <github URL to your fork>
 ```
 
-When you've made your changes and are ready to push them change to the working directory for the frontend project and then push your changes
+当您完成更改并准备推送它们时，切换到前端项目的工作目录，然后推送您的更改
 
 ```bash
 git add -A
@@ -110,11 +110,11 @@ git commit -m "Added new feature X"
 git push -u fork HEAD
 ```
 
-## Building the frontend
+## 构建前端
 
-If you're making changes to the way the frontend is packaged, it might be necessary to try out a new packaged build of the frontend in the main repository (instead of pointing it at the frontend repo). To do so, first build a production version of the frontend by running `script/build_frontend`.
+如果您正在更改前端打包方式，可能需要尝试在主代码库中使用新的打包后的前端版本（而不是将其指向前端代码库）。为此，请通过运行`script/build_frontend`命令构建前端的产品版本。
 
-To test it out inside Home Assistant, run the following command from the main Home Assistant repository:
+要在Home Assistant中测试它，请从主Home Assistant代码库运行以下命令：
 
 ```shell
 pip3 install -e /path/to/hass/frontend/ --config-settings editable_mode=compat

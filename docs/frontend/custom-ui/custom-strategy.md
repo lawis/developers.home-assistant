@@ -1,28 +1,28 @@
 ---
-title: "Custom Strategies"
+title: "Custom Strategies 定制策略"
 ---
 
-_Introduced in Home Assistant 2021.5._
+_在Home Assistant 2021.5中引入。_
 
-Strategies are JavaScript functions that generate dashboard configurations. When a user has not created a dashboard configuration yet, an auto-generated dashboard is shown. That configuration is generated using a built-in strategy.
+策略是生成仪表板配置的JavaScript函数。当用户尚未创建仪表板配置时，会显示一个自动生成的仪表板。该配置是使用内置策略生成的。
 
-It's possible for developers to create their own strategies to generate dashboards. Strategies can use all of Home Assistant's data and the user's dashboard configuration to create something new.
+开发者可以创建自己的策略来生成仪表板。策略可以使用Home Assistant的所有数据和用户的仪表板配置来创建新内容。
 
-A strategy can be applied to the whole configuration or to a specific view.
+策略可以应用于整个配置或特定视图。
 
-Strategies are defined as a custom element in a JavaScript file, and included [via dashboard resources](./registering-resources.md). Home Assistant will call static functions on the class instead of rendering it as a custom element.
+策略在JavaScript文件中定义为自定义元素，并通过[仪表板资源](./registering-resources.md)进行包含。Home Assistant将调用类上的静态函数，而不将其呈现为自定义元素。
 
-## Dashboard Strategies
+## 仪表板策略
 
-A dashboard strategy is responsible for generating a full dashboard configuration. This can either be from scratch, or based on an existing dashboard configuration that is passed in.
+仪表板策略负责生成完整的仪表板配置。这可以是从头开始生成，也可以基于传递的现有仪表板配置进行生成。
 
-An info object is passed to the strategy with information:
+一个包含信息的信息对象被传递给策略：
 
-| Key | Description
+| 键 | 描述
 | -- | --
-| `config` | User supplied dashboard configuration, if any.
-| `hass` | The Home Assistant object.
-| `narrow` | If the current user interface is rendered in narrow mode or not.
+| `config` | 用户提供的仪表板配置（如果有）。
+| `hass` | Home Assistant对象。
+| `narrow` | 当前用户界面是否以窄模式呈现。
 
 ```ts
 class StrategyDemo {
@@ -58,18 +58,18 @@ strategy:
 views: []
 ```
 
-## View Strategies
+## 视图策略
 
-A view strategy is responsible for generating the configuration of a specific dashboard view. The strategy is invoked when the user opens the specific view.
+视图策略负责生成特定仪表板视图的配置。当用户打开特定视图时，将调用该策略。
 
-An info object is passed to the strategy with information:
+一个包含信息的信息对象被传递给策略：
 
-| Key | Description
+| 键 | 描述
 | -- | --
-| `view` | View configuration.
-| `config` | Dashboard configuration.
-| `hass` | The Home Assistant object.
-| `narrow` | If the current user interface is rendered in narrow mode or not.
+| `view` | 视图配置。
+| `config` | 仪表板配置。
+| `hass` | Home Assistant对象。
+| `narrow` | 当前用户界面是否以窄模式呈现。
 
 ```ts
 class StrategyDemo {
@@ -100,13 +100,13 @@ views:
     type: custom:my-demo
 ```
 
-## Full Example
+## 完整示例
 
-Strategies are structured such that a single class can provide both a dashboard and view strategy implementations.
+策略的结构使得一个单独的类可以提供仪表板和视图策略的实现。
 
-It's recommended for a dashboard strategy to leave as much work to be done to the view strategies. That way the dashboard will show up for the user as fast as possible. This can be done by having the dashboard generate a configuration with views that rely on its own strategy.
+建议将尽可能多的工作留给视图策略来完成。这样，仪表板将尽快显示给用户。可以通过仪表板生成依赖于其自身策略的视图的配置来实现这一点。
 
-Below example will create a view per area, with each view showing all entities in that area in a grid.
+下面的示例将为每个区域创建一个视图，每个视图在网格中显示该区域中的所有实体。
 
 ```ts
 class StrategyDemo {
@@ -175,7 +175,7 @@ class StrategyDemo {
 customElements.define("ll-strategy-my-demo", StrategyDemo);
 ```
 
-Use the following dashboard configuration to use this strategy:
+使用以下仪表板配置来使用此策略：
 
 ```yaml
 strategy:

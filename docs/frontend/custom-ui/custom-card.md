@@ -2,13 +2,13 @@
 title: "Custom Cards"
 ---
 
-[Dashboards](https://www.home-assistant.io/dashboards/) are our approach to defining your user interface for Home Assistant. We offer a lot of built-in cards, but you're not just limited to the ones that we decided to include in Home Assistant. You can build and use your own!
+[仪表板](https://www.home-assistant.io/dashboards/) 是我们定义 Home Assistant 用户界面的方法。我们提供了很多内置的卡片，但你不仅仅局限于我们决定包含在 Home Assistant 中的那些卡片。你可以构建并使用你自己的卡片！
 
-## Defining your card
+## 定义你的卡片
 
-This is a basic example to show what's possible.
+这是一个基本示例，展示了一些可能的内容。
 
-Create a new file in your Home Assistant config dir as `<config>/www/content-card-example.js` and put in the following contents:
+在你的 Home Assistant 配置目录中创建一个名为 `<config>/www/content-card-example.js` 的新文件，并将以下内容放入其中：
 
 ```js
 class ContentCardExample extends HTMLElement {
@@ -55,13 +55,13 @@ class ContentCardExample extends HTMLElement {
 customElements.define("content-card-example", ContentCardExample);
 ```
 
-## Referencing your new card
+## 引用你的新卡片
 
-In our example card we defined a card with the tag `content-card-example` (see last line), so our card type will be `custom:content-card-example`. And because you created the file in your `<config>/www` directory, it will be accessible in your browser via the url `/local/` (if you have recently added the www folder you will need to re-start Home Assistant for files to be picked up).
+在我们的示例卡片中，我们使用标签 `content-card-example` 定义了一个卡片（请参见最后一行），因此我们的卡片类型将是 `custom:content-card-example`。由于你将文件创建在 `<config>/www` 目录中，因此你可以通过 url `/local/` 在浏览器中访问它（如果你最近添加了 www 文件夹，你需要重新启动 Home Assistant 才能加载文件）。
 
-Add a resource to your dashboard configuration with URL `/local/content-card-example.js` and type `module` ([resource docs](/docs/frontend/custom-ui/registering-resources)).
+将一个资源添加到你的仪表板配置中，URL 为 `/local/content-card-example.js`，类型为 `module`（[资源文档](/docs/frontend/custom-ui/registering-resources)）。
 
-You can then use your card in your dashboard configuration:
+然后可以在你的仪表板配置中使用你的卡片：
 
 ```yaml
 # Example dashboard configuration
@@ -74,15 +74,15 @@ views:
 
 ## API
 
-Custom cards are defined as a [custom element](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements). It's up to you to decide how to render your DOM inside your element. You can use Polymer, Angular, Preact or any other popular framework (except for React – [more info on React here](https://custom-elements-everywhere.com/#react)).
+自定义卡片以 [自定义元素](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements) 的形式定义。你可以决定如何在元素内部渲染你的 DOM。你可以使用 Polymer、Angular、Preact 或任何其他流行的框架（除了 React，[这里有更多关于 React 的信息](https://custom-elements-everywhere.com/#react)）。
 
-Home Assistant will call `setConfig(config)` when the configuration changes (rare). If you throw an exception if the configuration is invalid, Home Assistant will render an error card to notify the user.
+当配置更改（很少发生）时，Home Assistant 会调用 `setConfig(config)`。如果配置无效，你可以抛出一个异常，Home Assistant 将渲染一个错误卡片来通知用户。
 
-Home Assistant will set [the `hass` property](/docs/frontend/data/) when the state of Home Assistant changes (frequent). Whenever the state changes, the component will have to update itself to represent the latest state.
+当 Home Assistant 的状态发生变化时（频繁发生），Home Assistant 会设置[hass 属性](/docs/frontend/data/)。每当状态改变时，组件必须更新自身以表示最新的状态。
 
-Your card can define a `getCardSize` method that returns the size of your card as a number or a promise that will resolve to a number. A height of 1 is equivalent to 50 pixels. This will help Home Assistant distribute the cards evenly over the columns. A card size of `1` will be assumed if the method is not defined.
+你的卡片可以定义一个 `getCardSize` 方法，返回卡片的大小（作为一个数字或解析为数字的 promise）。高度为 1 等同于 50 像素。这将帮助 Home Assistant 平均分配卡片到列中。如果未定义该方法，将假定卡片大小为 `1`。
 
-Since some elements can be lazy loaded, if you want to get the card size of another element, you should first check it is defined.
+由于某些元素可能是延迟加载的，如果你想获取另一个元素的卡片大小，你应该先检查该元素是否被定义。
 
 ```js
 return customElements
@@ -90,15 +90,15 @@ return customElements
   .then(() => element.getCardSize());
 ```
 
-Your card can define a `getConfigElement` method that returns a custom element for editing the user configuration. Home Assistant will display this element in the card editor in the dashboard.
+你的卡片可以定义一个 `getConfigElement` 方法，返回一个自定义元素，用于编辑用户配置。Home Assistant 将在仪表板的卡片编辑器中显示该元素。
 
-## Advanced example
+## 高级示例
 
-Resources to load in dashboards are imported as a JS module import. Below is an example of a custom card using JS modules that does all the fancy things.
+加载到仪表板的资源被导入为一个 JS 模块。下面是一个使用 JS 模块的自定义卡片示例，它可以实现所有花哨的功能。
 
-![Screenshot of the wired card](/img/en/frontend/dashboard-custom-card-screenshot.png)
+![已连接卡片的屏幕截图](/img/en/frontend/dashboard-custom-card-screenshot.png)
 
-Create a new file in your Home Assistant config dir as `<config>/www/wired-cards.js` and put in the following contents:
+在你的 Home Assistant 配置目录中创建一个名为 `<config>/www/wired-cards.js` 的新文件，并将以下内容放入其中：
 
 ```js
 import "https://unpkg.com/wired-card@0.8.1/wired-card.js?module";
@@ -215,18 +215,18 @@ views:
           - input_boolean.switch_tv
 ```
 
-## Graphical card configuration
+## 图形卡片配置
 
-Your card can define a `getConfigElement` method that returns a custom element for editing the user configuration. Home Assistant will display this element in the card editor in the dashboard.
+你的卡片可以定义一个 `getConfigElement` 方法，返回一个自定义元素，用于编辑用户配置。Home Assistant 将在仪表板的卡片编辑器中显示该元素。
 
-Your card can also define a `getStubConfig` method that returns a default card configuration (without the `type:` parameter) in json form for use by the card type picker in the dashboard.
+你的卡片还可以定义一个 `getStubConfig` 方法，以 json 形式返回一个默认的卡片配置（不包含 `type:` 参数），供仪表板中的卡片类型选择器使用。
 
-Home Assistant will call the `setConfig` method of the config element on setup.
-Home Assistant will update the `hass` property of the config element on state changes, and the `lovelace` element, which contains information about the dashboard configuration.
+Home Assistant 在设置时将调用配置元素的 `setConfig` 方法。
+Home Assistant 在状态发生变化时会更新配置元素的 `hass` 属性，以及包含有关仪表板配置的信息的 `lovelace` 元素。
 
-Changes to the configuration are communicated back to the dashboard by dispatching a `config-changed` event with the new configuration in its detail.
+通过调度一个带有新配置的 `config-changed` 事件，将配置的更改发送回仪表板。
 
-To have your card displayed in the card picker dialog in the dashboard, add an object describing it to the array `window.customCards`. Required properties of the object are `type` and `name` (see example below).
+要在仪表板的卡片选择对话框中显示你的卡片，请将一个描述卡片的对象添加到数组 `window.customCards` 中。对象的必需属性是 `type` 和 `name`（请参见下面的示例）。
 
 ```js
 class ContentCardExample extends HTMLElement {
@@ -270,13 +270,11 @@ window.customCards.push({
 });
 ```
 
-## Tile features
+## 瓷砖功能
 
-The tile card has support for "features" to add quick actions to control the entity. We offer some built-in features, but you can build and use your own using similar way than defining custom cards.
+瓷砖卡片支持“功能”，以添加快速操作来控制实体。我们提供了一些内置功能，但你可以使用类似的方式构建和使用自己的功能，就像定义自定义卡片一样。
 
-Below is an example of a custom tile feature for [button entity](/docs/core/entity/button/).
-
-![Screenshot of the custom tile feature example](/img/en/frontend/dashboard-custom-tile-feature-screenshot.png)
+下面是一个针对[按钮实体](/docs/core/entity/button/)的自定义瓷砖功能示例的屏幕截图：![自定义瓷砖功能示例的屏幕截图](/img/en/frontend/dashboard-custom-tile-feature-screenshot.png)
 
 ```js
 import {
@@ -378,9 +376,9 @@ window.customTileFeatures.push({
 });
 ```
 
-The only difference with custom cards is the graphical configuration option.
-To have it displayed in the tile card editor, you must add an object describing it to the array `window.customTileFeatures`.
+唯一与自定义卡片不同的是图形化配置选项。
+要在瓷砖卡片编辑器中显示它，你必须将一个描述该功能的对象添加到数组 `window.customTileFeatures` 中。
 
-Required properties of the object are `type` and `name`. It is recommended to define the `supported` option with a function so the editor can only propose the feature if it is compatible with the selected entity in the tile card. Set `configurable` to `true` if your entity has additional configuration (e.g. `label` option in the example above) so the editor.
+对象的必需属性是 `type` 和 `name`。建议使用一个函数定义 `supported` 选项，这样编辑器只会在该功能与瓷砖卡片中选择的实体兼容时才提供该功能。如果你的实体有额外的配置（例如上面示例中的 `label` 选项），请将 `configurable` 设置为 `true`。
 
-Also, the static functions `getConfigElement` and `getStubConfig` work the same as with normal custom maps.
+此外，静态函数 `getConfigElement` 和 `getStubConfig` 的用法与常规的自定义 map 相同。

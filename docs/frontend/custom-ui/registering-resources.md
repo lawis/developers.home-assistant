@@ -1,21 +1,20 @@
 ---
-title: "Registering Resources"
+title: "Registering Resources 注册资源"
 ---
 
-If you want to extend the Home Assistant interface with custom cards, strategies or views you need to load external resources.
+如果您想要通过自定义卡片、策略或视图扩展Home Assistant界面，您需要加载外部资源。
 
-The first step is to make it accessible for the Home Assistant frontend. This is done by creating a new directory in your config folder called `www`. Create this directory and restart Home Assistant.
+第一步是使其对Home Assistant前端可访问。这可以通过在配置文件夹中创建一个名为`www`的新目录来完成。创建此目录并重新启动Home Assistant。
 
-Once restarted, you can put files in this directory. Each file will be accessible without authentication via the UI at `/local`.
+重新启动后，您可以将文件放在此目录中。每个文件都可以在UI上通过`/local`路径访问，无需进行身份验证。
 
-The next step is to register these resources with the Home Assistant interface. This is done by navigating to the Resources page by following below link:
+下一步是在Home Assistant界面中注册这些资源。通过点击下面的链接访问资源页面：
 
-[![Open your Home Assistant instance and show your resources.](https://my.home-assistant.io/badges/lovelace_resources.svg)](https://my.home-assistant.io/redirect/lovelace_dashboards/) (Note: Once redirected, click the three dots menu in the top-right.)
+[![打开您的Home Assistant实例并显示资源。](https://my.home-assistant.io/badges/lovelace_resources.svg)](https://my.home-assistant.io/redirect/lovelace_dashboards/) （注意：重定向后，在右上角点击三个点的菜单。）
 
 :::note
 
-This area is only available when the active user's profile has "advanced mode" enabled.
+只有在活动用户的配置文件启用了"高级模式"时才能使用此功能。
 
 :::
-
 ![Screenshot of the Advanced Mode selector found on the Profile page](/img/en/frontend/frontend-profile-advanced-mode.png)

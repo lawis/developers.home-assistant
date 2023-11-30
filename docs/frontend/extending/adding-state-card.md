@@ -1,21 +1,18 @@
 ---
 title: "Adding state card"
 ---
+Home Assistant的主要界面是当前实体及其状态的列表。对于系统中的每个实体，都会呈现一个状态卡片。状态卡片将显示一个图标、实体的名称、状态最后更改的时间以及当前状态或与之交互的控件。
 
-The main interface of Home Assistant is a list of the current entities and their states. For each entity in the system, a state card will be rendered. State cards will show an icon, the name of the entity, when the state has last changed and the current state or a control to interact with it.
+![前端中的卡片](/img/en/frontend/frontend-cards1.png)
 
-![Cards in the frontend](/img/en/frontend/frontend-cards1.png)
+不分组时，传感器将显示为所谓的徽章，位于状态卡片的顶部。
 
-The different card types can be found [here](https://github.com/home-assistant/frontend/tree/dev/src/state-summary).
+![前端中的徽章](/img/en/frontend/frontend-badges.png)
 
-Sensors, when not grouped, are shown as so-called badges on top of the state cards.
+不同的徽章位于文件[`/src/components/entity/ha-state-label-badge.ts`](https://github.com/home-assistant/frontend/blob/dev/src/components/entity/ha-state-label-badge.ts)中。
 
-![Badges in the frontend](/img/en/frontend/frontend-badges.png)
+可以通过几个简单的步骤添加自定义卡片类型。以添加一个适用于域`camera`的新状态卡片为例：
 
-The different badges are located in the file [`/src/components/entity/ha-state-label-badge.ts`](https://github.com/home-assistant/frontend/blob/dev/src/components/entity/ha-state-label-badge.ts).
-
-Adding a custom card type can be done with a few simple steps. For this example we will add a new state card for the domain `camera`:
-
- 1. Add `'camera'` to the array `DOMAINS_WITH_CARD` in the file [/common/const.ts](https://github.com/home-assistant/frontend/blob/dev/src/common/const.ts).
- 2. Create the files `state-card-camera.js` in the folder [/state-summary/](https://github.com/home-assistant/frontend/tree/dev/src/state-summary).
- 3. Add `import './state-card-camera.js';` to [state-card-content.js](https://github.com/home-assistant/frontend/blob/dev/src/state-summary/state-card-content.js).
+1. 在文件[/common/const.ts](https://github.com/home-assistant/frontend/blob/dev/src/common/const.ts)中的`DOMAINS_WITH_CARD`数组中添加`'camera'`。
+2. 在文件夹[/state-summary/](https://github.com/home-assistant/frontend/tree/dev/src/state-summary)中创建文件`state-card-camera.js`。
+3. 在[state-card-content.js](https://github.com/home-assistant/frontend/blob/dev/src/state-summary/state-card-content.js)中添加`import './state-card-camera.js';`。
