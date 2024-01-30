@@ -1,29 +1,29 @@
 ---
-title: "Frontend data"
-sidebar_label: "Data"
+title: "Frontend data 前端数据"
+sidebar_label: "Data 数据"
 ---
 
-The frontend passes a single `hass` object around. This object contains the latest state and allows you to send commands back to the server.
+前端会传递一个名为`hass`的对象。该对象包含最新的状态，并允许您向服务器发送命令。
 
-Whenever a state changes, a new version of the objects that changed are created. So you can easily see if something has changed by doing a strict equality check:
+每当状态发生变化时，会创建一个新版本的变化对象。因此，您可以通过进行严格的相等性检查轻松地查看是否有变化：
 
 ```js
 const changed = newVal !== oldVal;
 ```
 
-In order to see the data available in the `hass` object, visit your HomeAssistant frontend in your favorite browser and open the browser's developer tools. On the elements panel, select the `<home-assistant>` element, or any other element that has the `hass` property, and then run the following command in the console panel:
+为了查看`hass`对象中可用的数据，请在您喜欢的浏览器中打开HomeAssistant前端，并打开浏览器的开发者工具。在元素面板上，选择`<home-assistant>`元素或具有`hass`属性的任何其他元素，然后在控制台面板中运行以下命令：
 
 ```js
 $0.hass
 ```
 
-This method of reading the `hass` object should only be used as a reference. In order to interact with `hass` in your code, make sure it is passed to your code correctly.
+这种读取`hass`对象的方法只应作为参考。为了在您的代码中与`hass`交互，请确保正确传递它。
 
-## Data
+## 数据
 
 ### `hass.states`
 
-An object containing the states of all entities in Home Assistant. The key is the entity_id, the value is the state object.
+这是一个包含Home Assistant中所有实体状态的对象。键是实体ID，值是状态对象。
 
 ```json
 {
@@ -102,13 +102,13 @@ The logged in user.
 }
 ```
 
-## Methods
+## 方法
 
-All methods starting with `call` are async methods. This means that they will return a `Promise` that will resolve with the result of the call.
+所有以`call`开头的方法都是异步方法。这意味着它们会返回一个`Promise`，该`Promise`会在调用完成后解析为结果。
 
 ### `hass.callService(domain, service, data)`
 
-Call a service on the backend.
+调用后端上的服务。
 
 ```js
 hass.callService('light', 'turn_on', {
@@ -118,7 +118,7 @@ hass.callService('light', 'turn_on', {
 
 ### `hass.callWS(message)`
 
-Call a WebSocket command on the backend.
+在后端调用WebSocket命令。
 
 ```js
 this.hass.callWS({
@@ -130,19 +130,19 @@ this.hass.callWS({
 
 ### `hass.callApi(method, path, data)`
 
-Call an API on the Home Assistant server. For example, if you want to fetch all Home Assistant backups by issuing a GET request to `/api/hassio/backups`:
+在Home Assistant服务器上调用API。例如，如果您要通过向`/api/hassio/backups`发出GET请求来获取所有Home Assistant备份：
 
 ```js
 hass.callApi('get', 'hassio/backups')
   .then(backups => console.log('Received backups!', backups));
 ```
 
-If you need to pass in data, pass a third argument:
+如果需要传递数据，请通过第三个参数传递：
 
 ```js
 hass.callApi('delete', 'notify.html5', { subscription: 'abcdefgh' });
 ```
 
 :::info
-We're moving away from API calls and are migrating everything to `hass.callWS(message)` calls.
+我们正在逐步停止使用API调用，并将所有内容迁移到`hass.callWS(message)`调用上。
 :::

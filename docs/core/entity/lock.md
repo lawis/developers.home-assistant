@@ -3,31 +3,30 @@ title: Lock Entity
 sidebar_label: Lock
 ---
 
-A lock entity is able to be locked and unlocked. Locking and unlocking can optionally be secured with a user code. Some locks also allow for opening of latches, this may also be secured with a user code. Derive a platform entity from [`homeassistant.components.lock.LockEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/lock/__init__.py).
+锁实体可以进行锁定和解锁操作。可以选择使用用户代码对锁定和解锁进行安全控制。某些锁还允许打开门闩，同样可以使用用户代码进行安全控制。从 [`homeassistant.components.lock.LockEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/lock/__init__.py) 派生一个平台实体。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应该始终仅从内存中返回信息，而不执行 I/O 操作（如网络请求）。实现 `update()` 或 `async_update()` 方法以获取数据。
 :::
 
-| Name | Type | Default | Description
-| ---- | ---- | ------- | -----------
-| changed_by | string | None | Describes what the last change was triggered by.
-| code_format | string | None | Regex for code format or None if no code is required.
-| is_locked | bool | None | Indication of whether the lock is currently locked. Used to determine `state`.
-| is_locking | bool | None | Indication of whether the lock is currently locking. Used to determine `state`.
-| is_unlocking | bool | None | Indication of whether the lock is currently unlocking. Used to determine `state`.
-| is_jammed | bool | None | Indication of whether the lock is currently jammed. Used to determine `state`.
+| 名称           | 类型    | 默认值 | 描述
+| -------------- | ------- | ------ | -----------
+| changed_by     | string  | None   | 描述最后一次更改的触发者。
+| code_format    | string  | None   | 代码格式的正则表达式，如果不需要代码，则为 None。
+| is_locked      | bool    | None   | 表示锁是否当前已锁定。用于确定 `state`。
+| is_locking     | bool    | None   | 表示锁是否当前正在锁定中。用于确定 `state`。
+| is_unlocking   | bool    | None   | 表示锁是否当前正在解锁中。用于确定 `state`。
+| is_jammed      | bool    | None   | 表示锁是否当前出现故障。用于确定 `state`。
 
-## Supported Features
+## 支持的功能
 
-Supported features are defined by using values in the `LockEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
+支持的功能通过使用 `LockEntityFeature` 枚举中的值进行定义，并使用按位或 (`|`) 运算符进行组合。
 
-| Value  | Description                                |
-| ------ | ------------------------------------------ |
-| `OPEN` | This lock supports opening the door latch. |
+| 值        | 描述                        |
+| ----------| --------------------------- |
+| `OPEN`    | 该锁支持打开门闩。            |
 
 ## Methods
 

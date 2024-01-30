@@ -1,21 +1,22 @@
 ---
-title: Conversation Agent
+title: Conversation Agent 会话代理
 ---
 
-The conversation integration offers a standardized API for users to use human speech to interact with Home Assistant. The actual processing of human speech is handled by a conversation agent.
+对话集成提供了一个标准化的API，供用户使用人类语音与Home Assistant进行交互。实际的人类语音处理由对话代理处理。
 
-The integration provides a default conversation agent that uses our own [intent recognizer](../../voice/intent-recognition) and [intent handlers](../../intent_index).
+集成提供了一个默认的对话代理，它使用我们自己的 [意图识别器](../../voice/intent-recognition) 和 [意图处理器](../../intent_index)。
 
-## Creating a custom conversation agent
+## 创建自定义对话代理
 
-It is possible for integrations to provide a custom conversation agent. The `async_process` method takes a `ConversationInput` object that contains the following data:
+集成可以提供自定义的对话代理。`async_process` 方法接受一个 `ConversationInput` 对象，其中包含以下数据：
 
-| Name | Type | Description
+| 名称 | 类型 | 描述
 | ---- | ---- | -----------
-| `text` | `str` | User input
-| `context` | `Context` | HA context to attach to actions in HA
-| `conversation_id` | `Optional[str]` | Can be used to track a multi-turn conversation. Return None if not supported
-| `language` | `str` | Language of the text. If user did not provide one, it's set to the HA configured language.
+| `text` | `str` | 用户输入
+| `context` | `Context` | 附加到HA中的操作的HA上下文
+| `conversation_id` | `Optional[str]` | 用于追踪多轮对话。如果不支持，请返回None
+| `language` | `str` | 文本的语言。如果用户没有提供语言，将设置为HA配置的语言。
+
 
 ```python
 from homeassistant.helpers import intent

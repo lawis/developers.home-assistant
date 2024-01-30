@@ -2,15 +2,15 @@
 title: "Adding more info dialogs"
 ---
 
-Whenever the user taps or clicks on one of the cards, a more info dialog will show. The header of this dialog will be the state card, followed by the history of this entity for the last 24 hours. Below this the more info component is rendered for that entity. The more info component can show more information or allow more ways of control.
+每当用户点击卡片中的其中一个时，将显示更多信息对话框。此对话框的标题将是状态卡片，然后是该实体在过去24小时的历史记录。在此之下，将渲染用于该实体的更多信息组件。更多信息组件可以显示更多信息或允许更多的控制方式。
 
 <img
   src='/img/en/frontend/frontend-more-info-light.png'
   alt='The more info dialog for a light allows the user to control the color and the brightness.'
 />
 
-The instructions to add a more info dialog are very similar to adding a new card type. This example will add a new more info component for the domain `camera`:
+添加更多信息对话框的指令与添加新的卡片类型非常相似。以添加适用于域`camera`的新更多信息组件为例：
 
- 1. Add `'camera'` to the array `DOMAINS_WITH_MORE_INFO` in the file [/common/const.ts](https://github.com/home-assistant/frontend/blob/dev/src/common/const.ts).
- 2. Create the files `more-info-camera.js` in the folder [/dialogs/more-info/controls](https://github.com/home-assistant/frontend/tree/dev/src/dialogs/more-info/controls).
- 3. Add `import './more-info-camera.js';` to [/dialogs/more-info/more-info-content.ts](https://github.com/home-assistant/frontend/blob/dev/src/dialogs/more-info/more-info-content.ts)
+1. 在文件[/common/const.ts](https://github.com/home-assistant/frontend/blob/dev/src/common/const.ts)中的`DOMAINS_WITH_MORE_INFO`数组中添加`'camera'`。
+2. 在文件夹[/dialogs/more-info/controls](https://github.com/home-assistant/frontend/tree/dev/src/dialogs/more-info/controls)中创建文件`more-info-camera.js`。
+3. 在[/dialogs/more-info/more-info-content.ts](https://github.com/home-assistant/frontend/blob/dev/src/dialogs/more-info/more-info-content.ts)中添加`import './more-info-camera.js';`。

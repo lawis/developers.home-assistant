@@ -3,25 +3,25 @@ title: Date/Time Entity
 sidebar_label: Date/Time
 ---
 
-A `datetime` is an entity that allows the user to input a timestamp to an integration. Derive entity platforms from [`homeassistant.components.datetime.DateTimeEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/datetime/__init__.py)
+`datetime` 是一个实体，允许用户向集成输入时间戳。从 [`homeassistant.components.datetime.DateTimeEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/datetime/__init__.py) 派生实体平台。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应仅从内存中返回信息，而不执行 I/O 操作（例如网络请求）。实现 `update()` 或 `async_update()` 来获取数据。
 :::
 
-| Name | Type | Default | Description
+| 名称 | 类型 | 默认值 | 描述
 | ---- | ---- | ------- | -----------
-| native_value | datetime | **Required** | The value of the datetime. Must include timezone info.
+| native_value | datetime | **必需** | 日期时间的值。必须包括时区信息。
 
-Other properties that are common to all entities such as `icon`, `name` etc are also applicable.
+其他适用于所有实体的通用属性，例如 `icon`、`name` 等也适用。
 
-## Methods
+## 方法
 
-### Set value
+### 设置值
 
-Called when the user or an automation wants to update the value. The input datetime will always be in UTC.
+当用户或自动化想要更新值时调用。输入的日期时间将始终为 UTC。
 
 ```python
 class MyDateTime(DateTimeEntity):

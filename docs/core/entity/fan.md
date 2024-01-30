@@ -3,50 +3,49 @@ title: Fan Entity
 sidebar_label: Fan
 ---
 
-A fan entity is a device that controls the different vectors of your fan such as speed, direction and oscillation. Derive entity platforms from ['homeassistant.components.fan.FanEntity'](https://github.com/home-assistant/core/blob/dev/homeassistant/components/fan/__init__.py).
+风扇实体是控制风扇的不同参数（如速度、方向和摆动）的设备。从 ['homeassistant.components.fan.FanEntity'](https://github.com/home-assistant/core/blob/dev/homeassistant/components/fan/__init__.py) 派生实体平台。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应总是仅从内存中返回信息，而不执行I/O操作（如网络请求）。实现 `update()` 或 `async_update()` 来获取数据。
 :::
 
-| Name | Type | Default | Description
-| ---- | ---- | ------- | -----------
-| current_direction | str | `None` | Return the current direction of the fan |
-| is_on | boolean | `None` |Return true if the entity is on |
-| oscillating | boolean | None | Return true if the fan is oscillating |
-| percentage | int | `None` | Return the current speed percentage. Must be a value between 0 (off) and 100 |
-| speed_count | int | 100 | The number of speeds the fan supports |
-| supported_features | int | 0 | Flag supported features |
-| preset_mode | str | `None` | Return the current preset_mode. One of the values in `preset_modes` or `None` if no preset is active. |
-| preset_modes | list | `None` | Get the list of available preset_modes. This is an arbitrary list of str and should not contain any speeds. |
+| 名称                 | 类型         | 默认值   | 描述                                       |
+| -------------------- | ---------- | -------- | ------------------------------------------ |
+| current_direction   | 字符串       | `None`   | 返回风扇的当前方向。                          |
+| is_on                | 布尔值        | `None`   | 如果实体处于打开状态，则返回True。                         |
+| oscillating         | 布尔值        | `None`   | 如果风扇正在摆动，则返回True。                           |
+| percentage          | 整数         | `None`   | 返回当前速度的百分比。必须是0到100之间的值。           |
+| speed_count         | 整数         | 100      | 风扇支持的速度数。                              |
+| supported_features  | 整数         | 0        | 支持的功能标志。                               |
+| preset_mode         | 字符串       | `None`   | 返回当前的预设模式。应为`preset_modes`中的一个值，如果没有活动的预设模式，则返回`None`。 |
+| preset_modes        | 列表         | `None`   | 获取可用的预设模式列表。这是一个任意的字符串列表，不能包含任何速度设置。                  |
 
-### Preset Modes
+### 预设模式
 
-A fan may have preset modes that automatically control the percentage speed or other functionality. Common examples include `auto`, `smart`, `whoosh`, `eco`, and `breeze`. If no preset mode is set, the `preset_mode` property must be set to `None`.
+风扇可以具有预设模式，可以自动控制百分比速度或其他功能。常见的示例包括 `auto`、`smart`、`whoosh`、`eco` 和 `breeze`。如果没有设置预设模式，则 `preset_mode` 属性必须设置为 `None`。
 
-Preset modes should not include named (manual) speed settings as these should be represented as percentages.
+预设模式不应包含命名（手动）速度设置，因为这些应该表示为百分比。
 
-Manually setting a speed must disable any set preset mode. If it is possible to set a percentage speed manually without disabling the preset mode, create a switch or service to represent the mode.
+手动设置速度必须禁用任何设置的预设模式。如果可以在不禁用预设模式的情况下手动设置百分比速度，请创建一个开关或服务来表示预设模式。
 
-## Supported Features
+## 支持的功能
 
-Supported features are defined by using values in the `FanEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
+支持的功能使用 `FanEntityFeature` 枚举中的值定义，并使用按位或 (`|`) 操作符组合。
 
-| Value         | Description                                                              |
-| ------------- | ------------------------------------------------------------------------ |
-| `DIRECTION`   | The fan supports changing the direction.                                 |
-| `OSCILLATE`   | The fan supports oscillation.                                            |
-| `PRESET_MODE` | The fan supports preset modes.                                           |
-| `SET_SPEED`   | The fan supports setting the speed percentage and optional preset modes. |
+| 值              | 描述                                           |
+| --------------- | ---------------------------------------------- |
+| `DIRECTION`     | 风扇支持更改方向。                              |
+| `OSCILLATE`     | 风扇支持摆动。                                 |
+| `PRESET_MODE`   | 风扇支持预设模式。                              |
+| `SET_SPEED`     | 风扇支持设置速度百分比和可选预设模式。          |
 
-## Methods
+## 方法
 
-### Set direction
+### 设置方向
 
-Only implement this method if the flag `SUPPORT_DIRECTION` is set.
+仅在设置了 `SUPPORT_DIRECTION` 标志时才实现此方法。
 
 ```python
 class FanEntity(ToggleEntity):
@@ -59,9 +58,9 @@ class FanEntity(ToggleEntity):
         """Set the direction of the fan."""
 ```
 
-### Set preset mode
+### 设置预设模式
 
-Only implement this method if the flag `SUPPORT_PRESET_MODE` is set.
+只有在设置了 `SUPPORT_PRESET_MODE` 标志时才实现此方法。
 
 ```python
 class FanEntity(ToggleEntity):
@@ -74,9 +73,9 @@ class FanEntity(ToggleEntity):
         """Set the preset mode of the fan."""
 ```
 
-### Set speed percentage
+### 设置速度百分比
 
-Only implement this method if the flag `SUPPORT_SET_SPEED` is set.
+只有在设置了 `SUPPORT_SET_SPEED` 标志时才实现此方法。
 
 ```python
 class FanEntity(ToggleEntity):

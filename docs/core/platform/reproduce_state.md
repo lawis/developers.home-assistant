@@ -2,15 +2,15 @@
 title: "重现状态"
 ---
 
-Home Assistant has support for scenes. Scenes are a collection of (partial) entity states. When a scene is activated, Home Assistant will try to call the right services to get the specified scenes in their specified state.
+Home Assistant 支持场景。场景是（部分）实体状态的集合。当激活场景时，Home Assistant 将尝试调用正确的服务以使指定的场景处于指定的状态。
 
-Integrations are responsible for adding support to Home Assistant to be able to call the right services to reproduce the states in a scene.
+集成负责为 Home Assistant 添加支持，以便能够调用正确的服务来还原场景中的状态。
 
-## Adding support
+## 添加支持
 
-The quickest way to add reproduce state support to a new integration is by using our built-in scaffold template. From a Home Assistant dev environment, run `python3 -m script.scaffold reproduce_state` and follow the instructions.
+向新的集成添加还原状态支持的最快方法是使用我们内置的脚手架模板。从 Home Assistant 开发环境中，运行`python3 -m script.scaffold reproduce_state`并按照说明操作。
 
-If you prefer to go the manual route, create a new file in your integration folder called `reproduce_state.py` and implement the following method:
+如果您更喜欢手动操作，可以在集成文件夹中创建一个名为`reproduce_state.py`的新文件，并实现以下方法：
 
 ```python
 import asyncio

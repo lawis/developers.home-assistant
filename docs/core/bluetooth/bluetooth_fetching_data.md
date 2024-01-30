@@ -1,29 +1,29 @@
 ---
-title: "Fetching Bluetooth Data"
+title: "Fetching Bluetooth Data 获取蓝牙数据"
 ---
 
-## Choosing a method to fetch data
+## Choosing a method to fetch data 选择获取数据的方法
 
-If the device's primary method to notify of updates is Bluetooth advertisements and its primary function is a sensor, binary sensor, or firing events:
+如果设备通知更新的主要方法是蓝牙广告，并且其主要功能是传感器、二进制传感器或触发事件：
 
-- If all sensors are updated via Bluetooth advertisements: [`PassiveBluetoothProcessorCoordinator`](#passivebluetoothprocessorcoordinator)
-- If active connection are needed for some sensors: [`ActiveBluetoothProcessorCoordinator`](#activebluetoothprocessorcoordinator)
+- 如果所有传感器都通过蓝牙广告进行更新：[`PassiveBluetoothProcessorCoordinator`](#passivebluetoothprocessorcoordinator)
+- 如果某些传感器需要主动连接：[`ActiveBluetoothProcessorCoordinator`](#activebluetoothprocessorcoordinator)
 
-If the device's primary method to notify of updates is Bluetooth advertisements and its primary function is **not** a sensor, binary sensor, or firing events:
+如果设备通知更新的主要方法是蓝牙广告，并且其主要功能**不是**传感器、二进制传感器或触发事件：
 
-- If all entities are updated via Bluetooth advertisements: [`PassiveBluetoothCoordinator`](#passivebluetoothcoordinator)
-- If active connections are needed: [`ActiveBluetoothCoordinator`](#activebluetoothcoordinator)
+- 如果所有实体都通过蓝牙广告进行更新：[`PassiveBluetoothCoordinator`](#passivebluetoothcoordinator)
+- 如果需要主动连接：[`ActiveBluetoothCoordinator`](#activebluetoothcoordinator)
 
-If your device only communicates with an active Bluetooth connection and does not use Bluetooth advertisements:
+如果您的设备只通过主动蓝牙连接进行通信，而不使用蓝牙广告：
 
 - [`DataUpdateCoordinator`](/docs/integration_fetching_data)
 
 ## BluetoothProcessorCoordinator
 
-The `ActiveBluetoothProcessorCoordinator` and `PassiveBluetoothProcessorCoordinator` significantly reduce the code needed for creating integrations that primary function as sensor, binary sensors, or fire events. By formatting the data fed into the processor coordinators into a `PassiveBluetoothDataUpdate` object, the
-frameworks can take care of creating the entities on demand and allow for minimal `sensor` and `binary_sensor` platform implementations.
+`ActiveBluetoothProcessorCoordinator`和`PassiveBluetoothProcessorCoordinator`极大地减少了创建主要作为传感器、二进制传感器或触发事件的集成所需的代码。通过将输入到处理器协调器的数据格式化为`PassiveBluetoothDataUpdate`对象，框架可以负责根据需要创建实体，并允许最小化的`sensor`和`binary_sensor`平台实现。
 
-These frameworks require the data coming from the library to be formatted into a `PassiveBluetoothDataUpdate` as shown below:
+这些框架要求从库中获取的数据按照下面示例的形式格式化为`PassiveBluetoothDataUpdate`：
+
 
 ```python
 @dataclasses.dataclass(frozen=True)

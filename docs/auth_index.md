@@ -3,49 +3,48 @@ title: "Authentication"
 sidebar_label: Introduction
 ---
 
-Home Assistant has a built-in authentication system allowing different users to interact with Home Assistant. The authentication system consist of various parts.
+Home Assistant具有内置的身份验证系统，允许不同用户与Home Assistant进行交互。身份验证系统由各种部分组成。
 
 <img class='invertDark' src='/img/en/auth/architecture.png'
   alt='Overview of how the different parts interact' />
 
-## Authentication providers
+## 身份验证提供者
 
-An authentication provider is used for users to authenticate themselves. It's up to the authentication provider to choose the method of authentication and the backend to use. By default we enable the built-in Home Assistant authentication provider which stores the users securely inside your configuration directory.
+身份验证提供者用于用户进行身份认证。对于身份验证提供者来说，选择认证方法和后端使用的方式是灵活的。默认情况下，我们启用了内置的Home Assistant身份验证提供者，它将用户安全地存储在您的配置目录中。
 
-The authentication providers that Home Assistant will use are specified inside `configuration.yaml`. It is possible to have multiple instances of the same authentication provider active. In that case, each will be identified by a unique identifier. Authentication providers of the same type will not share credentials.
+Home Assistant将使用的身份验证提供者在`configuration.yaml`中进行了指定。可以同时使用多个相同类型的身份验证提供者实例。在这种情况下，每个提供者将通过唯一标识符进行识别。相同类型的身份验证提供者不会共享凭据。
 
-## Credentials
+## 凭证
 
-Credentials store the authentication of a user with a specific authentication provider. It is produced when a user successfully authenticates. It will allow the system to find the user in our system. If the user does not exist, a new user will be created. This user will not be activated but will require approval by the owner.
+凭证用于存储用户通过特定身份验证提供者进行验证的信息。当用户成功进行身份验证时，会生成凭证。凭证将使系统能够在我们的系统中找到该用户。如果用户不存在，则将创建一个新用户。该用户将不会被激活，而是需要所有者的批准。
 
-It is possible for a user to have multiple credentials linked to it. However, it can only have a single credential per specific authentication provider.
+一个用户可以有多个与之关联的凭证。但是，对于特定身份验证提供者，它只能有一个凭证。
 
-## Users
+## 用户
 
-Each person is a user in the system. To log in as a specific user, authenticate with any of the authentication providers that are linked to this user. When a user logs in, it will get a refresh and an access token to make requests to Home Assistant.
+在系统中，每个人都是一个用户。要作为特定用户登录，请使用与此用户关联的任何身份验证提供者进行身份验证。当用户登录时，它将获得一个刷新令牌和一个访问令牌，以便向Home Assistant发出请求。
 
-### Owner
+### 所有者
 
-The user that is created during onboarding will be marked as "owner". The owner is able to manage other users and will always have access to all permissions.
+在设备启动过程中创建的用户将被标记为“所有者”。所有者可以管理其他用户，并始终具有访问所有权限的权限。
 
-## Groups
+## 组
 
-Users are a member of one or more groups. Group membership is how a user is granted permissions.
+用户可以是一个或多个组的成员。组成员身份确定了用户的权限。
 
-## Permission Policy
+## 权限策略
 
-This is the permission policy that describes to which resources a group has access. For more information about permissions and policies, see [Permissions](auth_permissions.md).
+权限策略描述了组对哪些资源具有访问权限。有关权限和策略的更多信息请参见[Permissions](auth_permissions.md)。
 
-## Access and refresh tokens
+## 访问令牌和刷新令牌
 
-Applications that want to access Home Assistant will ask the user to start an authorization flow. The flow results in an authorization code when a user successfully authorizes the application with Home Assistant. This code can be used to retrieve an access and a refresh token. The access token will have a limited lifetime while refresh tokens will remain valid until a user deletes it.
+希望访问Home Assistant的应用程序将要求用户启动授权流程。当用户成功对应用程序进行Home Assistant授权时，该流程将生成一个授权代码。该代码可用于检索访问令牌和刷新令牌。访问令牌的有效期是有限的，而刷新令牌将保持有效，直到用户将其删除。
 
-The access token is used to access the Home Assistant APIs. The refresh token is used to retrieve a new valid access token.
+访问令牌用于访问Home Assistant的API。刷新令牌用于获取一个新的有效访问令牌。
 
-### Refresh token types
+### 刷新令牌类型
 
-There are three different types of refresh tokens:
-
-- *Normal*: These are the tokens that are generated when a user authorizes an application. The application will hold on to these tokens on behalf of the user.
-- *Long-lived Access Token*: These are refresh tokens that back a long lived access token. They are created internally and never exposed to the user.
-- *System*: These tokens are limited to be generated and used by system users like Home Assistant OS and the Supervisor. They are never exposed to the user.
+刷新令牌有三种不同的类型：
+- *普通类型*：这些令牌是用户授权应用程序时生成的。应用程序代表用户保存这些令牌。
+- *长期访问令牌类型*：这些令牌是用于支持长期访问令牌的刷新令牌。它们是内部创建的，不会对用户进行公开。
+- *系统类型*：此类令牌仅限于由系统用户使用，例如Home Assistant OS和Supervisor。它们不会对用户进行公开。

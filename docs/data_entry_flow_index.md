@@ -1,30 +1,31 @@
 ---
-title: Data Entry Flow
+title: Data Entry Flow 数据条目流程
+
 ---
 
-Data Entry Flow is a data entry framework that is part of Home Assistant. Data entry is done via data entry flows. A flow can represent a simple login form or a multi-step setup wizard for a component. A Flow Manager manages all flows that are in progress and handles creation of new flows.
+数据条目流是Home Assistant的一部分，是一个用于数据输入的框架。数据输入是通过数据输入流进行的。一个流可以表示一个简单的登录表单，也可以表示一个组件的多步设置向导。流管理器管理所有正在进行的流程，并处理新流程的创建。
 
-Data Entry Flow is used in Home Assistant to login, create config entries, handle options flow, repair issues.
+数据条目流在Home Assistant中用于登录、创建配置条目、处理选项流程和修复问题。
 
-## Flow Manager
+## 流程管理器
 
-This is the class that manages the flows that are in progress. When instantiating one, you pass in two async callbacks:
+流程管理器是管理正在进行的流程的类。在实例化一个流程管理器时，你需要传入两个异步回调函数：
 
 ```python
 async def async_create_flow(handler, context=context, data=data):
     """Create flow."""
 ```
 
-The manager delegates instantiating of config flow handlers to this async callback. This allows the parent of the manager to define their own way of finding handlers and preparing a handler for instantiation. For example, in the case of the config entry manager, it will make sure that the dependencies and requirements are setup.
+流程管理器将配置流处理程序的实例化委托给这个异步回调函数。这允许管理器的父级定义自己的方式来查找处理程序并准备实例化处理程序的过程。例如，在配置条目管理器的情况下，它将确保依赖项和要求已设置好。
 
 ```python
 async def async_finish_flow(flow, result):
     """Finish flow."""
 ```
 
-This async callback is called when a flow is finished or aborted. i.e. `result['type'] in [FlowResultType.CREATE_ENTRY, FlowResultType.ABORT]`. The callback function can modify result and return it back, if the result type changed to `FlowResultType.FORM`, the flow will continue running, display another form.
+当流程完成或中止时，将调用这个异步回调函数，即`result['type'] in [FlowResultType.CREATE_ENTRY, FlowResultType.ABORT]`。如果结果类型更改为`FlowResultType.FORM`，回调函数可以修改结果并将其返回，流程将继续运行，并显示另一个表单。
 
-If the result type is `FlowResultType.FORM`, the result should look like:
+如果结果类型为`FlowResultType.FORM`，结果应该如下所示：
 
 ```python
 {
@@ -45,8 +46,7 @@ If the result type is `FlowResultType.FORM`, the result should look like:
 }
 ```
 
-If the result type is `FlowResultType.CREATE_ENTRY`, the result should look like:
-
+如果结果类型是`FlowResultType.CREATE_ENTRY`，结果应该如下所示：
 ```python
 {
     # Data schema version of the entry
@@ -65,8 +65,7 @@ If the result type is `FlowResultType.CREATE_ENTRY`, the result should look like
 }
 ```
 
-If the result type is `FlowResultType.ABORT`, the result should look like:
-
+如果结果类型是`FlowResultType.ABORT`，结果应该如下所示：
 ```python
 {
     # The result type of the flow
@@ -80,20 +79,20 @@ If the result type is `FlowResultType.ABORT`, the result should look like:
 }
 ```
 
-## Flow Handler
+## 流处理程序
 
-Flow handlers will handle a single flow. A flow contains one or more steps. When a flow is instantiated, the `FlowHandler.init_step` step will be called. Each step has several possible results:
+流处理程序将处理单个流程。一个流程包含一个或多个步骤。当流程被实例化时，`FlowHandler.init_step` 步骤将被调用。每个步骤都有几种可能的结果：
 
-- [Show Form](#show-form)
-- [Create Entry](#create-entry)
-- [Abort](#abort)
-- [External Step](#external-step--external-step-done)
-- [Show Progress](#show-progress--show-progress-done)
-- [Show Menu](#show-menu)
+- [显示表单](#show-form)
+- [创建条目](#create-entry)
+- [中止](#abort)
+- [外部步骤](#external-step--external-step-done)
+- [显示进度](#show-progress--show-progress-done)
+- [显示菜单](#show-menu)
 
-At a minimum, each flow handler will have to define a version number and a step. This doesn't have to be `init`, as `async_create_flow` can assign `init_step` dependent on the current workflow, for example in configuration, `context.source` will be used as `init_step`.
+至少，每个流程处理程序必须定义一个版本号和一个步骤。这不一定是`init`，因为`async_create_flow`可以根据当前的工作流程分配`init_step`，例如在配置中，将使用`context.source`作为`init_step`。
 
-For example, a bare minimum config flow would be:
+例如，一个最简单的配置流程示例如下：
 
 ```python
 from homeassistant import data_entry_flow
@@ -110,13 +109,15 @@ class ExampleConfigFlow(data_entry_flow.FlowHandler):
         """Handle user step."""
 ```
 
-Data entry flows depend on translations for showing the text in the steps. It depends on the parent of a data entry flow manager where this is stored. For config and option flows, this is in `strings.json` under `config` and `option`, respectively.
 
-For a more detailed explanation of `strings.json` see the [backend translation](/docs/internationalization/core) page.
+数据录入流程依赖于步骤中显示文本的翻译。这取决于数据录入流程管理器的父级，其中存储了这些翻译。对于配置和选项流程，分别存储在`strings.json`的`config`和`option`下。
 
-### Show Form
+有关`strings.json`的更详细解释，请参阅[后端翻译](/docs/internationalization/core)页面。
 
-This result type will show a form to the user to fill in. You define the current step, the schema of the data (using a mixture of voluptuous and/or [selectors](https://www.home-assistant.io/docs/blueprint/selectors/)) and optionally a dictionary of errors.
+
+### 显示表单
+
+该结果类型将向用户显示一个需要填写的表单。您需要定义当前步骤、数据的模式使用 voluptuous 和/或[selectors](https://www.home-assistant.io/docs/blueprint/selectors/)的混合）以及可选的错误字典。
 
 ```python
 from homeassistant.helpers.selector import selector
@@ -138,19 +139,18 @@ class ExampleConfigFlow(data_entry_flow.FlowHandler):
 
         return self.async_show_form(step_id="init", data_schema=vol.Schema(data_schema))
 ```
+#### 标签和描述
 
-#### Labels & Descriptions
+表单的翻译内容以`strings.json`中的`step_id`作为键添加。该对象可以包含以下键：
 
-Translations for the form are added to `strings.json` in a key for the `step_id`. That object may contain the folowing keys:
+|        键        |           值            | 说明                                                                                                                                                           |
+| :--------------: | :--------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|     `title`      |     表单标题     | 不要包含您的品牌名称，它将自动从您的清单中注入。                                                                                                               |
+|  `description`   |   表单说明    | 可选。不要链接到文档，因为它会自动链接。不要包括"basic"信息，如"Here you can set up X"。                                                                          |
+|      `data`      |     字段标签     | 在适当时尽量保持简洁，并与其他集成保持一致，以便获得最佳用户体验。                                                                                               |
+| `data_description` |    字段描述     | 可选的解释性文本，显示在字段下方。                                                                                                                            |
 
-|        Key         |       Value        | Notes                                                                                                                                        |
-| :----------------: | :----------------: | :------------------------------------------------------------------------------------------------------------------------------------------- |
-|      `title`       |    Form heading    | Do not include your brand name. It will be automatically injected from your manifest.                                                        |
-|   `description`    | Form instructions  | Optional. Do not link to the documentation as that is linked automatically. Do not include "basic" information like "Here you can set up X". |
-|       `data`       |    Field labels    | Keep succinct and consistent with other integrations whenever appropriate for the best user experience.                                      |
-| `data_description` | Field descriptions | Optional explanatory text to show below the field.                                                                                           |
-
-The field labels and descriptions are given as a dictionary with keys corresponding to your schema. Here is a simple example:
+字段标签和描述以一个字典的形式给出，其中键对应于您的模式。以下是一个简单的示例：
 
 ```json
 {
@@ -171,13 +171,13 @@ The field labels and descriptions are given as a dictionary with keys correspond
 }
 ```
 
-#### Enabling Browser Autofill
+#### 启用浏览器自动填充
 
-Suppose your integration is collecting form data which can be automatically filled by browsers or password managers, such as login credentials or contact information. You should enable autofill whenever possible for the best user experience and accessibility. There are two options to enable this.
+假设您的集成正在收集可以由浏览器或密码管理器自动填充的表单数据，例如登录凭据或联系信息。您应该尽可能启用自动填充，以提供最佳的用户体验和可访问性。有两种选项可用于启用此功能。
 
-The first option is to use Voluptuous with data keys recognized by the frontend. The frontend will recognize the keys `"username"` and `"password"` and add HTML `autocomplete` attribute values of `"username"` and `"current-password"` respectively. Support for autocomplete is limited to `"username"` and `"password"` fields and is supported primarily to quickly enable auto-fill on the many integrations that collect them without converting their schemas to selectors.
+第一种选项是使用 Voluptuous，使用前端识别的数据键。前端将识别键 `"username"` 和 `"password"`，并分别添加 HTML `autocomplete` 属性值为 `"username"` 和 `"current-password"`。自动填充仅支持 `"username"` 和 `"password"` 字段，并且主要支持将其转换为选择器之前，快速启用自动填充。
 
-The second option is to use a [text selector](https://www.home-assistant.io/docs/blueprint/selectors/#text-selector). A text selector gives full control of the input type and allows any permitted value for `autocomplete` to be specified. A hypothetical schema collecting specific fillable data might be:
+第二种选项是使用[text选择器](https://www.home-assistant.io/docs/blueprint/selectors/#text-selector)。文本选择器可完全控制输入类型，并允许指定任何允许的 `autocomplete` 值。收集特定可填充数据的假设架构示例如下：
 
 ```python
 import voluptuous as vol
@@ -208,9 +208,9 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 )
 ```
 
-#### Defaults & Suggestions
+#### 默认值与建议
 
-If you'd like to pre-fill data in the form, you have two options. The first is to use the `default` parameter. This will both pre-fill the field, and act as the default value in case the user leaves the field empty.
+如果您希望预填写表单数据，您有两个选项。第一个选项是使用`default`参数。这将对字段进行预填充，并在用户未填写字段时充当默认值。
 
 ```python
     data_schema = {
@@ -228,9 +228,9 @@ The other alternative is to use a suggested value - this will also pre-fill the 
     }
 ```
 
-You can also mix and match - pre-fill through `suggested_value`, and use a different value for `default` in case the field is left empty, but that could be confusing to the user so use carefully.
+您还可以混合使用-通过`suggested_value`进行预填充，并在字段为空时使用不同的值作为`default`，但这可能会让用户感到困惑，因此请谨慎使用。
 
-Using suggested values also make it possible to declare a static schema, and merge suggested values from existing input. A `add_suggested_values_to_schema` helper makes this possible:
+使用建议值还可以声明一个静态模式，并从现有输入中合并建议值。一个名为`add_suggested_values_to_schema`的帮助器使这成为可能：
 
 ```python
 OPTIONS_SCHEMA = vol.Schema(
@@ -250,11 +250,13 @@ class ExampleOptionsFlow(config_entries.OptionsFlow):
         )
 ```
 
-#### Validation
 
-After the user has filled in the form, the step method will be called again and the user input is passed in. Your step will only be called if the user input passes your data schema. When the user passes in data, you will have to do extra validation of the data. For example, you can verify that the passed in username and password are valid.
+#### 验证
 
-If something is wrong, you can return a dictionary with errors. Each key in the error dictionary refers to a field name that contains the error. Use the key `base` if you want to show an error unrelated to a specific field. The specified errors need to refer to a key in a translation file.
+用户填写完表单后，步骤方法将再次被调用，并将用户输入传入。只有当用户输入符合数据模式时，您的步骤才会被调用。当用户传入数据时，您必须对数据进行额外的验证。例如，您可以验证传入的用户名和密码是否有效。
+
+如果出现错误，您可以返回一个包含错误的字典。错误字典中的每个键都指示包含错误的字段名称。如果要显示与特定字段无关的错误，请使用键`base`。指定的错误需要在翻译文件中引用一个键。
+
 
 ```python
 class ExampleConfigFlow(data_entry_flow.FlowHandler):
@@ -280,9 +282,10 @@ class ExampleConfigFlow(data_entry_flow.FlowHandler):
         )
 ```
 
-#### Multi-step flows
 
-If the user input passes validation, you can return one of the possible step types again. If you want to navigate the user to the next step, return the return value of that step:
+#### 多步骤流程
+
+如果用户输入通过了验证，您可以再次返回可能的步骤类型之一。如果您想将用户导航到下一步，请返回该步骤的返回值：
 
 ```python
 class ExampleConfigFlow(data_entry_flow.FlowHandler):
@@ -300,9 +303,10 @@ class ExampleConfigFlow(data_entry_flow.FlowHandler):
         ...
 ```
 
-### Create Entry
 
-When the result is "Create Entry", an entry will be created and passed to the parent of the flow manager. A success message is shown to the user and the flow is finished. You create an entry by passing a title and data. The title can be used in the UI to indicate to the user which entry it is. Data can be any data type, as long as it is JSON serializable.
+### 创建条目
+
+当结果为"Create Entry"时，将创建一个条目并传递给流程管理器的父级。用户将看到一个成功的消息，并且流程结束。您可以通过传递标题和数据来创建一个条目。标题可以在用户界面中用于指示条目的名称。数据可以是任何数据类型，只要它可以被JSON序列化。
 
 ```python
 class ExampleConfigFlow(data_entry_flow.FlowHandler):
@@ -315,36 +319,36 @@ class ExampleConfigFlow(data_entry_flow.FlowHandler):
         )
 ```
 
-### Abort
 
-When a flow cannot be finished, you need to abort it. This will finish the flow and inform the user that the flow has finished. Reasons for a flow to not be able to finish can be that a device is already configured or not compatible with Home Assistant.
+### 中止
+
+当无法完成流程时，您需要中止它。这将结束流程并通知用户流程已完成。无法完成流程的原因可能是设备已经配置或不兼容 Home Assistant。
 
 ```python
 class ExampleConfigFlow(data_entry_flow.FlowHandler):
     async def async_step_user(self, user_input=None):
         return self.async_abort(reason="not_supported")
 ```
+### 外部步骤和外部步骤完成
 
-### External Step & External Step Done
+有时用户可能需要通过在外部网站上执行操作来完成配置流程。例如，通过重定向到外部网页来设置集成。这通常由使用OAuth2授权用户的集成使用。
 
-It is possible that a user needs to finish a config flow by doing actions on an external website. For example, setting up an integration by being redirected to an external webpage. This is commonly used by integrations that use OAuth2 to authorize a user.
+_该示例是关于配置条目的，但也适用于使用数据输入流程的其他部分。_
 
-_The example is about config entries, but works with other parts that use data entry flows too._
+该流程的工作方式如下：
 
-The flow works as follows:
+1. 用户在 Home Assistant 中启动配置流程。
+2. 配置流程提示用户在外部网站上完成流程。
+3. 用户打开外部网站。
+4. 在完成外部步骤后，用户的浏览器将被重定向到 Home Assistant 的一个端点以传递响应。
+5. 端点对响应进行验证，并在验证通过后将外部步骤标记为已完成，并返回关闭窗口的 JavaScript 代码：`<script>window.close()</script>`。
 
-1. The user starts config flow in Home Assistant.
-2. Config flow prompts the user to finish the flow on an external website.
-3. The user opens the external website.
-4. Upon completion of the external step, the user's browser will be redirected to a Home Assistant endpoint to deliver the response.
-5. The endpoint validates the response, and upon validation, marks the external step as done and returns JavaScript code to close the window: `<script>window.close()</script>`.
+    为了能够将外部步骤的结果路由到 Home Assistant 的端点上，您需要确保配置流程ID被包括在内。如果您的外部步骤是OAuth2流程，您可以利用oauth2的状态变量。这是一个在授权页面上不被解析，而是原样传递给Home Assistant端点的变量。
 
-    To be able to route the result of the external step to the Home Assistant endpoint, you will need to make sure the config flow ID is included. If your external step is an OAuth2 flow, you can leverage the oauth2 state for this. This is a variable that is not interpreted by the authorization page but is passed as-is to the Home Assistant endpoint.
+6. 窗口关闭，Home Assistant 用户界面中的配置流程将再次对用户可见。
+7. 当外部步骤被标记为已完成时，配置流程会自动前进到下一步。用户将被提示进行下一步操作。
 
-6. The window closes and the Home Assistant user interface with the config flow will be visible to the user again.
-7. The config flow has automatically advanced to the next step when the external step was marked as done. The user is prompted with the next step.
-
-Example configuration flow that includes an external step.
+以下是包含外部步骤的示例配置流程。
 
 ```python
 from homeassistant import config_entries
@@ -368,11 +372,11 @@ class ExampleConfigFlow(data_entry_flow.FlowHandler):
         return self.async_create_entry(title=self.data["title"], data=self.data)
 ```
 
-Avoid doing work based on the external step data before you return an `async_mark_external_step_done`. Instead, do the work in the step that you refer to as `next_step_id` when marking the external step done. This will give the user a better user experience by showing a spinner in the UI while the work is done.
+在返回`async_mark_external_step_done`之前，避免根据外部步骤的数据进行任何工作。相反，将工作放在您在标记外部步骤为完成时所指的`next_step_id`步骤中。这将为用户提供更好的用户体验，因为在进行工作时，界面将显示一个加载动画。
 
-If you do the work inside the authorize callback, the user will stare at a blank screen until that all of a sudden closes because the data has forwarded. If you do the work before marking the external step as done, the user will still see the form with the "Open external website" button while the background work is being done. That too is undesirable.
+如果在授权回调函数中进行工作，用户将会一直盯着一个空白屏幕，直到突然关闭，因为数据已经转发。如果在标记外部步骤为完成之前进行工作，用户仍将看到带有“打开外部网站”按钮的表单，同时后台工作正在进行。这也是不可取的。
 
-Example code to mark an external step as done:
+以下是将外部步骤标记为已完成的示例代码：
 
 ```python
 from homeassistant import data_entry_flow
@@ -387,22 +391,22 @@ async def handle_result(hass, flow_id, data):
         return "Invalid config flow specified"
 ```
 
-### Show Progress & Show Progress Done
+### 显示进度 & 显示进度完成
 
-It is possible that we need the user to wait for a task that takes several minutes.
+有时候我们需要用户等待一项需要几分钟的任务。
 
-_The example is about config entries, but works with other parts that use data entry flows too._
+_该示例是关于配置条目的，但也适用于使用数据输入流程的其他部分。_
 
-The flow works as follows:
+该流程的工作方式如下：
 
-1. The user starts the config flow in Home Assistant.
-2. The config flow prompts the user that a task is in progress and will take some time to finish by calling `async_show_progress`. The flow should pass a task specific string as `progress_action` parameter to represent the translated text string for the prompt.
-3. The flow is responsible for managing the background task and continuing the flow when the task is done or canceled. Continue the flow by calling the `FlowManager.async_configure` method, e.g. via `hass.config_entries.flow.async_configure`. Create a new task that does this to avoid a deadlock.
-4. When the task or tasks are done, the flow should mark the progress to be done with the `async_show_progress_done` method.
-5. The frontend will update each time we call show progress or show progress done.
-6. The config flow will automatically advance to the next step when the progress was marked as done. The user is prompted with the next step.
+1. 用户在 Home Assistant 中启动配置流程。
+2. 配置流程通过调用`async_show_progress`来提示用户任务正在进行中，并需要一些时间来完成。流程应将任务特定的字符串作为`progress_action`参数传递，以表示提示的翻译文本。
+3. 流程负责管理后台任务，并在任务完成或取消时继续流程。通过调用`FlowManager.async_configure`方法（例如通过`hass.config_entries.flow.async_configure`）来继续流程。创建一个新的任务来执行此操作，以避免死锁。
+4. 任务完成后，流程应使用`async_show_progress_done`方法标记进度已完成。
+5. 前端每次调用show progress或show progress done时都会更新。
+6. 当进度被标记为完成时，配置流程将自动前进到下一步。用户将被提示进行下一步操作。
 
-Example configuration flow that includes two show progress tasks.
+以下是包含两个显示进度任务的示例配置流程。
 
 ```python
 from homeassistant import config_entries
@@ -447,8 +451,8 @@ class TestFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_create_entry(title="Some title", data={})
 ```
 
-Note: If the user closes the flow, the `async_remove` callback will be called. Make sure to implement this method in your FlowHandler to clean up any resources or tasks associated with the flow.
 
+注意：如果用户关闭了流程，`async_remove`回调将被调用。请确保在FlowHandler中实现此方法，以清理与流程相关的任何资源或任务。
 ```python
 class TestFlow(config_entries.ConfigFlow, domain=DOMAIN):
     ...
@@ -464,9 +468,9 @@ class TestFlow(config_entries.ConfigFlow, domain=DOMAIN):
         ...
 ```
 
-### Show Menu
+### 显示菜单
 
-This will show a navigation menu to the user to easily pick the next step. The menu labels can be hardcoded by specifying a dictionary of {`step_id`: `label`} or translated via `strings.json` when specifying a list.
+这将向用户显示一个导航菜单，以便轻松选择下一步操作。菜单标签可以通过指定一个{`step_id`: `label`}的字典进行硬编码，或者通过在指定列表时通过`strings.json`进行翻译。
 
 ```python
 class ExampleConfigFlow(data_entry_flow.FlowHandler):
@@ -503,9 +507,10 @@ class ExampleConfigFlow(data_entry_flow.FlowHandler):
 }
 ```
 
-## Initializing a config flow from an external source
 
-You might want to initialize a config flow programmatically. For example, if we discover a device on the network that requires user interaction to finish setup. To do so, pass a source parameter and optional user input when initializing a flow:
+## 从外部来源初始化配置流程
+
+您可能希望以编程的方式初始化配置流程。例如，如果我们在网络上发现一个需要用户交互才能完成设置的设备。要实现这一点，在初始化流程时传递一个源参数和可选的用户输入：
 
 ```python
 await flow_mgr.async_init(
@@ -513,12 +518,12 @@ await flow_mgr.async_init(
 )
 ```
 
-The config flow handler will not start with the `init` step. Instead, it will be instantiated with a step name equal to the source. The step should follow the same return values as a normal step.
 
+配置流程处理程序不会从`init`步骤开始。相反，它将使用与源名称相同的步骤进行实例化。该步骤应该遵循与普通步骤相同的返回值。
 ```python
 class ExampleConfigFlow(data_entry_flow.FlowHandler):
     async def async_step_discovery(self, info):
         """Handle discovery info."""
 ```
 
-The source of a config flow is available as `self.source` on `FlowHandler`.
+在`FlowHandler`上，配置流程的源可以通过`self.source`进行访问。

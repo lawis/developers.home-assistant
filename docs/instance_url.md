@@ -2,31 +2,24 @@
 title: "Getting the instance URL"
 ---
 
-In some cases, an integration requires to know the URL of the users' Home
-Assistant instance that matches the requirements needed for the use cases at
-hand. For example, cause a device needs to communicate back data to Home
-Assistant, or for an external service or device to fetch data from Home
-Assistant (e.g., a generated image or sound file).
+在某些情况下，集成需要知道与当前使用场景所需的要求相匹配的用户Home Assistant实例的URL。例如，因为某个设备需要将数据发送回Home Assistant，或者外部服务或设备需要从Home Assistant获取数据（例如生成的图像或音频文件）。
 
-Getting an instance URL can be rather complex, considering a user can have a
-bunch of different URLs available:
+获取实例URL可能相当复杂，因为用户可能有许多不同的URL可用：
 
-- A user-configured internal home network URL.
-- An automatically detected internal home network URL.
-- A user-configured, public accessible, external URL that works from the internet.
-- An URL provided by Home Assistant Cloud by Nabu Casa, in case the user has a subscription.
+- 用户配置的内部家庭网络URL。
+- 自动检测到的内部家庭网络URL。
+- 用户配置的可以从互联网访问的外部URL。
+- 在用户订阅Home Assistant Cloud的情况下，由Nabu Casa提供的URL。
 
-Extra complexity is added by the fact that URLs can be served on non-standard ports
-(e.g., not 80 or 443) and with or without SSL (`http://` vs `https://`).
+复杂性进一步增加的原因是URL可以使用非标准端口（例如，非80或443）提供，同时可以选择使用或不使用SSL（`http://`与`https://`）。
 
-Luckily, Home Assistant provides a helper method to ease that a bit.
+幸运的是，Home Assistant提供了一个网络助手方法来简化这个过程。
 
-## The URL helper
+## URL助手
 
-Home Assistant provides a network helper method to get the instance URL,
-that matches the requirements the integration needs, called `get_url`.
+Home Assistant提供了一个网络助手方法，名为`get_url`，用于获取与集成所需的要求匹配的实例URL。
 
-The signature of the helper method:
+助手方法的签名:
 
 ```py
 # homeassistant.helpers.network.get_url
@@ -44,65 +37,48 @@ def get_url(
     prefer_cloud: bool = False,
 ) -> str:
 ```
-
-The different parameters of the method:
+该方法的不同参数有：
 
 - `require_current_request`
-  Require the returned URL to match the URL the user is currently using
-  in their browser. If there is no current request, an error will be raised.
+  要求返回的 URL 与用户当前在浏览器中使用的 URL 匹配。如果没有当前请求，将出现错误。
 
 - `require_ssl`:
-  Require the returned URL to use the `https` scheme.
+  要求返回的 URL 使用 `https` 方案。
 
 - `require_standard_port`:
-  Require the returned URL use a standard HTTP port. So, it requires port 80
-  for the `http` scheme, and port 443 on the `https` scheme.
+  要求返回的 URL 使用标准的 HTTP 端口。因此，它需要 `http` 方案使用端口 80，`https` 方案使用端口 443。
 
 - `allow_internal`:
-  Allow the URL to be an internal set URL by the user or a detected URL on the
-  internal network. Set this one to `False` if one requires an external URL
-  exclusively.
+  允许 URL 为用户设置的内部 URL，或者是内部网络上检测到的 URL。如果需要仅使用外部 URL，则将其设置为 `False`。
 
 - `allow_external`:
-  Allow the URL to be an external set URL by the user or a Home Assistant Cloud
-  URL. Set this one to `False` if one requires an internal URL exclusively.
+  允许 URL 为用户设置的外部 URL，或者 Home Assistant Cloud 的 URL。如果需要仅使用内部 URL，则将其设置为 `False`。
 
 - `allow_cloud`:
-  Allow a Home Assistant Cloud URL to be returned, set to `False` in case one
-  requires anything but a Cloud URL.
+  允许返回 Home Assistant Cloud 的 URL，如果需要除 Cloud URL 外的任何 URL，请将其设置为 `False`。
 
 - `allow_ip`:
-  Allow the host part of an URL to be an IP address, set to `False` in case
-  that is not usable for the use case.
+  允许 URL 的主机部分为 IP 地址，在不可用的情况下将其设置为 `False`。
 
 - `prefer_external`:
-  By default, we prefer internal URLs over external ones. Set this option to
-  `True` to turn that logic around and prefer an external URL over
-  an internal one.
+  默认情况下，我们倾向于使用内部 URL 而不是外部 URL。将此选项设置为 `True`，则将该逻辑反转，优先使用外部 URL 而不是内部 URL。
 
 - `prefer_cloud`:
-  By default, an external URL set by the user is preferred, however, in rare
-  cases a cloud URL might be more reliable. Setting this option to `True`
-  prefers the Home Assistant Cloud URL over the user-defined external URL.
+  默认情况下，优选用户定义的外部 URL，但在某些情况下，Cloud URL 可能更可靠。将此选项设置为 `True`，则优先使用 Home Assistant Cloud URL 而不是用户定义的外部 URL。
 
-## Default behavior
+## 默认行为
 
-By default, without passing additional parameters (`get_url(hass)`),
-it will try to:
+默认情况下，在不传递其他参数的情况下 (`get_url(hass)`)，它会尝试：
 
-- Get an internal URL set by the user, or if not available, try to detect one
-  from the network interface (based on `http` settings).
+- 获取用户设置的内部 URL，如果不可用，则尝试根据 `http` 设置从网络接口检测到一个。
 
-- If an internal URL fails, it will try to get an external URL. It prefers the
-  external URL set by the user, in case that fails; Get a Home Assistant Cloud
-  URL if that is available.
+- 如果内部 URL 失败，则尝试获取一个外部 URL。它优先使用用户设置的外部 URL，如果失败，则获取一个 Home Assistant Cloud URL。
 
-The default is aimed to be: allow any URL, but prefer a local one,
-without requirements.
+默认设置是：允许任何 URL，但首选本地 URL，没有要求。
 
-## Example usage
+## 示例用法
 
-The most basic example of using the helper:
+使用 helper 的最基本示例：
 
 ```py
 from homeassistant.helpers.network import get_url
@@ -110,13 +86,9 @@ from homeassistant.helpers.network import get_url
 instance_url = get_url(hass)
 ```
 
-This example call to the helper method would return an internal URL, preferably,
-that is either user set or detected. If it cannot provide that, it will try
-the users' external URL. Lastly, if that isn't set by the user, it will try to
-make use of the Home Assistant Cloud URL.
+这个辅助方法的示例调用将返回一个首选的内部 URL，它可以是用户设置的或者是检测到的。如果无法提供这样的 URL，将尝试使用用户设置的外部 URL。最后，如果用户没有设置外部 URL，将会尝试使用 Home Assistant Cloud 的 URL。
 
-If absolutely no URL is available (or none match given requirements),
-an exception will be raised: `NoURLAvailableError`.
+如果绝对找不到可用的 URL（或者没有满足要求的 URL），将会引发一个异常：`NoURLAvailableError`。
 
 ```py
 from homeassistant.helpers import network
@@ -133,9 +105,6 @@ except network.NoURLAvailableError:
     raise MyInvalidValueError("Failed to find suitable URL for my integration")
 ```
 
-The above example shows a little more complex use of the URL helper. In this case
-the requested URL may not be an internal address, the URL may not contain an
-IP address, requires SSL and must be served on a standard port.
+上面的例子展示了 URL 辅助方法的一种稍微复杂的用法。在这种情况下，请求的 URL 可能不是一个内部地址，URL 可能不包含 IP 地址，要求使用 SSL，并且必须在标准端口上提供服务。
 
-If none is available, the `NoURLAvailableError` exception can be caught and
-handled.
+如果没有可用的 URL，可以捕捉和处理 `NoURLAvailableError` 异常。

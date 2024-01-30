@@ -1,40 +1,39 @@
 ---
-title: "Connecting to an instance"
+title: "Connecting to an instance 连接实例"
 ---
+当用户第一次打开应用时，他们需要连接到本地实例进行身份验证和设备注册。
 
-When a user first opens the app, they will need to connect to their local instance to authenticate and register the device.
+## 用户身份验证
 
-## Authenticating the user
+如果Home Assistant配置了[zeroconf集成]，可以通过搜索`_home-assistant._tcp.local.`来发现本地实例。如果未配置，则需要询问用户实例的本地地址。
 
-The local instance can be discovered if Home Assistant has the [zeroconf integration] configured by searching for `_home-assistant._tcp.local.`. If not configured, the user will need to be asked for the local address of their instance.
+一旦知道了实例的地址，应用程序将要求用户通过[OAuth2与Home Assistant]进行身份验证。Home Assistant使用IndieAuth，这意味着为了能够重定向到触发应用程序的URL，您需要采取一些额外的步骤。一定要仔细阅读“Clients”部分的最后一段。
 
-When the address of the instance is known, the app will ask the user to authenticate via [OAuth2 with Home Assistant]. Home Assistant uses IndieAuth, which means that to be able to redirect to a url that triggers your app, you need to take some extra steps. Make sure to read the last paragraph of the "Clients" section thoroughly.
+[zeroconf集成]: https://www.home-assistant.io/integrations/zeroconf
+[OAuth2与Home Assistant]: auth_api.md
 
-[zeroconf integration]: https://www.home-assistant.io/integrations/zeroconf
-[OAuth2 with Home Assistant]: auth_api.md
+## 设备注册
 
-## Registering the device
+_这需要Home Assistant 0.90或更高版本。_
 
-_This requires Home Assistant 0.90 or later._
+Home Assistant有一个`mobile_app`组件，允许应用程序注册自己并与实例进行交互。这是一个通用组件，用于处理大多数常见的移动应用程序任务。如果您的应用程序需要比此组件提供的更多类型的交互，则可以通过自定义交互来扩展此组件。
 
-Home Assistant has a `mobile_app` component that allows applications to register themselves and interact with the instance. This is a generic component to handle most common mobile application tasks. This component is extendable with custom interactions if your app needs more types of interactions than are offered by this component.
+一旦您获得了作为用户进行身份验证的令牌，就可以将应用程序与Home Assistant中的移动应用程序集成注册。
 
-Once you have tokens to authenticate as a user, it's time to register the app with the mobile app integration in Home Assistant.
+### 准备工作
 
-### Getting Ready
+首先，确保已加载`mobile_app`集成。有两种方法可以做到这一点：
 
-First, you must ensure that the `mobile_app` integration is loaded. There are two ways to do this:
+- 您可以发布一个Zeroconf/Bonjour记录`_hass-mobile-app._tcp.local.`来触发`mobile_app`集成的自动加载。在继续之前，应该等待至少60秒。
+- 您可以要求用户将`mobile_app`添加到他们的configuration.yaml中并重新启动Home Assistant。如果用户已经在配置中有`default_config`，那么`mobile_app`已经被加载。
 
-- You can publish a Zeroconf/Bonjour record `_hass-mobile-app._tcp.local.` to trigger the automatic load of the `mobile_app` integration. You should wait at least 60 seconds after publishing the record before continuing.
-- You can ask the user to add `mobile_app` to their configuration.yaml and restart Home Assistant. If the user already has `default_config` in their configuration, then `mobile_app` will have been already loaded.
+可以通过检查[`/api/config` REST API调用](/api/rest.md#get-apiconfig)的`components`数组来确认是否已加载`mobile_app`组件。如果继续设备注册并收到404状态码，则它很可能尚未加载。
 
-You can confirm the `mobile_app` component has been loaded by checking the `components` array of the [`/api/config` REST API call](/api/rest.md#get-apiconfig). If you continue to device registration and receive a 404 status code, then it most likely hasn't been loaded yet.
+### 注册设备
 
-### Registering the device
+要注册设备，请进行经过身份验证的POST请求到`/api/mobile_app/registrations`。[有关进行经过身份验证的请求的更多信息。](/auth_api.md#making-authenticated-requests)
 
-To register the device, make an authenticated POST request to `/api/mobile_app/registrations`. [More info on making authenticated requests.](/auth_api.md#making-authenticated-requests)
-
-Example payload to send to the registration endpoint:
+发送到注册端点的示例有效载荷：
 
 ```json
 {
@@ -53,22 +52,23 @@ Example payload to send to the registration endpoint:
   }
 }
 ```
+请参考以下翻译：
 
 | Key                   | Required | Type   | Description                                                                                                                  |
 | --------------------- | -------- | ------ | ---------------------------------------------------------------------------------------------------                          |
-| `device_id`           | V        | string | A unique identifier for this device. New in Home Assistant 0.104                                                             |
-| `app_id`              | V        | string | A unique identifier for this app.                                                                                            |
-| `app_name`            | V        | string | Name of the mobile app.                                                                                                      |
-| `app_version`         | V        | string | Version of the mobile app.                                                                                                   |
-| `device_name`         | V        | string | Name of the device running the app.                                                                                          |
-| `manufacturer`        | V        | string | The manufacturer of the device running the app.                                                                              |
-| `model`               | V        | string | The model of the device running the app.                                                                                     |
-| `os_name`             | V        | string | The name of the OS running the app.                                                                                          |
-| `os_version`          | V        | string | The OS version of the device running the app.                                                                                |
-| `supports_encryption` | V        | bool   | If the app supports encryption. See also the [encryption section](/api/native-app-integration/sending-data.md#implementing-encryption).  |
-| `app_data`            |          | Dict   | App data can be used if the app has a supporting component that extends `mobile_app` functionality.                          |
+| `device_id`           | 是        | 字符串 | 该设备的唯一标识符。Home Assistant 0.104新增。                                                              |
+| `app_id`              | 是        | 字符串 | 该应用的唯一标识符。                                                                                                      |
+| `app_name`            | 是        | 字符串 | 移动应用的名称。                                                                                                      |
+| `app_version`         | 是        | 字符串 | 移动应用的版本号。                                                                                                   |
+| `device_name`         | 是        | 字符串 | 运行该应用的设备名称。                                                                                          |
+| `manufacturer`        | 是        | 字符串 | 运行该应用的设备的制造商。                                                                              |
+| `model`               | 是        | 字符串 | 运行该应用的设备型号。                                                                                     |
+| `os_name`             | 是        | 字符串 | 运行该应用的操作系统名称。                                                                                          |
+| `os_version`          | 是        | 字符串 | 运行该应用的设备的操作系统版本。                                                                                |
+| `supports_encryption` | 是        | 布尔值   | 应用是否支持加密。详见[encryption](/api/native-app-integration/sending-data.md#implementing-encryption)。  |
+| `app_data`            |          | 字典   | 如果该应用有扩展`mobile_app`功能的支持组件，可以使用应用数据。                          |
 
-When you get a 200 response, the mobile app is registered with Home Assistant. The response is a JSON document and will contain the URLs on how to interact with the Home Assistant instance. You should permanently store this information.
+当您收到一个200响应时，移动应用已经在Home Assistant中注册成功。响应是一个JSON文档，其中包含与Home Assistant实例交互的URL。您应该永久存储这些信息。
 
 ```json
 {
@@ -79,9 +79,11 @@ When you get a 200 response, the mobile app is registered with Home Assistant. T
 }
 ```
 
-| Key             | Type   | Description                                                                                                                                                                                                            |
-| --------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `cloudhook_url` | string | The cloudhook URL provided by Home Assistant Cloud. Only will be provided if user is actively subscribed to Nabu Casa.                                                                                                 |
-| `remote_ui_url` | string | The remote UI URL provided by Home Assistant Cloud. Only will be provided if user is actively subscribed to Nabu Casa.                                                                                                 |
-| `secret`        | string | The secret to use for encrypted communication. Will only be included if encryption is supported by both the app and the Home Assistant instance. [More info](/api/native-app-integration/sending-data.md#implementing-encryption). |
-| `webhook_id`    | string | The webhook ID that can be used to send data back.                                                                                                                                                                     |
+请参考以下翻译：
+
+| Key             | Type   | Description                                                                                                                                      |
+| --------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `cloudhook_url` | 字符串 | Home Assistant Cloud 提供的云钩子 URL。仅当用户订阅了 Nabu Casa 时才会提供。                                                            |
+| `remote_ui_url` | 字符串 | Home Assistant Cloud 提供的远程 UI URL。仅当用户订阅了 Nabu Casa 时才会提供。                                                            |
+| `secret`        | 字符串 | 用于加密通信的密钥。仅在应用和 Home Assistant 实例都支持加密时才会包含。详见 [更多信息](/api/native-app-integration/sending-data.md#implementing-encryption)。 |
+| `webhook_id`    | 字符串 | 可用于发送数据的 Webhook ID。                                                                                                                            |

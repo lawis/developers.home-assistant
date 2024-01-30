@@ -2,9 +2,9 @@
 title: "重大变化"
 ---
 
-Home Assistant doesn't only collect data, it also exports data to various services. Not all of these services are interested in every change. To help these services filter insignificant changes, your entity integration can add significant change support.
+Home Assistant 不仅收集数据，还会将数据导出到各种服务中。并非所有这些服务都对每个更改都感兴趣。为了帮助这些服务过滤不重要的更改，您的实体集成可以添加重要更改支持。
 
-This support is added by creating a `significant_change.py` platform file with a function `async_check_significant_change`.
+要添加此支持，请创建一个名为`significant_change.py`的平台文件，并在其中编写一个名为`async_check_significant_change`的函数。
 
 ```python
 from typing import Any, Optional
@@ -21,16 +21,16 @@ def async_check_significant_change(
 ) -> bool | None:
 ```
 
-This function is passed a state that was previously considered significant and the new state. It is not just passing the last 2 known states in. The function should return a boolean if it is significant or not, or `None` if the function doesn't know.
+此函数接收先前被认为是重要的状态和新状态。它不仅仅传递最后 2 个已知状态。该函数应返回一个布尔值，表示该状态是否重要，如果该函数无法确定，则返回`None`。
 
-When deciding on significance, make sure you take all known attributes into account. Use device classes to differentiate between entity types.
+在确定重要性时，请确保考虑所有已知属性。使用设备类来区分实体类型。
 
-Here are some examples of insignificant changes:
+以下是一些不重要更改的示例：
 
- - A battery that loses 0.1 % charge
- - A temperature sensor that changes 0.1 Celsius
- - A light that changes 2 brightness
+- 电池电量减少了 0.1%
+- 温度传感器的温度变化了 0.1 摄氏度
+- 灯的亮度变化了 2
 
-Home Assistant will automatically handle cases like `unknown` and `unavailable`.
+Home Assistant 将自动处理`unknown`和`unavailable`等情况。
 
-To add significant state support to an entity integration, run `python3 -m script.scaffold significant_change`.
+要为实体集成添加重要状态支持，请运行`python3 -m script.scaffold significant_change`。

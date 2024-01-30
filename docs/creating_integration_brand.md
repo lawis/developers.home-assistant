@@ -2,12 +2,13 @@
 title: "品牌"
 ---
 
-A commercial brand may have several integrations which provide support for different offerings under that brand. Also, a brand may offer devices which comply with an IoT standard, for example Zigbee or Z-Wave.
-As an example of the first case, there are multiple integrations providing support for different Google products, e.g. Google Calendar by the `google` integration and Google Sheets by the `google_sheets` integration.
-As an example of the second case, Innovelli offers Zigbee and Z-Wave devices and doesn't need its own integration.
+一个商业品牌可能有多个集成，这些集成为该品牌下的不同产品提供支持。此外，品牌可能会提供符合物联网标准（例如 Zigbee 或 Z-Wave）的设备。
 
+以第一种情况为例，有多个集成提供对不同谷歌产品的支持，例如 google 集成提供对 Google 日历的支持，google_sheets 集成提供对 Google 表格的支持。
 
-To make these integrations easier to find by the user, they should be collected in a file within the `homeassistant/brands`folder.
+以第二种情况为例，Innovelli 提供 Zigbee 和 Z-Wave 设备，不需要自己的集成。
+
+为了使用户更容易找到这些集成，它们应该被收集在 homeassistant/brands 文件夹中的一个文件中
 
 Examples:
 ```json
@@ -37,19 +38,18 @@ Or a minimal example that you can copy into your project:
 }
 ```
 
-## Domain
+## 域名
 
-The domain is a short name consisting of characters and underscores. This domain has to be unique and cannot be changed. Example of the domain for the Google brand: `google`. The domain key has to match the file name of the brand file it is in. If there's an integration with the same
-domain, it has to be listed in the brand's `integrations`.
+域名是由字符和下划线组成的简短名称。该域名必须是唯一的，且不能更改。例如，Google 品牌的域名为 `google`。域名键必须与所在的品牌文件的文件名匹配。如果存在具有相同域名的集成，它必须在品牌的 `integrations` 列表中列出。
 
-## Name
+## 名称
 
-The name of the brand.
+品牌的名称。
 
-## Integrations
+## 集成
 
-A list of integration domains implementing offerings of the brand.
+实现品牌产品的一组集成域。
 
-## IoT standards
+## 物联网标准
 
-A list of IoT standards which are supported by devices of the brand. Possible values are `homekit`, `zigbee` and `zwave`. Note that a certain device may not support any of the listed IoT standards.
+品牌设备支持的物联网标准的列表。可能的值包括 `homekit`、`zigbee` 和 `zwave`。请注意，某些设备可能不支持列出的任何物联网标准。

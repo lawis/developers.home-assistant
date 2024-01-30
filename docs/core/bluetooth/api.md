@@ -2,13 +2,14 @@
 title: "Bluetooth APIs"
 ---
 
-### Subscribing to Bluetooth discoveries
+### 订阅蓝牙发现
 
-Some integrations may need to know when a device is discovered right away. The Bluetooth integration provides a registration API to receive callbacks when a new device is discovered that matches specific key values. The same format for `bluetooth` in [`manifest.json`](../../creating_integration_manifest#bluetooth) is used for matching. In addition to the matchers used in the `manifest.json`, `address` can also be used as a matcher.
+某些集成可能需要立即知道设备被发现的情况。蓝牙集成提供了一个注册 API，用于在发现与特定关键值匹配的新设备时接收回调。与 [`manifest.json`](../../creating_integration_manifest#bluetooth) 中的 `bluetooth` 相同的格式用于匹配。除了在 `manifest.json` 中使用的匹配器之外，`address` 也可以用作匹配器。
 
-The function `bluetooth.async_register_callback` is provided to enable this ability. The function returns a callback that will cancel the registration when called.
+提供了函数 `bluetooth.async_register_callback` 来实现此功能。该函数返回一个回调函数，当调用时将取消注册。
 
-The below example shows registering to get callbacks when a Switchbot device is nearby.
+下面的示例显示了注册以在附近有 Switchbot 设备时获取回调的方法。
+
 
 ```python
 from homeassistant.components import bluetooth
@@ -80,9 +81,9 @@ scanner = bluetooth.async_get_scanner(hass)
 ```
 
 
-### Determine if a scanner is running
+### 判断扫描程序是否正在运行
 
-The Bluetooth integration may be set up but has no connectable adapters or remotes. The `bluetooth.async_scanner_count` API can be used to determine if there is a scanner running that will be able to receive advertisements or generate `BLEDevice`s that can be used to connect to the device. An integration may want to raise a more helpful error during setup if there are no scanners that will generate connectable `BLEDevice` objects.
+蓝牙集成可能已经设置，但没有可连接的适配器或远程设备。可以使用 `bluetooth.async_scanner_count` API 来确定是否有正在运行的扫描程序，该程序将能够接收广告或生成可用于连接到设备的 `BLEDevice`。如果没有扫描程序将生成可连接的 `BLEDevice` 对象，集成可能希望在设置过程中引发一个更有帮助的错误。
 
 ```python
 from homeassistant.components import bluetooth
@@ -90,11 +91,11 @@ from homeassistant.components import bluetooth
 count = bluetooth.async_scanner_count(hass, connectable=True)
 ```
 
-### Subscribing to unavailable callbacks
+### 订阅不可用回调
 
-To get a callback when the Bluetooth stack can no longer see a device, call the `bluetooth.async_track_unavailable` API. For performance reasons, it may take up to five minutes to get a callback once the device is no longer seen.
+要在蓝牙堆栈无法再看到设备时获得回调，调用 `bluetooth.async_track_unavailable` API。出于性能原因，一旦设备不再可见，可能需要多达五分钟才能获得回调。
 
-If the `connectable` argument is set to `True`, if any `connectable` controller can reach the device, the device will be considered available. If only non-connectable controllers can reach the device, the device will be considered unavailable. If the argument is set to `False`, the device will be considered available if any controller can see it.
+如果将 `connectable` 参数设置为 `True`，如果任何可连接的控制器可以访问设备，则将认为该设备是可用的。如果只有不可连接的控制器可以访问设备，则认为该设备是不可用的。如果将参数设置为 `False`，则只要任何控制器可以看到设备，就认为该设备是可用的。
 
 ```python
 from homeassistant.components import bluetooth
@@ -105,11 +106,11 @@ def _unavailable_callback(info: bluetooth.BluetoothServiceInfoBleak) -> None:
 cancel = bluetooth.async_track_unavailable(hass, _unavailable_callback, "44:44:33:11:23:42", connectable=True)
 ```
 
-### Fetching the bleak `BLEDevice` from the `address`
+### 通过 `address` 获取 bleak 的 `BLEDevice`
 
-Integrations should avoid the overhead of starting an additional scanner to resolve the address by calling the `bluetooth.async_ble_device_from_address` API, which returns a `BLEDevice` for the nearest configured `bluetooth` adapter that can reach the device. If no adapters can reach the device, the `bluetooth.async_ble_device_from_address` API, will return `None`.
+集成应避免开启额外的扫描器来解析地址的开销，可以通过调用 `bluetooth.async_ble_device_from_address` API 来获取最接近配置的 `bluetooth` 适配器能够访问的设备的 `BLEDevice`。如果没有适配器能够访问该设备，`bluetooth.async_ble_device_from_address` API 将返回 `None`。
 
-Suppose the integration wants to receive data from `connectable` and non-connectable controllers. In that case, it can exchange the `BLEDevice` for a `connectable` one when it wants to make an outgoing connection as long as at least one `connectable` controller is in range.
+假设集成希望从 `connectable` 和非连接控制器接收数据，那么在需要建立输出连接时，可以将 `BLEDevice` 替换为 `connectable` 的设备，只要至少有一个 `connectable` 的控制器在范围内。
 
 ```python
 from homeassistant.components import bluetooth
@@ -117,9 +118,9 @@ from homeassistant.components import bluetooth
 ble_device = bluetooth.async_ble_device_from_address(hass, "44:44:33:11:23:42", connectable=True)
 ```
 
-### Fetching the latest `BluetoothServiceInfoBleak` for a device
+### 获取设备的最新 `BluetoothServiceInfoBleak`
 
-The latest advertisement and device data are available with the `bluetooth.async_last_service_info` API, which returns a `BluetoothServiceInfoBleak` from the scanner with the best RSSI of the requested connectable type.
+可以使用 `bluetooth.async_last_service_info` API 获取设备的最新广告和设备数据，该API将从请求的可连接类型中信号最好的扫描器返回一个 `BluetoothServiceInfoBleak`。
 
 ```python
 from homeassistant.components import bluetooth

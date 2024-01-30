@@ -1,10 +1,10 @@
 ---
-title: "Handling intents"
+title: "Handling intents 处理意图"
 ---
 
-Any component can register to handle intents. This allows a single component to handle intents fired from multiple voice assistants.
+任何组件都可以注册来处理意图。这使得单个组件能够处理来自多个语音助手的意图。
 
-A component has to register an intent handler for each type that it wants to handle. Intent handlers have to extend `homeassistant.helpers.intent.IntentHandler`
+一个组件必须为它想处理的每种类型注册一个意图处理器。意图处理器必须扩展`homeassistant.helpers.intent.IntentHandler`类。
 
 ```python
 from homeassistant.helpers import intent

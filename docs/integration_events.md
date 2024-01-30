@@ -2,13 +2,14 @@
 title: "Firing events"
 ---
 
-Some integrations represent devices or services that have events, like when motion is detected or a momentary button is pushed. An integration can make these available to users by firing them as events in Home Assistant.
+一些集成表示具有事件的设备或服务，例如当检测到运动或按下瞬时按钮时。集成可以通过在Home Assistant中将它们作为事件触发来向用户提供这些事件。
 
-Your integration should fire events of type `<domain>_event`. For example, the ZHA integration fires `zha_event` events.
+您的集成应该以`<domain>_event`类型的事件进行触发。例如，ZHA集成触发`zha_event`事件。
 
-If the event is related to a specific device/service, it should be correctly attributed. Do this by adding a `device_id` attribute to the event data that contains the device identifier from the device registry.
+如果事件与特定设备/服务相关联，应正确地标识它们。通过向事件数据添加一个包含设备注册表中设备标识符的`device_id`属性来实现。
 
-```
+
+```python
 event_data = {
     "device_id": "my-device-id",
     "type": "motion_detected",
@@ -16,14 +17,15 @@ event_data = {
 hass.bus.async_fire("mydomain_event", event_data)
 ```
 
-If a device or service only fires events, you need to [manually register it in the device registry](device_registry_index.md#manual-registration).
 
-## Making events accessible to users
+如果设备或服务只能触发事件，您需要[在设备注册表中手动注册](device_registry_index.md#manual-registration)它。
 
-A [Device trigger](device_automation_trigger.md) can be attached to a specific event based on the payload, and will make the event accessible to users. With a device trigger a user will be able to see all available events for the device and use it in their automations.
+## 使事件对用户可见
 
-## What not to do
+可以使用[设备触发器](device_automation_trigger.md)将特定事件附加到设备，使事件对用户可见。通过设备触发器，用户将能够查看设备的所有可用事件，并在其自动化中使用它们。
 
-Event related code should not be part of the entity logic of your integration. You want to enable the logic of converting your integration events to Home Assistant events from inside `async_setup_entry` inside `__init__.py`.
+## 不应该做的事情
 
-Entity state should not represent events. For example, you don't want to have a binary sensor that is `on` for 30 seconds when an event happens.
+与事件相关的代码不应成为集成实体逻辑的一部分。您希望从`async_setup_entry`函数内部的`__init__.py`中将集成事件转换为Home Assistant事件的逻辑。
+
+实体状态不应表示事件。例如，您不希望在事件发生时将二进制传感器设置为30秒的“开”状态。

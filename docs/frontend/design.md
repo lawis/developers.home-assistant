@@ -1,17 +1,16 @@
 ---
-title: "Frontend design"
-sidebar_label: "Design"
+title: "Frontend design 前端设计"
+sidebar_label: "Design 设计"
 ---
 
-We maintain a design portal at <https://design.home-assistant.io> that provides information about various frontend aspects such as:
+我们在<https://design.home-assistant.io>上维护着一个设计门户，提供有关各种前端方面的信息，包括：
 
-* UI components that can be reused.
-* Dashboard cards in various configurations and states.
-* Easy way to compare components and cards between light and dark themes.
-* Notes about specific wording in Home Assistant.
+* 可重用的UI组件。
+* 不同配置和状态的仪表板卡片。
+* 方便比较浅色和深色主题下的组件和卡片。
+* 关于Home Assistant中特定词汇的注意事项。
 
-When new components or features are added to the frontend, those need to be added to the design portal. This portal page explains the details on how to do so: <https://design.home-assistant.io/#design.home-assistant.io/editing>
+当在前端添加新的组件或功能时，需要将其添加到设计门户中。此门户页面说明了如何执行此操作的详细信息：<https://design.home-assistant.io/#design.home-assistant.io/editing>
 
 :::note
-While the portal is publically named "design", it is referred to as "gallery" in the frontend repository. That is why the script to run the gallery locally in your development environment can be found at `gallery/script/develop_gallery` and the source code in `gallery/src`.
-::
+尽管该门户公开被称为“design”，但在前端代码库中它被称为“gallery”。这就是为什么在开发环境中，可以在`gallery/script/develop_gallery`找到用于在本地运行gallery的脚本，并且源代码在`gallery/src`中的原因。

@@ -3,29 +3,28 @@ title: Sensor Entity
 sidebar_label: Sensor
 ---
 
-A sensor is a read-only entity that provides some information. Information has a value and optionally, a unit of measurement. Derive entity platforms from [`homeassistant.components.sensor.SensorEntity`](https://github.com/home-assistant/home-assistant/blob/master/homeassistant/components/sensor/__init__.py)
+传感器是一种只读实体，提供一些信息。信息具有一个值，可选地具有单位。从[`homeassistant.components.sensor.SensorEntity`](https://github.com/home-assistant/home-assistant/blob/master/homeassistant/components/sensor/__init__.py)派生实体平台。
 
-## Properties
-
-:::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
-:::
-
-| Name | Type | Default | Description
-| ---- | ---- | ------- | -----------
-| device_class | string | `None` | Type of sensor.
-| last_reset | `datetime.datetime` | `None` | The time when an accumulating sensor such as an electricity usage meter, gas meter, water meter etc. was initialized. If the time of initialization is unknown, set it to `None`. Note that the `datetime.datetime` returned by the `last_reset` property will be converted to an ISO 8601-formatted string when the entity's state attributes are updated. When changing `last_reset`, the `state` must be a valid number.
-| native_unit_of_measurement | string | `None` | The unit of measurement that the sensor's value is expressed in. If the `native_unit_of_measurement` is °C or °F, and its `device_class` is temperature, the sensor's `unit_of_measurement` will be the preferred temperature unit configured by the user and the sensor's `state` will be the `native_value` after an optional unit conversion.
-| native_value | `None`, `datetime.date`, `datetime.datetime`, `decimal.Decimal`, float, int, string | **Required** | The value of the sensor in the sensor's `native_unit_of_measurement`. Using a `device_class` may restrict the types that can be returned by this property.
-| options | list | `None` | In case this sensor provides a textual state, this property can be used to provide a list of possible states. Requires the `enum` device class to be set. Cannot be combined with `state_class` or `native_unit_of_measurement`.
-| state_class | string | `None` | Type of state. If not `None`, the sensor is assumed to be numerical and will be displayed as a line-chart in the frontend instead of as discrete values.
-| suggested_display_precision | int | `None` | The number of decimals which should be used in the sensor's state when it's displayed.
-| suggested_unit_of_measurement | string | `None` | The unit of measurement to be used for the sensor's state. For sensors with a `unique_id`, this will be used as the initial unit of measurement, which users can then override. For sensors without a `unique_id`, this will be the unit of measurement for the sensor's state. This property is intended to be used by integrations to override automatic unit conversion rules, for example, to make a temperature sensor always display in `°C` regardless of whether the configured unit system prefers `°C` or `°F`, or to make a distance sensor always display in miles even if the configured unit system is metric.
+## 属性
 
 :::tip
-Instead of adding `extra_state_attributes` for a sensor entity, create an additional sensor entity. Attributes that do not change are only saved in the database once. If `extra_state_attributes` and the sensor value both frequently change, this can quickly increase the size of the database.
+属性应始终只从内存中返回信息，不进行I/O操作（如网络请求）。实现`update()`或`async_update()`来获取数据。
 :::
 
+| 名称 | 类型 | 默认值 | 描述 |
+| ---- | ---- | ------- | ---- |
+| device_class | string | `None` | 传感器的类型。 |
+| last_reset | `datetime.datetime` | `None` | 积累传感器（如电力使用计量器、燃气计、水表等）初始化时的时间。如果初始化时间未知，请将其设置为`None`。请注意，当更新实体的状态属性时，`last_reset`属性返回的`datetime.datetime`将转换为ISO 8601格式的字符串。更改`last_reset`时，`state`必须是一个有效的数字。 |
+| native_unit_of_measurement | string | `None` | 传感器值所表示的单位。如果`native_unit_of_measurement`是°C或°F，并且其`device_class`为temperature，则传感器的`unit_of_measurement`将是用户配置的首选温度单位，并且传感器的`state`将是可选单位转换后的`native_value`。 |
+| native_value | `None`, `datetime.date`, `datetime.datetime`, `decimal.Decimal`, float, int, string | **Required** | 传感器的值，以传感器的`native_unit_of_measurement`为单位。使用`device_class`可以限制此属性返回的类型。 |
+| options | list | `None` | 如果此传感器提供文本状态，则可以使用此属性提供可能状态的列表。需要设置`enum`设备类别。不能与`state_class`或`native_unit_of_measurement`结合使用。 |
+| state_class | string | `None` | 状态的类型。如果不是`None`，则假定传感器是数字型的，并且将在前端显示为折线图，而不是离散值。 |
+| suggested_display_precision | int | `None` | 在显示传感器状态时应使用的小数位数。 |
+| suggested_unit_of_measurement | string | `None` | 传感器状态的应使用的度量单位。对于具有`unique_id`的传感器，这将被用作初始度量单位，用户随后可以覆盖。对于没有`unique_id`的传感器，这将是传感器状态的度量单位。此属性旨在供集成使用，以覆盖自动单位转换规则，例如使温度传感器始终以`°C`显示，而不管配置的单位系统首选`°C`还是`°F`，或使距离传感器始终以英里显示，即使配置的单位系统是公制系统。
+
+:::tip
+不要为传感器实体添加`extra_state_attributes`，而是创建一个额外的传感器实体。不变的属性只保存在数据库中一次。如果`extra_state_attributes`和传感器值都经常变化，这可能会快速增加数据库的大小。
+:::
 ### Available device classes
 
 If specifying a device class, your sensor entity will need to also return the correct unit of measurement.

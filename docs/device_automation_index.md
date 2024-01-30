@@ -2,18 +2,17 @@
 title: "Device Automations"
 sidebar_label: Introduction
 ---
+设备自动化为用户提供了一个在Home Assistant的核心概念之上的设备中心层。在创建自动化时，用户不再需要处理状态和事件等核心概念。相反，他们将能够选择一个设备，然后从预定义的触发器、条件和动作列表中选择。
 
-Device Automations provide users with a device-centric layer on top of the core concepts of Home Assistant. When creating automations, users no longer have to deal with core concepts like states and events. Instead, they will be able to pick a device and then pick from a list of pre-defined triggers, conditions and actions.
+集成可以通过公开函数来生成预定义的触发器、条件和动作，并具有可以监听触发器、检查条件和执行动作的函数，从而连接到此系统。
 
-Integrations can hook into this system by exposing functions to generate the pre-defined triggers, conditions, actions and having functions that can listen for the triggers, check the condition and execute the action.
+设备自动化不会公开额外的功能，而是为用户提供了不必学习新概念的方式。设备自动化在幕后使用事件、状态和服务助手。
 
-Device automations are not exposing extra functionality but are a way for users to not have to learn new concepts. Device automations are using events, state and service helpers under the hood.
+### 次级设备自动化
 
-### Secondary device automations
+某些设备可能会公开很多设备自动化。为了不使用户感到压倒性，可以将设备自动化标记为次级。标记为次级的设备自动化仍然会显示给用户，但可能会在其他设备自动化之后显示，或要求用户选择“显示更多”选项或类似选项。
 
-Some devices may expose a lot of device automation. To not overwhelm the user, a device automation can be marked as secondary. A device automation which is marked as secondary will still be shown to the user, but may be shown after other device automations or may require the user to select a "show more" option or similar.
-
-If the device automation references an entity via an `entity_id` key, the secondary flag will automatically be set to `True` if the referenced entity is hidden or if the referenced entity's entity category is not `None`. The example below shows how to mark a device automation as secondary.
+如果设备自动化通过`entity_id`键引用实体，则如果所引用的实体隐藏或所引用实体的实体类别不为`None`，次级标志将自动设置为`True`。以下示例显示了如何将设备自动化标记为次级。
 
 ```python
 from homeassistant.const import (

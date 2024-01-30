@@ -1,52 +1,52 @@
 ---
-title: "Frontend Architecture"
-sidebar_label: "Architecture"
+title: "Frontend Architecture 前端架构"
+sidebar_label: "Architecture 架构"
 ---
 
-The Home Assistant frontend is built using web components. This is a modern web technology allowing us to encapsulate templates, styling and logic into a single file and expose it as an HTML tag in the browser. These components are composable, allowing a very dynamic and powerful foundation of our application.
+Home Assistant前端是使用Web组件构建的。这是一种现代的Web技术，允许我们将模板、样式和逻辑封装到一个文件中，并将其作为HTML标签在浏览器中公开。这些组件是可组合的，为我们的应用程序提供了非常动态和强大的基础。
 
-## Structure
+## 结构
 
-The Home Assistant frontend can be broken up in 4 parts:
+Home Assistant前端可以分为4个部分：
 
-### Bootstrap
+### 启动引导
 
-File: `src/entrypoints/core.js`
+文件：`src/entrypoints/core.js`
 
-This is a very tiny script which is the first thing that is loaded on the page. It is responsible for checking for authentication credentials and setting up the websocket connection with the backend.
+这是一个非常小的脚本，它是在页面加载时首先加载的内容。它负责检查身份验证凭据并设置与后端的WebSocket连接。
 
-The script allows us to start downloading the data while also downloading the rest of the UI in parallel.
+该脚本允许我们在同时下载其他UI时开始下载数据。
 
-### App shell
+### 应用程序壳
 
-File: `src/entrypoints/app.js`
+文件：`src/entrypoints/app.js`
 
-This is everything that is required to render the sidebar and handle the routing.
+这包含了渲染侧边栏和处理路由的所有内容。
 
-### Panels
+### 面板
 
-Folder: `src/panels/`
+文件夹：`src/panels/`
 
-Each page in Home Assistant is a panel. Components can register extra panels to be shown to the user. Examples of panels are "states", "map", "logbook" and "history".
+Home Assistant中的每个页面都是一个面板。组件可以注册额外的面板以显示给用户。面板的示例包括“状态”、“地图”、“日志”和“历史记录”。
 
-### Dialogs
+### 对话框
 
-Folder: `src/dialogs`
+文件夹：`src/dialogs`
 
-Certain information and data entry is presented to users in flows. Dialogs can be triggered on any page. The most common one is the entity more info dialog, which allows users to dig into an entity's state, history, and settings.
+某些信息和数据输入以流的方式呈现给用户。对话框可以在任何页面上触发。最常见的是实体更多信息对话框，它允许用户查看实体的状态、历史记录和设置。
 
-## Data Flow
+## 数据流
 
-The frontend leverages the [Websocket API](api/websocket.md) and the [Rest API](api/rest.md) to interact with Home Assistant.
+前端利用[Websocket API](api/websocket.md)和[Rest API](api/rest.md)与Home Assistant进行交互。
 
-The data is made available as the `hass` property which is passed down to every component. The `hass` property contains the core state and has methods to call APIs.
+数据通过名为`hass`的属性提供给每个组件。`hass`属性包含核心状态并具有调用API的方法。
 
-Components can subscribe to information that is not available in the core state. Subscriptions run through the websocket API which keeps the data in sync with the backend.
+组件可以订阅在核心状态中不可用的信息。订阅通过WebSocket API运行，将数据与后端保持同步。
 
-We use a unidirectional data flow. When you make a change in the backend (like turning on a light), the `hass` object will be updated at the root of the application and will be made available to every component that needs it.
+我们使用单向数据流。当您在后端进行更改（例如打开灯），`hass`对象将在应用程序根部更新，并可供每个需要它的组件使用。
 
-## Routing
+## 路由
 
-The frontend uses decentralized routing. Each component only knows enough about the routing to know how to handle the part it's responsible for. Further routing is passed down the component tree.
+前端使用分散式路由。每个组件只需要了解与其负责部分的路由处理方式即可。进一步的路由由组件树传递下去。
 
-For example, the `<home-assistant>` main component will look at the first part of the url to decide which panel should be loaded. Each panel can have its own mapping between the url and what content to show.
+例如，`<home-assistant>`主组件将查看URL的第一部分以确定应加载哪个面板。每个面板可以在URL和要显示内容之间具有自己的映射关系。
